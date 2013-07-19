@@ -37,6 +37,11 @@ namespace Coob
             writer.Write(Y);
             writer.Write(Z);
         }
+
+        public override string ToString()
+        {
+            return "Vec3f{ " + X + ", " + Y + ", " + Z + " }";
+        }
     }
 
     public struct QVector3
@@ -53,6 +58,11 @@ namespace Coob
             writer.Write(X);
             writer.Write(Y);
             writer.Write(Z);
+        }
+
+        public override string ToString()
+        {
+            return "QVec3f{ " + X + ", " + Y + ", " + Z + " }";
         }
     }
 
