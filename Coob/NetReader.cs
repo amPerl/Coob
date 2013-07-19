@@ -8,23 +8,47 @@ using System.Text;
 
 namespace Coob
 {
-    [StructLayout(LayoutKind.Explicit)]
-    public struct Vector3
+    public struct Vector3 : ICloneable
     {
-        [FieldOffset(0)]
-        public float X;
-        [FieldOffset(0)]
-        public float Pitch;
+        private float _x;
+        private float _y;
+        private float _z;
 
-        [FieldOffset(4)]
-        public float Y;
-        [FieldOffset(4)]
-        public float Roll;
+        public float X
+        {
+            get { return _x; }
+            set { _x = value; }
+        }
 
-        [FieldOffset(8)]
-        public float Z;
-        [FieldOffset(8)]
-        public float Yaw;
+        public float Pitch //Alias of X
+        {
+            get { return _x; }
+            set { _x = value; }
+        }
+
+        public float Y
+        {
+            get { return _y; }
+            set { _y = value; }
+        }
+
+        public float Roll //Alias of Y
+        {
+            get { return _y; }
+            set { _y = value; }
+        }
+
+        public float Z
+        {
+            get { return _z; }
+            set { _z = value; }
+        }
+
+        public float Yaw //Alias of X
+        {
+            get { return _z; }
+            set { _z = value; }
+        }
 
         public Vector3 Clone()
         {
@@ -42,9 +66,14 @@ namespace Coob
         {
             return "Vec3f{ " + X + ", " + Y + ", " + Z + " }";
         }
+
+        object ICloneable.Clone()
+        {
+            return new Vector3() { X = this.X, Y = this.Y, Z = this.Z };
+        }
     }
 
-    public struct QVector3
+    public struct QVector3 : ICloneable
     {
         public long X, Y, Z;
 
@@ -63,6 +92,11 @@ namespace Coob
         public override string ToString()
         {
             return "QVec3f{ " + X + ", " + Y + ", " + Z + " }";
+        }
+
+        object ICloneable.Clone()
+        {
+            return new Vector3() { X = this.X, Y = this.Y, Z = this.Z };
         }
     }
 
