@@ -125,6 +125,16 @@ namespace Coob
             return BitConverter.ToSingle(tempBuffer, 0);
         }
 
+        public QVector3 ReadQVector3()
+        {
+            return new QVector3
+                   {
+                       X = ReadInt64(),
+                       Y = ReadInt64(),
+                       Z = ReadInt64(),
+                   };
+        }
+
         public Vector3 ReadVector3()
         {
             return new Vector3
