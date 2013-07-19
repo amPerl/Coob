@@ -747,11 +747,7 @@ namespace Coob.Structures
             }
             if (bitArray.Get(37))
             {
-<<<<<<< HEAD
-                writer.Write((byte)unknown_or_not_used3);
-=======
                 writer.Write(unknown_or_not_used3);
->>>>>>> Structure IO stuff
             }
             if (bitArray.Get(38))
             {
