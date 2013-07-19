@@ -60,10 +60,17 @@ namespace Coob
 
         public void Disconnect(string reason = "")
         {
+            Joined = false;
             Root.JavaScript.Engine.CallFunction("onClientDisconnect", this);
 
             Log.WriteInfo("Client " + ID + " disconnected (" + reason + ").");
             tcp.Close();
+
+            if (Root.Coob.Clients.Contains(this))
+            {
+                Root.Coob.Clients.Remove(this);
+                Log.WriteInfo("Clients count: " + Root.Coob.Clients.Count);
+            }
         }
 
         public void SendMessage(long id, string message)
