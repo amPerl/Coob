@@ -27,23 +27,23 @@ namespace Coob
             Console.Write(" ");
         }
 
-        public static void WriteInfo(string message)
+        public static void WriteInfo(object message)
         {
             writeTimePrefix();
             writeTypePrefix("INFO", ConsoleColor.DarkGreen, ConsoleColor.Green);
-            Console.WriteLine(message);
+            Console.WriteLine(message.ToString());
         }
 
-        public static void WriteWarning(string message)
+        public static void WriteWarning(object message)
         {
             writeTimePrefix();
             writeTypePrefix("WARNING", ConsoleColor.DarkYellow, ConsoleColor.Yellow);
-            Console.WriteLine(message);
+            Console.WriteLine(message.ToString());
         }
 
-        public static void WriteError(string message)
+        public static void WriteError(object message)
         {
-            string[] lines = message.Split('\n');
+            string[] lines = message.ToString().Split('\n');
             if (lines.Length > 1)
             {
                 foreach (string line in lines.Take(2))
@@ -53,7 +53,7 @@ namespace Coob
             {
                 writeTimePrefix();
                 writeTypePrefix("ERROR", ConsoleColor.DarkRed, ConsoleColor.Red);
-                Console.WriteLine(message);
+                Console.WriteLine(message.ToString());
             }
         }
     }
