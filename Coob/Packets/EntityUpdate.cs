@@ -67,7 +67,14 @@ namespace Coob.Packets
             public override bool CallScript()
             {
                 if (IsJoin)
-                    return (bool)Root.JavaScript.Engine.CallFunction("onClientJoin", Sender);
+                {
+                    bool joined = (bool)Root.JavaScript.Engine.CallFunction("onClientJoin", Sender);
+
+                    if (joined)
+                        Sender.Joined = true;
+
+                    return joined;
+                }
                 else
                     return (bool)Root.JavaScript.Engine.CallFunction("onEntityUpdate", Entity, Changes, Sender);
             }
