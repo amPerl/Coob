@@ -8,6 +8,7 @@ using System.Net;
 using System.Threading;
 using Coob.Structures;
 using Coob.Packets;
+using Jint.Native;
 
 namespace Coob
 {
@@ -105,7 +106,15 @@ namespace Coob
                 Packet.Base message = null;
                 if (!MessageQueue.TryDequeue(out message)) continue;
 
-                if (!message.CallScript()) continue;
+                try
+                {
+                    if (!message.CallScript()) continue;
+                }
+                catch (JsException ex)
+                {
+                    Log.WriteError("JS Error on " + message.GetType().Name + ": " + (ex.InnerException != null ? (ex.Message + ": " + ex.InnerException.Message) : ex.Message) + " - " + ex.Value);
+                    continue;
+                }
 
                 message.Process();
             }
@@ -142,6 +151,16 @@ namespace Coob
         public Client[] GetClients()
         {
             return Clients.ToArray();
+        }
+
+        public void SendServerMessage(string message)
+        {
+            var clients = new List<Client>(Clients);
+            foreach (var client in clients)
+            {
+                if (client.Joined)
+                    client.SendServerMessage(message);
+            }
         }
     }
 }
