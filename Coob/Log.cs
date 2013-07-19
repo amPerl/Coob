@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Coob
 {
@@ -16,7 +14,7 @@ namespace Coob
         {
             Console.ForegroundColor = ConsoleColor.Black;
             Console.BackgroundColor = ConsoleColor.Gray;
-            Console.Write(DateTime.Now.ToString(" hh:mm "));
+            Console.Write(DateTime.Now.ToString(" HH:mm:ss "));
         }
 
         static void writeTypePrefix(string type, ConsoleColor bg, ConsoleColor fg)
