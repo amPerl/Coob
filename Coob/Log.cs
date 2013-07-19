@@ -46,14 +46,29 @@ namespace Coob
             Console.Write(" ");
         }
 
+        public static void WriteInfo(string message)
+        {
+            WriteInfo(message, new object[] { });
+        }
+
         public static void WriteInfo(string format, params object[] args)
         {
             queuedMessages.Enqueue(new LogMessage("INFO", string.Format(format, args), ConsoleColor.DarkGreen, ConsoleColor.Green));
         }
 
+        public static void WriteWarning(string message)
+        {
+            WriteWarning(message, new object[] { });
+        }
+
         public static void WriteWarning(string format, params object[] args)
         {
             queuedMessages.Enqueue(new LogMessage("WARNING", string.Format(format, args), ConsoleColor.DarkYellow, ConsoleColor.Yellow));
+        }
+
+        public static void WriteError(string message)
+        {
+            WriteError(message, new object[] { });
         }
 
         public static void WriteError(string format, params object[] args)

@@ -22,9 +22,9 @@ namespace Coob
 
             Engine.SetParameter("coob", Root.Coob);
 
-            Engine.SetFunction("LogInfo", (Action<string, object[]>)Log.WriteInfo);
-            Engine.SetFunction("LogWarning", (Action<string, object[]>)Log.WriteWarning);
-            Engine.SetFunction("LogError", (Action<string, object[]>)Log.WriteError);
+            Engine.SetFunction("LogInfo", (Action<string>)Log.WriteInfo);
+            Engine.SetFunction("LogWarning", (Action<string>)Log.WriteWarning);
+            Engine.SetFunction("LogError", (Action<string>)Log.WriteError);
 
             try
             {
