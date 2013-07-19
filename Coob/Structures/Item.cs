@@ -1,0 +1,94 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+
+namespace Coob.Structures
+{
+    /* Structure info mostly stolen from mat^2 ;) */
+
+    public class Item
+    {
+        public byte Type, SubType;
+        public uint Modifier;
+        public uint MinusModifier;
+        public byte Rarity, Material, Flags;
+        public ushort Level;
+        public ItemUpgrade[] Upgrades;
+        public uint UpgradeCount;
+
+        public Item()
+        {
+            Upgrades = new ItemUpgrade[32];
+        }
+
+        public void Read(BinaryReader reader)
+        {
+            Type = reader.ReadByte();
+            SubType = reader.ReadByte();
+            reader.ReadInt16(); // skip 2
+            Modifier = reader.ReadUInt32();
+            MinusModifier = reader.ReadUInt32();
+            Rarity = reader.ReadByte();
+            Material = reader.ReadByte();
+            Flags = reader.ReadByte();
+            reader.ReadByte(); // skip 1
+            Level = reader.ReadUInt16();
+            reader.ReadInt16(); // skip 2
+            for (int i = 0; i < 32; i++)
+            {
+                Upgrades[i] = new ItemUpgrade();
+                Upgrades[i].Read(reader);
+            }
+            UpgradeCount = reader.ReadUInt32();
+
+        }
+
+        public void CopyFrom(Item from)
+        {
+            if (from == null) return;
+
+            Type = from.Type;
+            SubType = from.SubType;
+            Modifier = from.Modifier;
+            MinusModifier = from.MinusModifier;
+            Rarity = from.Rarity;
+            Material = from.Material;
+            Flags = from.Flags;
+            Level = from.Level;
+            UpgradeCount = from.UpgradeCount;
+            for (int i = 0; i < 32; i++)
+            {
+                Upgrades[i] = new ItemUpgrade();
+                Upgrades[i].CopyFrom(from.Upgrades[i]);
+            }
+        }
+    }
+
+    public class ItemUpgrade
+    {
+        public byte X, Y, Z, Material;
+        public uint Level;
+
+        public void Read(BinaryReader reader)
+        {
+            X = reader.ReadByte();
+            Y = reader.ReadByte();
+            Z = reader.ReadByte();
+            Material = reader.ReadByte();
+            Level = reader.ReadUInt32();
+        }
+
+        public void CopyFrom(ItemUpgrade from)
+        {
+            if (from == null) return;
+
+            X = from.X;
+            Y = from.Y;
+            Z = from.Z;
+            Material = from.Material;
+            Level = from.Level;
+        }
+    }
+}

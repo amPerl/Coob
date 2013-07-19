@@ -19,7 +19,7 @@ namespace Coob.Packets
 
             public static Base Parse(Client client)
             {
-                int length = client.Reader.ReadInt();
+                int length = client.Reader.ReadInt32();
                 string message = Encoding.Unicode.GetString(client.Reader.ReadBytes(length * 2));
                 return new ChatMessage(message, client);
             }

@@ -49,7 +49,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BitmaskUtils.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="Coob.cs" />
     <Compile Include="Log.cs" />
@@ -64,7 +63,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScriptHandler.cs" />
-    <Compile Include="Structures.cs" />
+    <Compile Include="Structures\Appearance.cs" />
+    <Compile Include="Structures\Entity.cs" />
+    <Compile Include="Structures\Item.cs" />
     <Compile Include="ZlibHelper.cs" />
   </ItemGroup>
   <ItemGroup>

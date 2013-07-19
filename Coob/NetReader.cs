@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
@@ -29,6 +30,13 @@ namespace Coob
         {
             return new Vector3() { X = this.X, Y = this.Y, Z = this.Z };
         }
+
+        public void Write(BinaryWriter writer)
+        {
+            writer.Write(X);
+            writer.Write(Y);
+            writer.Write(Z);
+        }
     }
 
     public struct QVector3
@@ -39,60 +47,68 @@ namespace Coob
         {
             return new QVector3() { X = this.X, Y = this.Y, Z = this.Z };
         }
+
+        public void Write(BinaryWriter writer)
+        {
+            writer.Write(X);
+            writer.Write(Y);
+            writer.Write(Z);
+        }
     }
 
-    public class NetReader
+    public class NetReader : BinaryReader
     {
         NetworkStream ns;
         byte[] tempBuffer;
 
-        public NetReader(NetworkStream stream)
+        public NetReader(NetworkStream stream) : 
+            base(stream)
         {
             ns = stream;
         }
 
-        public byte ReadByte()
+        public override byte ReadByte()
         {
             byte val = (byte)ns.ReadByte();
             return val;
         }
 
-        public byte[] ReadBytes(int n)
+        public override byte[] ReadBytes(int n)
         {
             byte[] bytes = new byte[n];
             ns.Read(bytes, 0, n);
             return bytes;
         }
 
-        public short ReadShort()
+        public override short ReadInt16()
         {
             tempBuffer = new byte[2];
             ns.Read(tempBuffer, 0, 2);
             return BitConverter.ToInt16(tempBuffer, 0);
         }
 
-        public ushort ReadUShort()
+        public override ushort ReadUInt16()
         {
             tempBuffer = new byte[2];
             ns.Read(tempBuffer, 0, 2);
             return BitConverter.ToUInt16(tempBuffer, 0);
         }
 
-        public int ReadInt()
+        public override int ReadInt32()
         {
             tempBuffer = new byte[4];
             ns.Read(tempBuffer, 0, 4);
             return BitConverter.ToInt32(tempBuffer, 0);
         }
 
-        public uint ReadUInt()
+        public override uint ReadUInt32()
         {
             tempBuffer = new byte[4];
             ns.Read(tempBuffer, 0, 4);
             return BitConverter.ToUInt32(tempBuffer, 0);
         }
 
-        public float ReadFloat()
+        public override float ReadSingle()
         {
             tempBuffer = new byte[4];
             ns.Read(tempBuffer, 0, 4);
@@ -103,13 +119,13 @@ namespace Coob
         {
             return new Vector3
             {
-                X = ReadFloat(),
-                Y = ReadFloat(),
-                Z = ReadFloat()
+                X = ReadSingle(),
+                Y = ReadSingle(),
+                Z = ReadSingle()
             };
         }
 
-        public long ReadLong()
+        public override long ReadInt64()
         {
             tempBuffer = new byte[8];
             ns.Read(tempBuffer, 0, 8);

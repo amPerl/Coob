@@ -7,6 +7,8 @@ using System.Text;
 
 namespace Coob.Structures
 {
+    /* Structure info mostly stolen from mat^2 ;) */
+
     public class Entity
     {
         #region Fields
@@ -100,13 +102,13 @@ namespace Coob.Structures
             ItemData = new Item();
 
             Equipment = new Item[13];
-            for(int i = 0; i < 13; i++)
+            for (int i = 0; i < 13; i++)
                 Equipment[i] = new Item();
 
             Skills = new uint[11];
         }
 
-        public void ReadMaskedValues(BinaryReader reader)
+        public void ReadByMask(BinaryReader reader)
         {
             LastBitmask = reader.ReadBytes(8);
             BitArray bitArray = new BitArray(LastBitmask);
@@ -345,7 +347,7 @@ namespace Coob.Structures
             }
         }
 
-        public void CopyValuesByMask(Entity from)
+        public void CopyByMask(Entity from)
         {
             BitArray bitArray = new BitArray(LastBitmask);
 
@@ -576,274 +578,231 @@ namespace Coob.Structures
                 IceBlockFour = from.IceBlockFour;
             }
         }
-    }
 
-    public class Appearance
-    {
-        public byte NotUsed1, NotUsed2;
-        public byte HairR, HairG, HairB;
-        public byte MovementFlags, EntityFlags;
-        public float Scale;
-        public float BoundingRadius;
-        public float BoundingHeight;
-        public ushort HeadModel, HairModel, HandModel, FootModel, BodyModel, BackModel, ShoulderModel, WingModel;
-        public float HeadScale, BodyScale, HandScale, FootScale, ShoulderScale, WeaponScale, BackScale, Unknown, WingScale;
-        public float BodyPitch, ArmPitch, ArmRoll, ArmYaw;
-        public float FeetPitch, WingPitch, BackPitch;
-        public Vector3 BodyOffset, HeadOffset, HandOffset, FootOffset, BackOffset, WingOffset;
 
-        public Appearance()
+        public void WriteByMask(byte[] bitmask, BinaryWriter writer)
         {
-        }
+            BitArray bitArray = new BitArray(bitmask);
 
-        public void Read(BinaryReader reader)
-        {
-            NotUsed1 = reader.ReadByte();
-            NotUsed2 = reader.ReadByte();
-            HairR = reader.ReadByte();
-            HairG = reader.ReadByte();
-            HairB = reader.ReadByte();
-            reader.ReadByte(); // skip 1
-            MovementFlags = reader.ReadByte();
-            EntityFlags = reader.ReadByte();
-            Scale = reader.ReadSingle();
-            BoundingRadius = reader.ReadSingle();
-            BoundingHeight = reader.ReadSingle();
-            HeadModel = reader.ReadUInt16();
-            HairModel = reader.ReadUInt16();
-            HandModel = reader.ReadUInt16();
-            FootModel = reader.ReadUInt16();
-            BodyModel = reader.ReadUInt16();
-            BackModel = reader.ReadUInt16();
-            ShoulderModel = reader.ReadUInt16();
-            WingModel = reader.ReadUInt16();
-            HeadScale = reader.ReadSingle();
-            BodyScale = reader.ReadSingle();
-            HandScale = reader.ReadSingle();
-            FootScale = reader.ReadSingle();
-            ShoulderScale = reader.ReadSingle();
-            WeaponScale = reader.ReadSingle();
-            BackScale = reader.ReadSingle();
-            Unknown = reader.ReadSingle();
-            WingScale = reader.ReadSingle();
-            BodyPitch = reader.ReadSingle();
-            ArmPitch = reader.ReadSingle();
-            ArmRoll = reader.ReadSingle();
-            ArmYaw = reader.ReadSingle();
-            FeetPitch = reader.ReadSingle();
-            WingPitch = reader.ReadSingle();
-            BackPitch = reader.ReadSingle();
-            BodyOffset = new Vector3 { X = reader.ReadSingle(), Y = reader.ReadSingle(), Z = reader.ReadSingle() };
-            HeadOffset = new Vector3 { X = reader.ReadSingle(), Y = reader.ReadSingle(), Z = reader.ReadSingle() };
-            HandOffset = new Vector3 { X = reader.ReadSingle(), Y = reader.ReadSingle(), Z = reader.ReadSingle() };
-            FootOffset = new Vector3 { X = reader.ReadSingle(), Y = reader.ReadSingle(), Z = reader.ReadSingle() };
-            BackOffset = new Vector3 { X = reader.ReadSingle(), Y = reader.ReadSingle(), Z = reader.ReadSingle() };
-            WingOffset = new Vector3 { X = reader.ReadSingle(), Y = reader.ReadSingle(), Z = reader.ReadSingle() };
-        }
-
-        public void ReadNet(NetReader reader)
-        {
-            NotUsed1 = reader.ReadByte();
-            NotUsed2 = reader.ReadByte();
-            HairR = reader.ReadByte();
-            HairG = reader.ReadByte();
-            HairB = reader.ReadByte();
-            reader.ReadByte(); // skip 1
-            MovementFlags = reader.ReadByte();
-            EntityFlags = reader.ReadByte();
-            Scale = reader.ReadFloat();
-            BoundingRadius = reader.ReadFloat();
-            BoundingHeight = reader.ReadFloat();
-            HeadModel = reader.ReadUShort();
-            HairModel = reader.ReadUShort();
-            HandModel = reader.ReadUShort();
-            FootModel = reader.ReadUShort();
-            BodyModel = reader.ReadUShort();
-            BackModel = reader.ReadUShort();
-            ShoulderModel = reader.ReadUShort();
-            WingModel = reader.ReadUShort();
-            HeadScale = reader.ReadFloat();
-            BodyScale = reader.ReadFloat();
-            HandScale = reader.ReadFloat();
-            FootScale = reader.ReadFloat();
-            ShoulderScale = reader.ReadFloat();
-            WeaponScale = reader.ReadFloat();
-            BackScale = reader.ReadFloat();
-            Unknown = reader.ReadFloat();
-            WingScale = reader.ReadFloat();
-            BodyPitch = reader.ReadFloat();
-            ArmPitch = reader.ReadFloat();
-            ArmRoll = reader.ReadFloat();
-            ArmYaw = reader.ReadFloat();
-            FeetPitch = reader.ReadFloat();
-            WingPitch = reader.ReadFloat();
-            BackPitch = reader.ReadFloat();
-            BodyOffset = new Vector3 { X = reader.ReadFloat(), Y = reader.ReadFloat(), Z = reader.ReadFloat() };
-            HeadOffset = new Vector3 { X = reader.ReadFloat(), Y = reader.ReadFloat(), Z = reader.ReadFloat() };
-            HandOffset = new Vector3 { X = reader.ReadFloat(), Y = reader.ReadFloat(), Z = reader.ReadFloat() };
-            FootOffset = new Vector3 { X = reader.ReadFloat(), Y = reader.ReadFloat(), Z = reader.ReadFloat() };
-            BackOffset = new Vector3 { X = reader.ReadFloat(), Y = reader.ReadFloat(), Z = reader.ReadFloat() };
-            WingOffset = new Vector3 { X = reader.ReadFloat(), Y = reader.ReadFloat(), Z = reader.ReadFloat() };
-        }
-
-        public void CopyFrom(Appearance from)
-        {
-            if (from == null) return;
-
-            NotUsed1 =      from.NotUsed1;
-            NotUsed2 =      from.NotUsed2;
-            HairR =         from.HairR;
-            HairG =         from.HairG;
-            HairB =         from.HairB;
-            MovementFlags = from.MovementFlags;
-            EntityFlags =   from.EntityFlags;
-            Scale =         from.Scale;
-            BoundingRadius = from.BoundingRadius;
-            BoundingHeight = from.BoundingHeight;
-            HeadModel =     from.HeadModel;
-            HairModel =     from.HairModel;
-            HandModel =     from.HandModel;
-            FootModel =     from.FootModel;
-            BodyModel =     from.BodyModel;
-            BackModel =     from.BackModel;
-            ShoulderModel = from.ShoulderModel;
-            WingModel =     from.WingModel;
-            HeadScale =     from.HeadScale;
-            BodyScale =     from.BodyScale;
-            HandScale =     from.HandScale;
-            FootScale =     from.FootScale;
-            ShoulderScale = from.ShoulderScale;
-            WeaponScale =   from.WeaponScale;
-            BackScale =     from.BackScale;
-            Unknown =       from.Unknown;
-            WingScale =     from.WingScale;
-            BodyPitch =     from.BodyPitch;
-            ArmPitch =      from.ArmPitch;
-            ArmRoll =       from.ArmRoll;
-            ArmYaw =        from.ArmYaw;
-            FeetPitch =     from.FeetPitch;
-            WingPitch =     from.WingPitch;
-            BackPitch =     from.BackPitch;
-            BodyOffset =    from.BodyOffset.Clone();
-            HeadOffset =    from.HeadOffset.Clone();
-            HandOffset =    from.HandOffset.Clone();
-            FootOffset =    from.FootOffset.Clone();
-            BackOffset =    from.BackOffset.Clone();
-            WingOffset =    from.WingOffset.Clone();
-        }
-    }
-
-    public class Item
-    {
-        public byte Type, SubType;
-        public uint Modifier;
-        public uint MinusModifier;
-        public byte Rarity, Material, Flags;
-        public ushort Level;
-        public ItemUpgrade[] Upgrades;
-        public uint UpgradeCount;
-
-        public Item()
-        {
-            Upgrades = new ItemUpgrade[32];
-        }
-
-        public void Read(BinaryReader reader)
-        {
-            Type = reader.ReadByte();
-            SubType = reader.ReadByte();
-            reader.ReadInt16(); // skip 2
-            Modifier = reader.ReadUInt32();
-            MinusModifier = reader.ReadUInt32();
-            Rarity = reader.ReadByte();
-            Material = reader.ReadByte();
-            Flags = reader.ReadByte();
-            reader.ReadByte(); // skip 1
-            Level = reader.ReadUInt16();
-            reader.ReadInt16(); // skip 2
-            for (int i = 0; i < 32; i++)
+            if (bitArray.Get(0))
             {
-                Upgrades[i] = new ItemUpgrade();
-                Upgrades[i].Read(reader);
+                Position.Write(writer);
             }
-            UpgradeCount = reader.ReadUInt32();
-            
-        }
-
-        public void ReadNet(NetReader reader)
-        {
-            Type = reader.ReadByte();
-            SubType = reader.ReadByte();
-            reader.ReadShort(); // skip 2
-            Modifier = reader.ReadUInt();
-            MinusModifier = reader.ReadUInt();
-            Rarity = reader.ReadByte();
-            Material = reader.ReadByte();
-            Flags = reader.ReadByte();
-            reader.ReadByte(); // skip 1
-            Level = reader.ReadUShort();
-            reader.ReadShort(); // skip 2
-            for (int i = 0; i < 32; i++)
+            if (bitArray.Get(1))
             {
-                Upgrades[i] = new ItemUpgrade();
-                Upgrades[i].ReadNet(reader);
+                Rotation.Write(writer);
             }
-            UpgradeCount = reader.ReadUInt();
-        }
-
-        public void CopyFrom(Item from)
-        {
-            if (from == null) return;
-
-            Type = from.Type;
-            SubType = from.SubType;
-            Modifier = from.Modifier;
-            MinusModifier = from.MinusModifier;
-            Rarity = from.Rarity;
-            Material = from.Material;
-            Flags = from.Flags;
-            Level = from.Level;
-            UpgradeCount = from.UpgradeCount;
-            for (int i = 0; i < 32; i++)
+            if (bitArray.Get(2))
             {
-                Upgrades[i] = new ItemUpgrade();
-                Upgrades[i].CopyFrom(from.Upgrades[i]);
+                Velocity.Write(writer);
             }
-        }
-    }
-
-    public class ItemUpgrade
-    {
-        public byte X, Y, Z, Material;
-        public uint Level;
-
-        public void Read(BinaryReader reader)
-        {
-            X = reader.ReadByte();
-            Y = reader.ReadByte();
-            Z = reader.ReadByte();
-            Material = reader.ReadByte();
-            Level = reader.ReadUInt32();
-        }
-
-        public void ReadNet(NetReader reader)
-        {
-            X = reader.ReadByte();
-            Y = reader.ReadByte();
-            Z = reader.ReadByte();
-            Material = reader.ReadByte();
-            Level = reader.ReadUInt();
-        }
-
-        public void CopyFrom(ItemUpgrade from)
-        {
-            if (from == null) return;
-
-            X = from.X;
-            Y = from.Y;
-            Z = from.Z;
-            Material = from.Material;
-            Level = from.Level;
+            if (bitArray.Get(3))
+            {
+                Acceleration.Write(writer);
+            }
+            if (bitArray.Get(4))
+            {
+                ExtraVelocity.Write(writer);
+            }
+            if (bitArray.Get(5))
+            {
+                writer.Write(LookPitch
+            }
+            if (bitArray.Get(6))
+            {
+                writer.Write(PhysicsFlags = reader.ReadUInt32();
+            }
+            if (bitArray.Get(7))
+            {
+                writer.Write(SpeedFlags = reader.ReadByte();
+            }
+            if (bitArray.Get(8))
+            {
+                writer.Write(EntityType = reader.ReadUInt32();
+            }
+            if (bitArray.Get(9))
+            {
+                writer.Write(CurrentMode = reader.ReadByte();
+            }
+            if (bitArray.Get(10))
+            {
+                writer.Write(LastShootTime = reader.ReadUInt32();
+            }
+            if (bitArray.Get(11))
+            {
+                writer.Write(HitCounter = reader.ReadUInt32();
+            }
+            if (bitArray.Get(12))
+            {
+                writer.Write(LastHitTime = reader.ReadUInt32();
+            }
+            if (bitArray.Get(13))
+            {
+                Appearance.Write(writer);
+            }
+            if (bitArray.Get(14))
+            {
+                writer.Write(Flags1 = reader.ReadByte();
+                writer.Write(Flags2 = reader.ReadByte();
+            }
+            if (bitArray.Get(15))
+            {
+                writer.Write(RollTime = reader.ReadUInt32();
+            }
+            if (bitArray.Get(16))
+            {
+                writer.Write(StunTime = reader.ReadInt32();
+            }
+            if (bitArray.Get(17))
+            {
+                writer.Write(SlowedTime = reader.ReadUInt32();
+            }
+            if (bitArray.Get(18))
+            {
+                writer.Write(MakeBlueTime = reader.ReadUInt32();
+            }
+            if (bitArray.Get(19))
+            {
+                writer.Write(SpeedUpTime = reader.ReadUInt32();
+            }
+            if (bitArray.Get(20))
+            {
+                writer.Write(ShowPatchTime = reader.ReadSingle();
+            }
+            if (bitArray.Get(21))
+            {
+                writer.Write(ClassType = reader.ReadByte();
+            }
+            if (bitArray.Get(22))
+            {
+                writer.Write(Specialization = reader.ReadByte();
+            }
+            if (bitArray.Get(23))
+            {
+                writer.Write(ChargedMP = reader.ReadSingle();
+            }
+            if (bitArray.Get(24))
+            {
+                writer.Write((uint)not_used1);
+                writer.Write((uint)not_used2);
+                writer.Write((uint)not_used3);
+            }
+            if (bitArray.Get(25))
+            {
+                writer.Write((uint)not_used4);
+                writer.Write((uint)not_used5);
+                writer.Write((uint)not_used6);
+            }
+            if (bitArray.Get(26))
+            {
+                RayHit.Write(writer);
+            }
+            if (bitArray.Get(27))
+            {
+                writer.Write(HP);
+            }
+            if (bitArray.Get(28))
+            {
+                writer.Write(MP);
+            }
+            if (bitArray.Get(29))
+            {
+                writer.Write(BlockPower);
+            }
+            if (bitArray.Get(30))
+            {
+                writer.Write(MaxHPMultiplier);
+                writer.Write(ShootSpeed);
+                writer.Write(DamageMultiplier);
+                writer.Write(ArmorMultiplier);
+                writer.Write(ResistanceMultiplier);
+            }
+            if (bitArray.Get(31))
+            {
+                writer.Write((byte)not_used7);
+            }
+            if (bitArray.Get(32))
+            {
+                writer.Write((byte)not_used8);
+            }
+            if (bitArray.Get(33))
+            {
+                writer.Write(Level);
+            }
+            if (bitArray.Get(34))
+            {
+                writer.Write(CurrentXP);
+            }
+            if (bitArray.Get(35))
+            {
+                writer.Write((uint)not_used9);
+                writer.Write((uint)not_used10);
+            }
+            if (bitArray.Get(36))
+            {
+                writer.Write((uint)unknown_or_not_used1);
+                writer.Write((uint)unknown_or_not_used2);
+            }
+            if (bitArray.Get(37))
+            {
+                writer.Write((uint)unknown_or_not_used3);
+            }
+            if (bitArray.Get(38))
+            {
+                writer.Write((uint)unknown_or_not_used4);
+            }
+            if (bitArray.Get(39))
+            {
+                writer.Write((uint)unknown_or_not_used5);
+                writer.Write((uint)not_used11);
+                writer.Write((uint)not_used12);
+            }
+            if (bitArray.Get(40))
+            {
+                writer.Write((uint)not_used13);
+                writer.Write((uint)not_used14);
+                writer.Write((uint)not_used15);
+                writer.Write((uint)not_used16);
+                writer.Write((uint)not_used17);
+                writer.Write((uint)not_used18);
+            }
+            if (bitArray.Get(41))
+            {
+                writer.Write((uint)not_used20);
+                writer.Write((uint)not_used21);
+                writer.Write((uint)not_used22);
+            }
+            if (bitArray.Get(42))
+            {
+                writer.Write((byte)not_used19);
+            }
+            if (bitArray.Get(43))
+            {
+                ItemData.Write(writer);
+            }
+            if (bitArray.Get(44))
+            {
+                for (int i = 0; i < 13; i++)
+                {
+                    Equipment[i].Write(writer);
+                }
+            }
+            if (bitArray.Get(45))
+            {
+                writer.Write(Name);
+                writer.Write(new byte[16-Name.Length]);
+            }
+            if (bitArray.Get(46))
+            {
+                for (int i = 0; i < 11; i++)
+                {
+                    writer.Write(Skills[i]);
+                }
+            }
+            if (bitArray.Get(47))
+            {
+                writer.Write(IceBlockFour);
+            }
         }
     }
 }

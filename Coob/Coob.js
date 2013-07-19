@@ -2,7 +2,7 @@ var latestVersion = 3;
 
 function onClientConnect(ip) {
 	LogInfo("Client connecting from " + ip);
-	return true;
+	return false;
 }
 
 function onClientVersion(version, client) {
@@ -19,7 +19,7 @@ function onClientJoin(client) {
 }
 
 function onEntityUpdate(entity, changed, client) {
-	LogInfo("Player's X changed: " + changed.Position.X);
+
 	return true;
 }
 

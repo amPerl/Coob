@@ -26,7 +26,7 @@ namespace Coob.Packets
 
             public static Base Parse(Client client)
             {
-                int length = client.Reader.ReadInt();
+                int length = client.Reader.ReadInt32();
 
                 byte[] compressedData = client.Reader.ReadBytes(length);
                 byte[] maskedData = ZlibHelper.UncompressBuffer(compressedData);
@@ -48,7 +48,7 @@ namespace Coob.Packets
                         client.Entity = entity;
                         Root.Coob.Entities[client.ID] = client.Entity;
 
-                        entity.ReadMaskedValues(br);
+                        entity.ReadByMask(br);
 
                         return new EntityUpdate(client.Entity, client.Entity, true, client);
                     }
@@ -57,7 +57,7 @@ namespace Coob.Packets
                         entity = Root.Coob.Entities[id];
 
                         Entity changes = new Entity();
-                        changes.ReadMaskedValues(br);
+                        changes.ReadByMask(br);
 
                         return new EntityUpdate(client.Entity, changes, false, client);
                     }
@@ -74,7 +74,14 @@ namespace Coob.Packets
 
             public override void Process()
             {
-                Entity.CopyValuesByMask(Changes);
+                Entity.CopyByMask(Changes);
+
+                using (var ms = new MemoryStream())
+                using (var bw = new BinaryWriter(ms))
+                {
+                    bw.Write(Entity.ID);
+                    Entity.WriteByMask(Changes.LastBitmask);
+                }
             }
         }
     }

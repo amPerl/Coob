@@ -86,7 +86,7 @@ namespace Coob
                 !(message is Packet.UpdateChunk) &&
                 !(message is Packet.UpdateSector))
             {
-                //Log.WriteInfo("queueing " + message);
+                Log.WriteInfo("queueing " + message);
             }
         }
 

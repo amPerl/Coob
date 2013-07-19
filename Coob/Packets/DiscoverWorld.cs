@@ -22,8 +22,8 @@ namespace Coob.Packets
             public static Base Parse(Client client)
             {
                 return new UpdateChunk(
-                    client.Reader.ReadInt(),
-                    client.Reader.ReadInt(),
+                    client.Reader.ReadInt32(),
+                    client.Reader.ReadInt32(),
                     client);
             }
 
@@ -51,8 +51,8 @@ namespace Coob.Packets
             public static Base Parse(Client client)
             {
                 return new UpdateSector(
-                    client.Reader.ReadInt(),
-                    client.Reader.ReadInt(),
+                    client.Reader.ReadInt32(),
+                    client.Reader.ReadInt32(),
                     client);
             }
 

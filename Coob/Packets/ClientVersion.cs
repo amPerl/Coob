@@ -19,7 +19,7 @@ namespace Coob.Packets
 
             public static Base Parse(Client client)
             {
-                int version = client.Reader.ReadInt();
+                int version = client.Reader.ReadInt32();
                 return new ClientVersion(version, client);
             }
 

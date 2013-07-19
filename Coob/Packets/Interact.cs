@@ -36,17 +36,17 @@ namespace Coob.Packets
             public static Base Parse(Client client)
             {
                 Item Item = new Item();
-                Item.ReadNet(client.Reader);
+                Item.Read(client.Reader);
                 return new Interact(client)
                 {
                     Item = Item,
-                    ChunkX = client.Reader.ReadInt(),
-                    ChunkY = client.Reader.ReadInt(),
-                    Something3 = client.Reader.ReadInt(),
-                    Something4 = client.Reader.ReadUInt(),
+                    ChunkX = client.Reader.ReadInt32(),
+                    ChunkY = client.Reader.ReadInt32(),
+                    Something3 = client.Reader.ReadInt32(),
+                    Something4 = client.Reader.ReadUInt32(),
                     Type = (InteractType)client.Reader.ReadByte(),
                     Something6 = client.Reader.ReadByte(),
-                    Something7 = client.Reader.ReadUShort()
+                    Something7 = client.Reader.ReadUInt16()
                 };
             }
 
