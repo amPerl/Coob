@@ -16,6 +16,7 @@ namespace Coob
         public NetworkStream NetStream;
         public long ID;
         public Entity Entity;
+        public string IP;
 
         TcpClient tcp;
         byte[] recvBuffer;
@@ -26,6 +27,7 @@ namespace Coob
             Entity = null;
 
             tcp = tcpClient;
+            IP = tcp.Client.RemoteEndPoint.ToString().Split(':')[0];
             NetStream = tcp.GetStream();
             Reader = new NetReader(NetStream);
             Writer = new BinaryWriter(NetStream);
@@ -43,7 +45,7 @@ namespace Coob
             }
 
             int bytesRead = 0;
-            //try
+            try
             {
                 bytesRead = NetStream.EndRead(result);
 
@@ -53,7 +55,7 @@ namespace Coob
                 }
                 NetStream.BeginRead(recvBuffer, 0, 4, idCallback, null);
             }
-            //catch { Disconnect("Read error."); }
+            catch { Disconnect("Read error."); }
         }
 
         public void Disconnect(string reason = "")
