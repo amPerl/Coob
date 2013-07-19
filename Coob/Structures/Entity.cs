@@ -606,35 +606,35 @@ namespace Coob.Structures
             }
             if (bitArray.Get(5))
             {
-                writer.Write(LookPitch
+                writer.Write(LookPitch);
             }
             if (bitArray.Get(6))
             {
-                writer.Write(PhysicsFlags = reader.ReadUInt32();
+                writer.Write(PhysicsFlags);
             }
             if (bitArray.Get(7))
             {
-                writer.Write(SpeedFlags = reader.ReadByte();
+                writer.Write(SpeedFlags);
             }
             if (bitArray.Get(8))
             {
-                writer.Write(EntityType = reader.ReadUInt32();
+                writer.Write(EntityType);
             }
             if (bitArray.Get(9))
             {
-                writer.Write(CurrentMode = reader.ReadByte();
+                writer.Write(CurrentMode);
             }
             if (bitArray.Get(10))
             {
-                writer.Write(LastShootTime = reader.ReadUInt32();
+                writer.Write(LastShootTime);
             }
             if (bitArray.Get(11))
             {
-                writer.Write(HitCounter = reader.ReadUInt32();
+                writer.Write(HitCounter);
             }
             if (bitArray.Get(12))
             {
-                writer.Write(LastHitTime = reader.ReadUInt32();
+                writer.Write(LastHitTime);
             }
             if (bitArray.Get(13))
             {
@@ -642,44 +642,44 @@ namespace Coob.Structures
             }
             if (bitArray.Get(14))
             {
-                writer.Write(Flags1 = reader.ReadByte();
-                writer.Write(Flags2 = reader.ReadByte();
+                writer.Write(Flags1);
+                writer.Write(Flags2);
             }
             if (bitArray.Get(15))
             {
-                writer.Write(RollTime = reader.ReadUInt32();
+                writer.Write(RollTime);
             }
             if (bitArray.Get(16))
             {
-                writer.Write(StunTime = reader.ReadInt32();
+                writer.Write(StunTime);
             }
             if (bitArray.Get(17))
             {
-                writer.Write(SlowedTime = reader.ReadUInt32();
+                writer.Write(SlowedTime);
             }
             if (bitArray.Get(18))
             {
-                writer.Write(MakeBlueTime = reader.ReadUInt32();
+                writer.Write(MakeBlueTime);
             }
             if (bitArray.Get(19))
             {
-                writer.Write(SpeedUpTime = reader.ReadUInt32();
+                writer.Write(SpeedUpTime);
             }
             if (bitArray.Get(20))
             {
-                writer.Write(ShowPatchTime = reader.ReadSingle();
+                writer.Write(ShowPatchTime);
             }
             if (bitArray.Get(21))
             {
-                writer.Write(ClassType = reader.ReadByte();
+                writer.Write(ClassType);
             }
             if (bitArray.Get(22))
             {
-                writer.Write(Specialization = reader.ReadByte();
+                writer.Write(Specialization);
             }
             if (bitArray.Get(23))
             {
-                writer.Write(ChargedMP = reader.ReadSingle();
+                writer.Write(ChargedMP);
             }
             if (bitArray.Get(24))
             {
