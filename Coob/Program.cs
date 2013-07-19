@@ -20,7 +20,7 @@ namespace Coob
             Coob = new Coob(new CoobOptions
             {
                 Port = 12345,
-                WorldSeed = 12345
+                WorldSeed = 26879,
             });
             JavaScript = new ScriptHandler("Coob.js");
 
