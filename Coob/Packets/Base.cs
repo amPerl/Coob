@@ -16,6 +16,14 @@ namespace Coob.Packets
                 Sender = client;
             }
 
+            public string PacketTypeName
+            {
+                get
+                {
+                    return this.GetType().Name;
+                }
+            }
+
             public abstract bool CallScript();
             public abstract void Process();
         }

@@ -112,7 +112,7 @@ namespace Coob
                 }
                 catch (JsException ex)
                 {
-                    Log.WriteError("JS Error on " + message.GetType().Name + ": " + (ex.InnerException != null ? (ex.Message + ": " + ex.InnerException.Message) : ex.Message) + " - " + ex.Value);
+                    Log.WriteError("JS Error on " + message.PacketTypeName + ": " + (ex.InnerException != null ? (ex.Message + ": " + ex.InnerException.Message) : ex.Message) + " - " + ex.Value);
                     continue;
                 }
 
