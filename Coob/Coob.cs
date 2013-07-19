@@ -22,7 +22,7 @@ namespace Coob
         public ConcurrentQueue<Packet.Base> MessageQueue;
         public delegate Packet.Base PacketParserDel(Client client);
         public Dictionary<int, PacketParserDel> PacketParsers;
-        public ConcurrentBag<Client> Clients;
+        public List<Client> Clients;
         public ConcurrentDictionary<long, Entity> Entities;
         public CoobOptions Options;
 
@@ -35,7 +35,7 @@ namespace Coob
             this.Options = options;
             MessageQueue = new ConcurrentQueue<Packet.Base>();
             PacketParsers = new Dictionary<int, PacketParserDel>();
-            Clients = new ConcurrentBag<Client>();
+            Clients = new List<Client>();
             Entities = new ConcurrentDictionary<long, Entity>();
 
             PacketParsers.Add(0, Packet.EntityUpdate.Parse);
@@ -119,7 +119,7 @@ namespace Coob
             {
                 id++;
                 inuse = false;
-                foreach (var client in Clients)
+                foreach (var client in GetClients())
                     if (client.ID == id) inuse = true;
             } while (inuse);
             return id;
@@ -130,13 +130,18 @@ namespace Coob
             byte[] msgBuffer = Encoding.Unicode.GetBytes(message);
             int msgLength = msgBuffer.Length / 2;
 
-            foreach (var client in Clients)
+            foreach (var client in GetClients())
             {
                 client.Writer.Write(10);
                 client.Writer.Write(id);
                 client.Writer.Write(msgLength);
                 client.Writer.Write(msgBuffer);
             }
+        }
+
+        public Client[] GetClients()
+        {
+            return Clients.ToArray();
         }
     }
 }
