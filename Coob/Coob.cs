@@ -74,7 +74,7 @@ namespace Coob
         {
             if (!PacketParsers.ContainsKey(id))
             {
-                Log.WriteError("Unknown packet: " + id + " from client " + id);
+                Log.WriteError("Unknown packet: " + id + " from client " + client.ID);
                 client.Disconnect("Unknown data");
                 return;
             }
