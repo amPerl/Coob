@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BinaryWriterExtensions.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="Coob.cs" />
     <Compile Include="Log.cs" />
