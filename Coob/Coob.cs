@@ -106,19 +106,22 @@ namespace Coob
             while (true)
             {
                 Packet.Base message = null;
-                if (!MessageQueue.TryDequeue(out message)) continue;
+                if (!MessageQueue.TryDequeue(out message)) goto displayLog;
 
                 try
                 {
-                    if (!message.CallScript()) continue;
+                    if (!message.CallScript()) goto displayLog;
                 }
                 catch (JsException ex)
                 {
                     Log.WriteError("JS Error on " + message.PacketTypeName + ": " + (ex.InnerException != null ? (ex.Message + ": " + ex.InnerException.Message) : ex.Message) + " - " + ex.Value);
-                    continue;
+                    goto displayLog;
                 }
 
                 message.Process();
+
+            displayLog:
+                Log.Display();
             }
         }
 
