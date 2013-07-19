@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.IO;
 
 namespace Coob
 {
@@ -19,7 +20,16 @@ namespace Coob
 
         public static byte[] CompressBuffer(byte[] buffer)
         {
-            return DeflateStream.CompressBuffer(buffer);
+            byte[] compressed;
+            using (var input = new MemoryStream(buffer))
+            using (var compressStream = new MemoryStream())
+            using (var compressor = new DeflateStream(compressStream, CompressionMode.Compress))
+            {
+                input.CopyTo(compressor);
+                compressor.Close();
+                compressed = compressStream.ToArray();
+            }
+            return compressed;
         }
     }
 }
