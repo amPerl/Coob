@@ -42,7 +42,6 @@ namespace Coob.Structures
                 Upgrades[i].Read(reader);
             }
             UpgradeCount = reader.ReadUInt32();
-
         }
 
         public void CopyFrom(Item from)
@@ -63,6 +62,32 @@ namespace Coob.Structures
                 Upgrades[i] = new ItemUpgrade();
                 Upgrades[i].CopyFrom(from.Upgrades[i]);
             }
+        }
+
+        public void Write(BinaryWriter writer)
+        {
+            writer.Write(Type);
+            writer.Write(SubType);
+
+            writer.Write((short)0); // skip 2
+
+            writer.Write(Modifier);
+            writer.Write(MinusModifier);
+            writer.Write(Rarity);
+            writer.Write(Material);
+            writer.Write(Flags);
+
+            writer.Write((byte)0); // skip 1
+
+            writer.Write(Level);
+
+            writer.Write((short)0); // skip 2
+
+            for (int i = 0; i < 32; i++)
+            {
+                Upgrades[i].Write(writer);
+            }
+            writer.Write(UpgradeCount);
         }
     }
 
@@ -89,6 +114,15 @@ namespace Coob.Structures
             Z = from.Z;
             Material = from.Material;
             Level = from.Level;
+        }
+
+        public void Write(BinaryWriter writer)
+        {
+            writer.Write(X);
+            writer.Write(Y);
+            writer.Write(Z);
+            writer.Write(Material);
+            writer.Write(Level);
         }
     }
 }

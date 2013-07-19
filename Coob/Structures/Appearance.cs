@@ -116,5 +116,50 @@ namespace Coob.Structures
             BackOffset = from.BackOffset.Clone();
             WingOffset = from.WingOffset.Clone();
         }
+
+        public void Write(BinaryWriter writer)
+        {
+            writer.Write(NotUsed1);
+            writer.Write(NotUsed2);
+            writer.Write(HairR);
+            writer.Write(HairG);
+            writer.Write(HairB);
+            writer.Write((byte)0);
+            writer.Write(MovementFlags);
+            writer.Write(EntityFlags);
+            writer.Write(Scale);
+            writer.Write(BoundingRadius);
+            writer.Write(BoundingHeight);
+            writer.Write(HeadModel);
+            writer.Write(HairModel);
+            writer.Write(HandModel);
+            writer.Write(FootModel);
+            writer.Write(BodyModel);
+            writer.Write(BackModel);
+            writer.Write(ShoulderModel);
+            writer.Write(WingModel);
+            writer.Write(HeadScale);
+            writer.Write(BodyScale);
+            writer.Write(HandScale);
+            writer.Write(FootScale);
+            writer.Write(ShoulderScale);
+            writer.Write(WeaponScale);
+            writer.Write(BackScale);
+            writer.Write(Unknown);
+            writer.Write(WingScale);
+            writer.Write(BodyPitch);
+            writer.Write(ArmPitch);
+            writer.Write(ArmRoll);
+            writer.Write(ArmYaw);
+            writer.Write(FeetPitch);
+            writer.Write(WingPitch);
+            writer.Write(BackPitch);
+            BodyOffset.Write(writer);
+            HeadOffset.Write(writer);
+            HandOffset.Write(writer);
+            FootOffset.Write(writer);
+            BackOffset.Write(writer);
+            WingOffset.Write(writer);
+        }
     }
 }

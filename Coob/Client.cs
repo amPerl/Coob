@@ -59,6 +59,7 @@ namespace Coob
         public void Disconnect(string reason = "")
         {
             Root.JavaScript.Engine.CallFunction("onClientDisconnect", this);
+
             Log.WriteInfo("Client " + ID + " disconnected (" + reason + ").");
             tcp.Close();
         }

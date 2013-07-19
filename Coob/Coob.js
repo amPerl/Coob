@@ -2,7 +2,7 @@ var latestVersion = 3;
 
 function onClientConnect(ip) {
 	LogInfo("Client connecting from " + ip);
-	return false;
+	return true;
 }
 
 function onClientVersion(version, client) {

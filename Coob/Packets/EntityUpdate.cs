@@ -80,7 +80,8 @@ namespace Coob.Packets
                 using (var bw = new BinaryWriter(ms))
                 {
                     bw.Write(Entity.ID);
-                    Entity.WriteByMask(Changes.LastBitmask);
+                    bw.Write(Changes.LastBitmask);
+                    Entity.WriteByMask(Changes.LastBitmask, bw);
                 }
             }
         }
