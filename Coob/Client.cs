@@ -71,13 +71,13 @@ namespace Coob
             Joined = false;
             Root.JavaScript.Engine.CallFunction("onClientDisconnect", this);
 
-            Log.WriteInfo("Client " + ID + " disconnected (" + reason + ").");
+            Log.WriteInfo("Client {0} disconnected ({1}).", ID, reason);
             tcp.Close();
 
             if (Root.Coob.Clients.ContainsKey(this.ID))
             {
                 Root.Coob.Clients.Remove(this.ID);
-                Log.WriteInfo("Clients count: " + Root.Coob.Clients.Count);
+                Log.WriteInfo("Clients count: {0}", Root.Coob.Clients.Count);
             }
         }
 

@@ -77,7 +77,7 @@ namespace Coob
         {
             if (!PacketParsers.ContainsKey(id))
             {
-                Log.WriteError("Unknown packet: " + id + " from client " + client.ID);
+                Log.WriteError("Unknown packet: {0} from client {1}", id, client.ID);
                 client.Disconnect("Unknown data");
                 return;
             }
@@ -89,7 +89,7 @@ namespace Coob
                 !(message is Packet.UpdateChunk) &&
                 !(message is Packet.UpdateSector))
             {
-                Log.WriteInfo("queueing " + message);
+                Log.WriteInfo("queueing {0}", message);
             }
         }
 
@@ -114,7 +114,8 @@ namespace Coob
                 }
                 catch (JsException ex)
                 {
-                    Log.WriteError("JS Error on " + message.PacketTypeName + ": " + (ex.InnerException != null ? (ex.Message + ": " + ex.InnerException.Message) : ex.Message) + " - " + ex.Value);
+                    var messageText = (ex.InnerException != null ? (ex.Message + ": " + ex.InnerException.Message) : ex.Message);
+                    Log.WriteError("JS Error on {0}: {1} - {2}", message.PacketTypeName, messageText, ex.Value);
                     goto displayLog;
                 }
 

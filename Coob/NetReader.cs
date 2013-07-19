@@ -44,7 +44,7 @@ namespace Coob
             set { _z = value; }
         }
 
-        public float Yaw //Alias of X
+        public float Yaw //Alias of Z
         {
             get { return _z; }
             set { _z = value; }
