@@ -18,6 +18,7 @@ namespace Coob
             Engine = new JintEngine();
 
             Engine.AddPermission(new UIPermission(PermissionState.Unrestricted));
+            Engine.AddPermission(new FileIOPermission(PermissionState.Unrestricted));
 
             Engine.SetParameter("coob", Root.Coob);
 

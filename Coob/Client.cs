@@ -43,7 +43,7 @@ namespace Coob
             }
 
             int bytesRead = 0;
-            try
+            //try
             {
                 bytesRead = NetStream.EndRead(result);
 
@@ -53,7 +53,7 @@ namespace Coob
                 }
                 NetStream.BeginRead(recvBuffer, 0, 4, idCallback, null);
             }
-            catch { Disconnect("Read error."); }
+            //catch { Disconnect("Read error."); }
         }
 
         public void Disconnect(string reason = "")

@@ -57,33 +57,33 @@ namespace Coob.Structures
         public uint[] Skills;
         public string Name;
 
-        public object unknown_or_not_used1;
-        public object unknown_or_not_used2;
-        public object unknown_or_not_used3;
-        public object unknown_or_not_used4;
-        public object unknown_or_not_used5;
-        public object not_used1;
-        public object not_used2;
-        public object not_used3;
-        public object not_used4;
-        public object not_used5;
-        public object not_used6;
-        public object not_used7;
-        public object not_used8;
-        public object not_used9;
-        public object not_used10;
-        public object not_used11;
-        public object not_used12;
-        public object not_used13;
-        public object not_used14;
-        public object not_used15;
-        public object not_used16;
-        public object not_used17;
-        public object not_used18;
-        public object not_used20;
-        public object not_used21;
-        public object not_used22;
-        public object not_used19;
+        public uint unknown_or_not_used1;
+        public uint unknown_or_not_used2;
+        public byte unknown_or_not_used3;
+        public uint unknown_or_not_used4;
+        public uint unknown_or_not_used5;
+        public uint not_used1;
+        public uint not_used2;
+        public uint not_used3;
+        public uint not_used4;
+        public uint not_used5;
+        public uint not_used6;
+        public byte not_used7;
+        public byte not_used8;
+        public uint not_used9;
+        public uint not_used10;
+        public uint not_used11;
+        public uint not_used12;
+        public uint not_used13;
+        public uint not_used14;
+        public uint not_used15;
+        public uint not_used16;
+        public uint not_used17;
+        public uint not_used18;
+        public uint not_used20;
+        public uint not_used21;
+        public uint not_used22;
+        public byte not_used19;
 
         #endregion
 
@@ -349,6 +349,8 @@ namespace Coob.Structures
 
         public void CopyByMask(Entity from)
         {
+            LastBitmask = from.LastBitmask;
+
             BitArray bitArray = new BitArray(LastBitmask);
 
             if (bitArray.Get(0))
@@ -683,15 +685,15 @@ namespace Coob.Structures
             }
             if (bitArray.Get(24))
             {
-                writer.Write((uint)not_used1);
-                writer.Write((uint)not_used2);
-                writer.Write((uint)not_used3);
+                writer.Write(not_used1);
+                writer.Write(not_used2);
+                writer.Write(not_used3);
             }
             if (bitArray.Get(25))
             {
-                writer.Write((uint)not_used4);
-                writer.Write((uint)not_used5);
-                writer.Write((uint)not_used6);
+                writer.Write(not_used4);
+                writer.Write(not_used5);
+                writer.Write(not_used6);
             }
             if (bitArray.Get(26))
             {
@@ -719,11 +721,11 @@ namespace Coob.Structures
             }
             if (bitArray.Get(31))
             {
-                writer.Write((byte)not_used7);
+                writer.Write(not_used7);
             }
             if (bitArray.Get(32))
             {
-                writer.Write((byte)not_used8);
+                writer.Write(not_used8);
             }
             if (bitArray.Get(33))
             {
@@ -735,46 +737,50 @@ namespace Coob.Structures
             }
             if (bitArray.Get(35))
             {
-                writer.Write((uint)not_used9);
-                writer.Write((uint)not_used10);
+                writer.Write(not_used9);
+                writer.Write(not_used10);
             }
             if (bitArray.Get(36))
             {
-                writer.Write((uint)unknown_or_not_used1);
-                writer.Write((uint)unknown_or_not_used2);
+                writer.Write(unknown_or_not_used1);
+                writer.Write(unknown_or_not_used2);
             }
             if (bitArray.Get(37))
             {
+<<<<<<< HEAD
                 writer.Write((byte)unknown_or_not_used3);
+=======
+                writer.Write(unknown_or_not_used3);
+>>>>>>> Structure IO stuff
             }
             if (bitArray.Get(38))
             {
-                writer.Write((uint)unknown_or_not_used4);
+                writer.Write(unknown_or_not_used4);
             }
             if (bitArray.Get(39))
             {
-                writer.Write((uint)unknown_or_not_used5);
-                writer.Write((uint)not_used11);
-                writer.Write((uint)not_used12);
+                writer.Write(unknown_or_not_used5);
+                writer.Write(not_used11);
+                writer.Write(not_used12);
             }
             if (bitArray.Get(40))
             {
-                writer.Write((uint)not_used13);
-                writer.Write((uint)not_used14);
-                writer.Write((uint)not_used15);
-                writer.Write((uint)not_used16);
-                writer.Write((uint)not_used17);
-                writer.Write((uint)not_used18);
+                writer.Write(not_used13);
+                writer.Write(not_used14);
+                writer.Write(not_used15);
+                writer.Write(not_used16);
+                writer.Write(not_used17);
+                writer.Write(not_used18);
             }
             if (bitArray.Get(41))
             {
-                writer.Write((uint)not_used20);
-                writer.Write((uint)not_used21);
-                writer.Write((uint)not_used22);
+                writer.Write(not_used20);
+                writer.Write(not_used21);
+                writer.Write(not_used22);
             }
             if (bitArray.Get(42))
             {
-                writer.Write((byte)not_used19);
+                writer.Write(not_used19);
             }
             if (bitArray.Get(43))
             {
