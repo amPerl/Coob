@@ -16,6 +16,7 @@ namespace Coob
     {
         public int Port = 12345;
         public int WorldSeed;
+        public int MaxClients = 1024;
     }
 
     public class Coob
@@ -23,7 +24,7 @@ namespace Coob
         public ConcurrentQueue<Packet.Base> MessageQueue;
         public delegate Packet.Base PacketParserDel(Client client);
         public Dictionary<int, PacketParserDel> PacketParsers;
-        public List<Client> Clients;
+        public Dictionary<long, Client> Clients;
         public ConcurrentDictionary<long, Entity> Entities;
         public CoobOptions Options;
 
@@ -36,7 +37,7 @@ namespace Coob
             this.Options = options;
             MessageQueue = new ConcurrentQueue<Packet.Base>();
             PacketParsers = new Dictionary<int, PacketParserDel>();
-            Clients = new List<Client>();
+            Clients = new Dictionary<long, Client>();
             Entities = new ConcurrentDictionary<long, Entity>();
 
             PacketParsers.Add(0, Packet.EntityUpdate.Parse);
@@ -61,7 +62,8 @@ namespace Coob
 
             if ((bool)Root.JavaScript.Engine.CallFunction("onClientConnect", ip))
             {
-                Clients.Add(new Client(tcpClient));
+                var newClient = new Client(tcpClient);
+                Clients.Add(newClient.ID, newClient);
             }
             else
             {
@@ -120,18 +122,21 @@ namespace Coob
             }
         }
 
+        /// <summary>
+        /// Returns the lowest unused client ID. Returns -1 if limit is exceeded.
+        /// </summary>
+        /// <returns></returns>
         public long CreateID()
         {
-            long id = 0;
-            bool inuse = false;
-            do
+            for (long i = 0; i < Options.MaxClients; i++)
             {
-                id++;
-                inuse = false;
-                foreach (var client in GetClients())
-                    if (client.ID == id) inuse = true;
-            } while (inuse);
-            return id;
+                if (Clients.ContainsKey(i) == false)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
         }
 
         public void BroadcastChat(long id, string message)
@@ -150,17 +155,17 @@ namespace Coob
 
         public Client[] GetClients()
         {
-            return Clients.ToArray();
+            return Clients.Values.ToArray();
         }
 
         public void SendServerMessage(string message)
         {
-            var clients = new List<Client>(Clients);
-            foreach (var client in clients)
-            {
-                if (client.Joined)
-                    client.SendServerMessage(message);
-            }
+            Clients.Select(cl => cl.Value)
+                .Where(cl => cl.Joined)
+                .ToList()
+                .ForEach(
+                    cl => cl.SendServerMessage(message)
+                );
         }
     }
 }

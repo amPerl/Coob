@@ -1,4 +1,5 @@
-﻿using Coob.Structures;
+﻿using Coob.Exceptions;
+using Coob.Structures;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,7 +15,7 @@ namespace Coob
         public NetReader Reader;
         public BinaryWriter Writer;
         public NetworkStream NetStream;
-        public long ID;
+        public long ID {get; private set;}
         public Entity Entity;
         public string IP;
 
@@ -31,6 +32,13 @@ namespace Coob
             NetStream = tcp.GetStream();
             Reader = new NetReader(NetStream);
             Writer = new BinaryWriter(NetStream);
+
+            ID = Root.Coob.CreateID();
+
+            if (ID == -1)
+            {
+                throw new UserLimitReachedException();
+            }
 
             recvBuffer = new byte[4];
             NetStream.BeginRead(recvBuffer, 0, 4, idCallback, null);
@@ -66,9 +74,9 @@ namespace Coob
             Log.WriteInfo("Client " + ID + " disconnected (" + reason + ").");
             tcp.Close();
 
-            if (Root.Coob.Clients.Contains(this))
+            if (Root.Coob.Clients.ContainsKey(this.ID))
             {
-                Root.Coob.Clients.Remove(this);
+                Root.Coob.Clients.Remove(this.ID);
                 Log.WriteInfo("Clients count: " + Root.Coob.Clients.Count);
             }
         }

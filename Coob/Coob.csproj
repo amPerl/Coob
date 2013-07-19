@@ -52,6 +52,7 @@
     <Compile Include="BinaryWriterExtensions.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="Coob.cs" />
+    <Compile Include="Exceptions\UserLimitReachedException.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="NetReader.cs" />
     <Compile Include="Packets\Base.cs" />

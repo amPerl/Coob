@@ -30,8 +30,6 @@ namespace Coob.Packets
 
             public override void Process()
             {
-                Sender.ID = Root.Coob.CreateID();
-
                 Sender.Writer.Write(16); // ServerData
                 Sender.Writer.Write(0);
                 Sender.Writer.Write(Sender.ID);
