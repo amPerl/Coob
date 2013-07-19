@@ -745,7 +745,7 @@ namespace Coob.Structures
             }
             if (bitArray.Get(37))
             {
-                writer.Write((uint)unknown_or_not_used3);
+                writer.Write((byte)unknown_or_not_used3);
             }
             if (bitArray.Get(38))
             {
