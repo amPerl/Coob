@@ -45,10 +45,11 @@ namespace Coob
             PacketParsers.Add(11, Packet.UpdateChunk.Parse);
             PacketParsers.Add(12, Packet.UpdateSector.Parse);
             PacketParsers.Add(17, Packet.ClientVersion.Parse);
-
+            Root.JavaScript.Engine.CallFunction("onServerStartup");
             clientListener = new TcpListener(IPAddress.Any, options.Port);
             clientListener.Start();
             clientListener.BeginAcceptTcpClient(onClientConnect, null);
+            
         }
 
         void onClientConnect(IAsyncResult result)
@@ -60,6 +61,10 @@ namespace Coob
             if ((bool)Root.JavaScript.Engine.CallFunction("onClientConnect", ip))
             {
                 Clients.Add(new Client(tcpClient));
+            }
+            else
+            {
+                tcpClient.Close();
             }
 
             clientListener.BeginAcceptTcpClient(onClientConnect, null);
