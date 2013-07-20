@@ -26,7 +26,7 @@ namespace Coob.Packets
 
             public override bool CallScript()
             {
-                return (bool)Root.JavaScript.Engine.CallFunction("onChatMessage", Message, Sender);
+                return Root.Scripting.CallFunction<bool>("onChatMessage", Message, Sender);
             }
 
             public override void Process()

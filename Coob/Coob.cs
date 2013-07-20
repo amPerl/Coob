@@ -60,7 +60,7 @@ namespace Coob
 
             string ip = tcpClient.Client.RemoteEndPoint.ToString().Split(':')[0];
 
-            if ((bool)Root.JavaScript.Engine.CallFunction("onClientConnect", ip))
+            if (Root.Scripting.CallFunction<bool>("onClientConnect", ip))
             {
                 var newClient = new Client(tcpClient);
                 Clients.Add(newClient.ID, newClient);

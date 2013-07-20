@@ -25,7 +25,7 @@ namespace Coob.Packets
 
             public override bool CallScript()
             {
-                return (bool)Root.JavaScript.Engine.CallFunction("onClientVersion", Version, Sender);
+                return Root.Scripting.CallFunction<bool>("onClientVersion", Version, Sender);
             }
 
             public override void Process()
