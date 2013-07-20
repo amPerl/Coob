@@ -63,7 +63,7 @@ namespace Coob
                 }
                 NetStream.BeginRead(recvBuffer, 0, 4, idCallback, null);
             }
-            catch { Disconnect("Read error."); }
+            catch { Disconnect("Read error"); }
         }
 
         public void Disconnect(string reason = "")
@@ -71,13 +71,13 @@ namespace Coob
             Joined = false;
             Root.JavaScript.Engine.CallFunction("onClientDisconnect", this);
 
-            Log.WriteInfo("Client {0} disconnected ({1}).", ID, reason);
+            Log.Info("Client {0} disconnected ({1}).", ID, reason);
             tcp.Close();
 
             if (Root.Coob.Clients.ContainsKey(this.ID))
             {
                 Root.Coob.Clients.Remove(this.ID);
-                Log.WriteInfo("Clients count: {0}", Root.Coob.Clients.Count);
+                Log.Info("Clients count: {0}", Root.Coob.Clients.Count);
             }
         }
 

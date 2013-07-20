@@ -46,32 +46,32 @@ namespace Coob
             Console.Write(" ");
         }
 
-        public static void WriteInfo(object message)
+        public static void Info(object message)
         {
             queuedMessages.Enqueue(new LogMessage("INFO", message.ToString(), ConsoleColor.DarkGreen, ConsoleColor.Green)); // Can't use the method below because if the message contains { or } it will throw invalid string format exception.
         }
 
-        public static void WriteInfo(object format, params object[] args)
+        public static void Info(object format, params object[] args)
         {
             queuedMessages.Enqueue(new LogMessage("INFO", string.Format(format.ToString(), args), ConsoleColor.DarkGreen, ConsoleColor.Green));
         }
 
-        public static void WriteWarning(object message)
+        public static void Warning(object message)
         {
             queuedMessages.Enqueue(new LogMessage("WARNING", message.ToString(), ConsoleColor.DarkYellow, ConsoleColor.Yellow));
         }
 
-        public static void WriteWarning(object format, params object[] args)
+        public static void Warning(object format, params object[] args)
         {
             queuedMessages.Enqueue(new LogMessage("WARNING", string.Format(format.ToString(), args), ConsoleColor.DarkYellow, ConsoleColor.Yellow));
         }
 
-        public static void WriteError(object message)
+        public static void Error(object message)
         {
             queuedMessages.Enqueue(new LogMessage("ERROR", message.ToString(), ConsoleColor.DarkRed, ConsoleColor.Red));
         }
 
-        public static void WriteError(object format, params object[] args)
+        public static void Error(object format, params object[] args)
         {
             queuedMessages.Enqueue(new LogMessage("ERROR", string.Format(format.ToString(), args), ConsoleColor.DarkRed, ConsoleColor.Red));
         }

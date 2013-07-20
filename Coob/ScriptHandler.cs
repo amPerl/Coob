@@ -22,9 +22,9 @@ namespace Coob
 
             Engine.SetParameter("coob", Root.Coob);
 
-            Engine.SetFunction("LogInfo", (Action<string>)Log.WriteInfo);
-            Engine.SetFunction("LogWarning", (Action<string>)Log.WriteWarning);
-            Engine.SetFunction("LogError", (Action<string>)Log.WriteError);
+            Engine.SetFunction("LogInfo", (Action<string>)Log.Info);
+            Engine.SetFunction("LogWarning", (Action<string>)Log.Warning);
+            Engine.SetFunction("LogError", (Action<string>)Log.Error);
 
             try
             {
@@ -32,7 +32,7 @@ namespace Coob
             }
             catch (JintException ex)
             {
-                Log.WriteError(ex.InnerException != null ? (ex.Message + ": " + ex.InnerException.Message) : ex.Message);
+                Log.Error(ex.InnerException != null ? (ex.Message + ": " + ex.InnerException.Message) : ex.Message);
                 Environment.Exit(1);
             }
         }
