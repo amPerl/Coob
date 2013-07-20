@@ -53,7 +53,7 @@ namespace Coob.Packets
 
             public override bool CallScript()
             {
-                return (bool)Root.JavaScript.Engine.CallFunction("onInteract", this, Sender);
+                return Root.Scripting.CallFunction<bool>("onInteract", this, Sender);
             }
 
             public override void Process()

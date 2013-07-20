@@ -10,7 +10,7 @@ namespace Coob
     class Root
     {
         public static Coob Coob;
-        public static ScriptHandler JavaScript;
+        public static IScriptHandler Scripting;
 
         static void Main(string[] args)
         {
@@ -22,7 +22,19 @@ namespace Coob
                 Port = 12345,
                 WorldSeed = 26874,
             });
-            JavaScript = new ScriptHandler("Coob.js");
+
+            Scripting = new JavascriptEngine();
+
+            Scripting.Initialize();
+            Scripting.Load("Coob.js");
+
+            Scripting.SetParameter("coob", Root.Coob);
+
+            Scripting.SetFunction("LogInfo", (Action<string>)Log.Info);
+            Scripting.SetFunction("LogWarning", (Action<string>)Log.Warning);
+            Scripting.SetFunction("LogError", (Action<string>)Log.Error);
+
+            Scripting.Run();
 
             Coob.StartMessageHandler();
 

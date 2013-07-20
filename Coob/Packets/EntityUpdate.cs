@@ -69,7 +69,7 @@ namespace Coob.Packets
             {
                 if (IsJoin)
                 {
-                    bool joined = (bool)Root.JavaScript.Engine.CallFunction("onClientJoin", Sender);
+                    bool joined = Root.Scripting.CallFunction<bool>("onClientJoin", Sender);
 
                     if (joined)
                         Sender.Joined = true;
@@ -77,7 +77,7 @@ namespace Coob.Packets
                     return joined;
                 }
                 else
-                    return (bool)Root.JavaScript.Engine.CallFunction("onEntityUpdate", Entity, Changes, Sender);
+                    return Root.Scripting.CallFunction<bool>("onEntityUpdate", Entity, Changes, Sender);
             }
 
             public override void Process()
