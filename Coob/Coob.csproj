@@ -56,7 +56,7 @@
     <Compile Include="IScriptHandler.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="NetReader.cs" />
-    <Compile Include="Packets\Base.cs" />
+    <Compile Include="Packets\Packet.cs" />
     <Compile Include="Packets\ChatMessage.cs" />
     <Compile Include="Packets\ClientVersion.cs" />
     <Compile Include="Packets\DiscoverWorld.cs" />
