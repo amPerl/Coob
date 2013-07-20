@@ -5,63 +5,63 @@ namespace Coob
 {
     public struct Vector3 : ICloneable
     {
-        private float x;
-        private float y;
-        private float z;
+        private float _x;
+        private float _y;
+        private float _z;
 
         public float X
         {
-            get { return x; }
-            set { x = value; }
+            get { return _x; }
+            set { _x = value; }
         }
 
         public float Pitch //Alias of X
         {
-            get { return x; }
-            set { x = value; }
+            get { return _x; }
+            set { _x = value; }
         }
 
         public float Y
         {
-            get { return y; }
-            set { y = value; }
+            get { return _y; }
+            set { _y = value; }
         }
 
         public float Roll //Alias of Y
         {
-            get { return y; }
-            set { y = value; }
+            get { return _y; }
+            set { _y = value; }
         }
 
         public float Z
         {
-            get { return z; }
-            set { z = value; }
+            get { return _z; }
+            set { _z = value; }
         }
 
         public float Yaw //Alias of Z
         {
-            get { return z; }
-            set { z = value; }
+            get { return _z; }
+            set { _z = value; }
         }
 
         public Vector3(float x, float y, float z)
         {
-            this.x = x;
-            this.y = y;
-            this.z = z;
+            this._x = x;
+            this._y = y;
+            this._z = z;
         }
 
         public Vector3(float xyz)
         {
-            x = xyz;
-            y = xyz;
-            z = xyz;
+            _x = xyz;
+            _y = xyz;
+            _z = xyz;
         }
 
         public Vector3 Clone()
         {
-            return new Vector3(x, y, z);
+            return new Vector3(_x, _y, _z);
         }
 
         public void Write(BinaryWriter writer)
@@ -78,7 +78,7 @@ namespace Coob
 
         object ICloneable.Clone()
         {
-            return new Vector3(x, y, z);
+            return new Vector3(_x, _y, _z);
         }
 
         public static Vector3 operator +(Vector3 a, Vector3 b)
