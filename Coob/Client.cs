@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
@@ -29,7 +30,7 @@ namespace Coob
             Entity = null;
 
             tcp = tcpClient;
-            IP = tcp.Client.RemoteEndPoint.ToString().Split(':')[0];
+            IP = (tcp.Client.RemoteEndPoint as IPEndPoint).Address.ToString();
             NetStream = tcp.GetStream();
             Reader = new NetReader(NetStream);
             Writer = new BinaryWriter(NetStream);

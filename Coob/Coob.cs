@@ -58,7 +58,7 @@ namespace Coob
         {
             var tcpClient = clientListener.EndAcceptTcpClient(result);
 
-            string ip = tcpClient.Client.RemoteEndPoint.ToString().Split(':')[0];
+            string ip = (tcpClient.Client.RemoteEndPoint as IPEndPoint).Address.ToString();
 
             if (Root.Scripting.CallFunction<bool>("onClientConnect", ip))
             {
