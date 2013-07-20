@@ -132,7 +132,7 @@ namespace Coob
         /// <returns></returns>
         public long CreateID()
         {
-            for (long i = 0; i < Options.MaxClients; i++)
+            for (long i = 1; i < Options.MaxClients; i++)
             {
                 if (Clients.ContainsKey(i) == false)
                 {
