@@ -59,6 +59,7 @@ namespace Coob
         public void Disconnect(string reason = "")
         {
             Log.WriteInfo("Client " + ID + " disconnected (" + reason + ").");
+            tcp.Close();
         }
 
         public void SendMessage(long id, string message)

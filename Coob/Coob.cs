@@ -61,6 +61,10 @@ namespace Coob
             {
                 Clients.Add(new Client(tcpClient));
             }
+            else
+            {
+                tcpClient.Close();
+            }
 
             clientListener.BeginAcceptTcpClient(onClientConnect, null);
         }
