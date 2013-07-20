@@ -11,6 +11,7 @@ namespace Coob
     {
         public static Coob Coob;
         public static IScriptHandler Scripting;
+        public static HookHandler Hooks;
 
         static void Main(string[] args)
         {
@@ -33,6 +34,9 @@ namespace Coob
             Scripting.SetFunction("LogInfo", (Action<string>)Log.Info);
             Scripting.SetFunction("LogWarning", (Action<string>)Log.Warning);
             Scripting.SetFunction("LogError", (Action<string>)Log.Error);
+
+            Hooks = new HookHandler();
+            Hooks.ScriptHandlers.Add(Scripting);
 
             Scripting.Run();
 
