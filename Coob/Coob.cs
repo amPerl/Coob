@@ -50,8 +50,25 @@ namespace Coob
             PacketParsers.Add((int)CSPacketIDs.SectorDiscovered, Packet.UpdateSector.Parse);
             PacketParsers.Add((int)CSPacketIDs.ClientVersion, Packet.ClientVersion.Parse);
 
-            clientListener = new TcpListener(IPAddress.Any, options.Port);
-            clientListener.Start();
+            try
+            {
+                clientListener = new TcpListener(IPAddress.Any, options.Port);
+                clientListener.Start();
+            }
+            catch (SocketException e)
+            {
+                if (e.ErrorCode == 10048)
+                {
+                    Console.WriteLine("Something is already running on port " + options.Port + ". Can't start server.");
+                }
+                else
+                {
+                    Console.WriteLine("Unknown error occured while trying to start server:\n" + e);
+                }
+
+                Environment.Exit(1);
+            }
+
             clientListener.BeginAcceptTcpClient(onClientConnect, null);
         }
 
