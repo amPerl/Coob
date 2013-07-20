@@ -10,49 +10,63 @@ namespace Coob
 {
     public struct Vector3 : ICloneable
     {
-        private float _x;
-        private float _y;
-        private float _z;
+        private float x;
+        private float y;
+        private float z;
 
         public float X
         {
-            get { return _x; }
-            set { _x = value; }
+            get { return x; }
+            set { x = value; }
         }
 
         public float Pitch //Alias of X
         {
-            get { return _x; }
-            set { _x = value; }
+            get { return x; }
+            set { x = value; }
         }
 
         public float Y
         {
-            get { return _y; }
-            set { _y = value; }
+            get { return y; }
+            set { y = value; }
         }
 
         public float Roll //Alias of Y
         {
-            get { return _y; }
-            set { _y = value; }
+            get { return y; }
+            set { y = value; }
         }
 
         public float Z
         {
-            get { return _z; }
-            set { _z = value; }
+            get { return z; }
+            set { z = value; }
         }
 
         public float Yaw //Alias of Z
         {
-            get { return _z; }
-            set { _z = value; }
+            get { return z; }
+            set { z = value; }
+        }
+
+        public Vector3(float x, float y, float z)
+        {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+
+        public Vector3(float xyz)
+        {
+            x = xyz;
+            y = xyz;
+            z = xyz;
         }
 
         public Vector3 Clone()
         {
-            return new Vector3() { X = this.X, Y = this.Y, Z = this.Z };
+            return new Vector3(x, y, z);
         }
 
         public void Write(BinaryWriter writer)
@@ -69,7 +83,32 @@ namespace Coob
 
         object ICloneable.Clone()
         {
-            return new Vector3() { X = this.X, Y = this.Y, Z = this.Z };
+            return new Vector3(x, y, z);
+        }
+
+        public static Vector3 operator +(Vector3 a, Vector3 b)
+        {
+            return new Vector3(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
+        }
+
+        public static Vector3 operator -(Vector3 a, Vector3 b)
+        {
+            return new Vector3(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+        }
+
+        public static Vector3 operator *(Vector3 a, Vector3 b)
+        {
+            return new Vector3(a.X * b.X, a.Y * b.Y, a.Z * b.Z);
+        }
+
+        public static Vector3 operator *(Vector3 a, float b)
+        {
+            return new Vector3(a.X * b, a.Y * b, a.Z * b);
+        }
+
+        public static Vector3 operator *(float a, Vector3 b)
+        {
+            return b * a;
         }
     }
 
@@ -80,6 +119,20 @@ namespace Coob
         public QVector3 Clone()
         {
             return new QVector3() { X = this.X, Y = this.Y, Z = this.Z };
+        }
+
+        public QVector3(long x, long y, long z)
+        {
+            X = x;
+            Y = y;
+            Z = z;
+        }
+
+        public QVector3 (long xyz)
+        {
+            X = xyz;
+            Y = xyz;
+            Z = xyz;
         }
 
         public void Write(BinaryWriter writer)
@@ -96,7 +149,32 @@ namespace Coob
 
         object ICloneable.Clone()
         {
-            return new Vector3() { X = this.X, Y = this.Y, Z = this.Z };
+            return new Vector3(X, Y, Z);
+        }
+
+        public static QVector3 operator +(QVector3 a, QVector3 b)
+        {
+            return new QVector3(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
+        }
+
+        public static QVector3 operator -(QVector3 a, QVector3 b)
+        {
+            return new QVector3(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+        }
+
+        public static QVector3 operator *(QVector3 a, QVector3 b)
+        {
+            return new QVector3(a.X * b.X, a.Y * b.Y, a.Z * b.Z);
+        }
+
+        public static QVector3 operator *(QVector3 a, float b)
+        {
+            return new QVector3((long)(a.X * b), (long)(a.Y * b), (long)(a.Z * b));
+        }
+
+        public static QVector3 operator *(float a, QVector3 b)
+        {
+            return b * a;
         }
     }
 
