@@ -42,18 +42,17 @@ namespace Coob
             Clients = new Dictionary<ulong, Client>();
             Entities = new ConcurrentDictionary<ulong, Entity>();
 
-            PacketParsers.Add(0, Packet.EntityUpdate.Parse);
-            PacketParsers.Add(6, Packet.Interact.Parse);
-            PacketParsers.Add(9, Packet.Shoot.Parse);
-            PacketParsers.Add(10, Packet.ChatMessage.Parse);
-            PacketParsers.Add(11, Packet.UpdateChunk.Parse);
-            PacketParsers.Add(12, Packet.UpdateSector.Parse);
-            PacketParsers.Add(17, Packet.ClientVersion.Parse);
+            PacketParsers.Add((int)CSPacketIDs.EntityUpdate, Packet.EntityUpdate.Parse);
+            PacketParsers.Add((int)CSPacketIDs.Interact, Packet.Interact.Parse);
+            PacketParsers.Add((int)CSPacketIDs.Shoot, Packet.Shoot.Parse);
+            PacketParsers.Add((int)CSPacketIDs.ClientChatMessage, Packet.ChatMessage.Parse);
+            PacketParsers.Add((int)CSPacketIDs.ChunkDiscovered, Packet.UpdateChunk.Parse);
+            PacketParsers.Add((int)CSPacketIDs.SectorDiscovered, Packet.UpdateSector.Parse);
+            PacketParsers.Add((int)CSPacketIDs.ClientVersion, Packet.ClientVersion.Parse);
 
             clientListener = new TcpListener(IPAddress.Any, options.Port);
             clientListener.Start();
             clientListener.BeginAcceptTcpClient(onClientConnect, null);
-            
         }
 
         void onClientConnect(IAsyncResult result)
