@@ -11,50 +11,50 @@ namespace Coob
 {
     public class JavascriptEngine : IScriptHandler
     {
-        private JintEngine _Engine;
-        private string _Source;
+        private JintEngine engine;
+        private string source;
 
         public JavascriptEngine()
         {
-            _Engine = new JintEngine();
+            engine = new JintEngine();
         }
 
         public void Initialize()
         {
-            _Engine.AddPermission(new UIPermission(PermissionState.Unrestricted));
-            _Engine.AddPermission(new FileIOPermission(PermissionState.Unrestricted));
+            engine.AddPermission(new UIPermission(PermissionState.Unrestricted));
+            engine.AddPermission(new FileIOPermission(PermissionState.Unrestricted));
         }
 
         public void Load(string SourceFile)
         {
-            _Source = File.ReadAllText(SourceFile);
+            source = File.ReadAllText(SourceFile);
         }
 
         public void SetParameter(string name, object value)
         {
-            _Engine.SetParameter(name, value);
+            engine.SetParameter(name, value);
         }
 
         public void SetFunction(string name, Delegate function)
         {
-            _Engine.SetFunction(name, function);
+            engine.SetFunction(name, function);
         }
 
         public T CallFunction<T>(string functionName, params object[] arguments)
         {
-            return (T)_Engine.CallFunction(functionName, arguments);
+            return (T)engine.CallFunction(functionName, arguments);
         }
 
         public void CallMethod(string functionName, params object[] arguments)
         {
-            _Engine.CallFunction(functionName, arguments);
+            engine.CallFunction(functionName, arguments);
         }
 
         public void Run()
         {
             try
             {
-                _Engine.Run(_Source);
+                engine.Run(source);
             }
             catch (JintException ex)
             {
