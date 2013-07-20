@@ -32,6 +32,8 @@ namespace Coob
 
         Thread messageHandlerThread;
 
+        public bool Running { get; private set; }
+
         public Coob(CoobOptions options)
         {
             this.Options = options;
@@ -95,15 +97,21 @@ namespace Coob
 
         public void StartMessageHandler()
         {
+            Running = true;
             messageHandlerThread = new Thread(messageHandler);
             messageHandlerThread.Start();
 
             Log.Info("Started message handler.");
         }
 
+        public void StopMessageHandler()
+        {
+            Running = false;
+        }
+
         void messageHandler()
         {
-            while (true)
+            while (Running)
             {
                 Packet.Base message = null;
                 if (!MessageQueue.TryDequeue(out message)) goto displayLog;
