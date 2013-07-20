@@ -46,6 +46,7 @@ namespace Coob.Packets
                         entity = new Entity();
 
                         client.Entity = entity;
+                        entity.ID = client.ID;
                         Root.Coob.Entities[client.ID] = client.Entity;
 
                         entity.ReadByMask(br);
