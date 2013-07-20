@@ -96,5 +96,17 @@ namespace Coob
         {
             SendMessage(0, message);
         }
+
+        /// <summary>
+        /// Sets the current day and time for the client.
+        /// </summary>
+        /// <param name="day">The current day (not sure what use this has).</param>
+        /// <param name="time">The elapsed hours in 0-24 range.</param>
+        public void SetTime(uint day, float time)
+        {
+            Writer.Write(5);
+            Writer.Write(day);
+            Writer.Write((uint)(60f * 60f * time * 1000f));
+        }
     }
 }

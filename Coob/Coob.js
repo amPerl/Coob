@@ -20,5 +20,15 @@ function onEntityUpdate(entity, changed, client) {
 
 function onChatMessage(message, client) {
     LogInfo("<" + client.Entity.Name + "> " + message);
+    
+    // Testing time
+    var day = 1;
+    var time = parseFloat(message);
+    
+    if (!isNaN(time)) {
+        coob.SetTime(day, time);
+        coob.SendServerMessage("Time set to " + time + " hours.");
+    }
+
     return true;
 }

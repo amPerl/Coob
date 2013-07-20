@@ -171,5 +171,13 @@ namespace Coob
                     cl => cl.SendServerMessage(message)
                 );
         }
+
+        public void SetTime(uint day, float time)
+        {
+            Clients.Select(cl => cl.Value)
+                .Where(cl => cl.Joined)
+                .ToList()
+                .ForEach(cl => cl.SetTime(day, time));
+        }
     }
 }
