@@ -71,7 +71,7 @@ namespace Coob
         public void Disconnect(string reason = "")
         {
             Joined = false;
-            Root.Scripting.CallMethod("onClientDisconnect", this);
+            Root.Scripting.CallFunction("onClientDisconnect", this);
 
             Log.Info("Client {0} disconnected ({1}).", ID, reason);
             tcp.Close();

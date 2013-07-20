@@ -37,7 +37,7 @@ namespace Coob
 
             foreach (var functionName in hooks[eventName])
             {
-                ScriptHandlers.ForEach(sh => sh.CallMethod(functionName, args));
+                ScriptHandlers.ForEach(sh => sh.CallFunction(functionName, args));
             }
         }
     }

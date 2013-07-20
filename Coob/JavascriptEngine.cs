@@ -42,12 +42,33 @@ namespace Coob
 
         public T CallFunction<T>(string functionName, params object[] arguments)
         {
-            return (T)engine.CallFunction(functionName, arguments);
+            try
+            {
+                return (T)engine.CallFunction(functionName, arguments);
+            }
+            catch (Exception ex)
+            {
+                WriteException(ex);
+            }
+
+            return default(T);
         }
 
-        public void CallMethod(string functionName, params object[] arguments)
+        public void CallFunction(string functionName, params object[] arguments)
         {
-            engine.CallFunction(functionName, arguments);
+            try
+            {
+                engine.CallFunction(functionName, arguments);
+            }
+            catch (Exception ex)
+            {
+                WriteException(ex);
+            }
+        }
+
+        private void WriteException(Exception exception)
+        {
+            Log.Error(exception);
         }
 
         public void Run()

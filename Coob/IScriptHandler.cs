@@ -10,6 +10,6 @@ namespace Coob
         void Load(string SourceFile);
         void Run();
         T CallFunction<T>(string functionName, params object[] arguments);
-        void CallMethod(string functionName, params object[] arguments);
+        void CallFunction(string functionName, params object[] arguments);
     }
 }
