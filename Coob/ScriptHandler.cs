@@ -15,8 +15,8 @@ namespace Coob
 
         public ScriptHandler(string source)
         {
-            Engine = new JintEngine();
 
+            Engine = new JintEngine();
             Engine.AddPermission(new UIPermission(PermissionState.Unrestricted));
 
             Engine.SetParameter("coob", Root.Coob);

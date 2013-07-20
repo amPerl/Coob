@@ -16,13 +16,13 @@ namespace Coob
         {
             Console.Title = "Coob";
             Log.WriteInfo("Starting Coob.");
-
+            JavaScript = new ScriptHandler("Coob.js");
             Coob = new Coob(new CoobOptions
             {
                 Port = 12345,
                 WorldSeed = 12345
             });
-            JavaScript = new ScriptHandler("Coob.js");
+            
 
             Coob.StartMessageHandler();
 
