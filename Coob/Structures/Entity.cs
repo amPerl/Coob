@@ -70,8 +70,7 @@ namespace Coob.Structures
         public uint not_used6;
         public byte not_used7;
         public byte not_used8;
-        public uint not_used9;
-        public uint not_used10;
+        public ulong ParentOwner;
         public uint not_used11;
         public uint not_used12;
         public uint not_used13;
@@ -274,8 +273,7 @@ namespace Coob.Structures
             }
             if (bitArray.Get(35))
             {
-                not_used9 = reader.ReadUInt32();
-                not_used10 = reader.ReadUInt32();
+                ParentOwner = reader.ReadUInt64();
             }
             if (bitArray.Get(36))
             {
@@ -509,8 +507,7 @@ namespace Coob.Structures
             }
             if (bitArray.Get(35))
             {
-                not_used9 = from.not_used9;
-                not_used10 = from.not_used10;
+                ParentOwner = from.ParentOwner;
             }
             if (bitArray.Get(36))
             {
@@ -737,8 +734,7 @@ namespace Coob.Structures
             }
             if (bitArray.Get(35))
             {
-                writer.Write(not_used9);
-                writer.Write(not_used10);
+                writer.Write(ParentOwner);
             }
             if (bitArray.Get(36))
             {
