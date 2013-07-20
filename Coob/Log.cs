@@ -46,7 +46,7 @@ namespace Coob
             Console.Write(" ");
         }
 
-        public static void WriteInfo(string message)
+        public static void WriteInfo(object message)
         {
             WriteInfo(message, new object[] { });
         }
@@ -56,7 +56,7 @@ namespace Coob
             queuedMessages.Enqueue(new LogMessage("INFO", string.Format(format, args), ConsoleColor.DarkGreen, ConsoleColor.Green));
         }
 
-        public static void WriteWarning(string message)
+        public static void WriteWarning(object message)
         {
             WriteWarning(message, new object[] { });
         }
@@ -66,7 +66,7 @@ namespace Coob
             queuedMessages.Enqueue(new LogMessage("WARNING", string.Format(format, args), ConsoleColor.DarkYellow, ConsoleColor.Yellow));
         }
 
-        public static void WriteError(string message)
+        public static void WriteError(object message)
         {
             WriteError(message, new object[] { });
         }
