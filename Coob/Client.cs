@@ -1,4 +1,5 @@
 ﻿using Coob.Exceptions;
+using Coob.Packets;
 using Coob.Structures;
 using System;
 using System.Collections.Generic;
@@ -86,7 +87,7 @@ namespace Coob
             byte[] msgBuffer = Encoding.Unicode.GetBytes(message);
             int msgLength = msgBuffer.Length / 2;
 
-            Writer.Write(10);
+            Writer.Write(SCPacketIDs.ServerChatMessage);
             Writer.Write(id);
             Writer.Write(msgLength);
             Writer.Write(msgBuffer);
@@ -104,7 +105,7 @@ namespace Coob
         /// <param name="time">The elapsed hours in 0-24 range.</param>
         public void SetTime(uint day, float time)
         {
-            Writer.Write(5);
+            Writer.Write(SCPacketIDs.CurrentTime);
             Writer.Write(day);
             Writer.Write((uint)(60f * 60f * time * 1000f));
         }

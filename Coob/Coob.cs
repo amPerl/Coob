@@ -150,7 +150,7 @@ namespace Coob
 
             foreach (var client in GetClients())
             {
-                client.Writer.Write(10);
+                client.Writer.Write(SCPacketIDs.ServerChatMessage);
                 client.Writer.Write(id);
                 client.Writer.Write(msgLength);
                 client.Writer.Write(msgBuffer);

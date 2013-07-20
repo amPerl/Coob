@@ -27,5 +27,15 @@ namespace Coob
             var nullArray = new byte[length];
             writer.Write(nullArray);
         }
+
+        public static void Write(this BinaryWriter writer, Packets.SCPacketIDs pId)
+        {
+            writer.Write((int)pId);
+        }
+
+        public static void Write(this BinaryWriter writer, Packets.CSPacketIDs pId)
+        {
+            writer.Write((int)pId);
+        }
     }
 }
