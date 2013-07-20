@@ -91,7 +91,7 @@ namespace Coob
 
         public override string ToString()
         {
-            return "QVec3f{ " + X + ", " + Y + ", " + Z + " }";
+            return "QVec3L{ " + X + ", " + Y + ", " + Z + " }";
         }
 
         object ICloneable.Clone()
