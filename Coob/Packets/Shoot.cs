@@ -45,8 +45,6 @@ namespace Coob.Packets
 
             public override bool CallScript()
             {
-                Root.Coob.SendServerMessage(Sender.Entity.Name + " shot");
-
                 return true;
             }
 
@@ -87,9 +85,7 @@ namespace Coob.Packets
                 shoot.ChunkX = reader.ReadInt32();
                 shoot.ChunkY = reader.ReadInt32();
                 shoot.something5 = reader.ReadUInt32();
-
                 reader.ReadBytes(4);
-
                 shoot.Position = reader.ReadQVector3();
                 shoot.something13 = reader.ReadUInt32();
                 shoot.something14 = reader.ReadUInt32();
