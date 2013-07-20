@@ -23,7 +23,7 @@ namespace Coob.Packets
         {
             public Item Item;
             public int ChunkX, ChunkY;
-            public int ItemIndex;
+            public int ItemIndex; // Index of item in ChunkItems.
             public uint Something4;
             public InteractType InteractType;
             public byte Something6;
