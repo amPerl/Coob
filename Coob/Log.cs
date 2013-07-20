@@ -46,7 +46,7 @@ namespace Coob
             Console.Write(" ");
         }
 
-        public static void Info(string message)
+        public static void Info(object message)
         {
             queuedMessages.Enqueue(new LogMessage("INFO", message.ToString(), ConsoleColor.DarkGreen, ConsoleColor.Green)); // Can't use the method below because if the message contains { or } it will throw invalid string format exception.
         }
