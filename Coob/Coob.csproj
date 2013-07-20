@@ -53,6 +53,7 @@
     <Compile Include="Client.cs" />
     <Compile Include="Coob.cs" />
     <Compile Include="Exceptions\UserLimitReachedException.cs" />
+    <Compile Include="Hooks.cs" />
     <Compile Include="IScriptHandler.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="NetReader.cs" />
