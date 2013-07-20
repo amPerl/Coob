@@ -36,7 +36,7 @@ namespace Coob.Packets
                 using (var ms = new MemoryStream(maskedData))
                 using (var br = new BinaryReader(ms))
                 {
-                    long id = br.ReadInt64();
+                    ulong id = br.ReadUInt64();
 
                     if (id != client.ID)
                         throw new NotImplementedException();

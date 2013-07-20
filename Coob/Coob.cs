@@ -16,7 +16,7 @@ namespace Coob
     {
         public int Port = 12345;
         public int WorldSeed;
-        public int MaxClients = 1024;
+        public uint MaxClients = 1024;
     }
 
     public class Coob
@@ -24,8 +24,8 @@ namespace Coob
         public ConcurrentQueue<Packet.Base> MessageQueue;
         public delegate Packet.Base PacketParserDel(Client client);
         public Dictionary<int, PacketParserDel> PacketParsers;
-        public Dictionary<long, Client> Clients;
-        public ConcurrentDictionary<long, Entity> Entities;
+        public Dictionary<ulong, Client> Clients;
+        public ConcurrentDictionary<ulong, Entity> Entities;
         public CoobOptions Options;
 
         TcpListener clientListener;
@@ -37,8 +37,8 @@ namespace Coob
             this.Options = options;
             MessageQueue = new ConcurrentQueue<Packet.Base>();
             PacketParsers = new Dictionary<int, PacketParserDel>();
-            Clients = new Dictionary<long, Client>();
-            Entities = new ConcurrentDictionary<long, Entity>();
+            Clients = new Dictionary<ulong, Client>();
+            Entities = new ConcurrentDictionary<ulong, Entity>();
 
             PacketParsers.Add(0, Packet.EntityUpdate.Parse);
             PacketParsers.Add(6, Packet.Interact.Parse);
@@ -130,9 +130,9 @@ namespace Coob
         /// Returns the lowest unused client ID. Returns -1 if limit is exceeded.
         /// </summary>
         /// <returns></returns>
-        public long CreateID()
+        public ulong CreateID()
         {
-            for (long i = 1; i < Options.MaxClients; i++)
+            for (ulong i = 1; i < Options.MaxClients; i++)
             {
                 if (Clients.ContainsKey(i) == false)
                 {
@@ -140,10 +140,10 @@ namespace Coob
                 }
             }
 
-            return -1;
+            return 0;
         }
 
-        public void BroadcastChat(long id, string message)
+        public void BroadcastChat(ulong id, string message)
         {
             byte[] msgBuffer = Encoding.Unicode.GetBytes(message);
             int msgLength = msgBuffer.Length / 2;

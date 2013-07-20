@@ -15,7 +15,7 @@ namespace Coob
         public NetReader Reader;
         public BinaryWriter Writer;
         public NetworkStream NetStream;
-        public long ID {get; private set;}
+        public ulong ID {get; private set;}
         public Entity Entity;
         public string IP;
 
@@ -35,7 +35,7 @@ namespace Coob
 
             ID = Root.Coob.CreateID();
 
-            if (ID == -1)
+            if (ID == 0)
             {
                 throw new UserLimitReachedException();
             }

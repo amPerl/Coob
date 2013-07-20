@@ -12,7 +12,7 @@ namespace Coob.Structures
     public class Entity
     {
         #region Fields
-        public long ID;
+        public ulong ID;
         public byte[] LastBitmask;
 
         public QVector3 Position;
