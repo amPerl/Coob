@@ -31,14 +31,27 @@ namespace Coob
                 hooks[eventName].Remove(functionName);
         }
 
-        public void Call(string eventName, params object[] args)
+        /// <summary>Returns true if not cancelled.</summary>
+        public bool Call(string eventName, params object[] args)
         {
-            if (!hooks.ContainsKey(eventName)) return;
+            if (!hooks.ContainsKey(eventName)) return true;
+
+            var eventArgs = new ScriptEventArgs();
+            var list = new List<object>(args);
+            list.Insert(0, eventArgs);
+            args = list.ToArray();
 
             foreach (var functionName in hooks[eventName])
             {
                 ScriptHandlers.ForEach(sh => sh.CallFunction(functionName, args));
             }
+
+            return !eventArgs.Canceled;
         }
+    }
+
+    public class ScriptEventArgs : EventArgs
+    {
+        public bool Canceled = false;
     }
 }
