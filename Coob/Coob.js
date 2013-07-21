@@ -56,8 +56,6 @@ AddHook("OnInitialize", function (args) {
     admin.opList = LoadInfo("admins.txt");
     admin.banList = LoadInfo("bans.txt");
     admin.whiteList = LoadInfo("whitelist.txt");
-
-    LogInfo("FAGETS");
 });
 
 function onQuit()
