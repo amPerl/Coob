@@ -1,56 +1,85 @@
 var latestVersion = 3;
-//whitelist
-if (System.IO.File.Exists("whitelist.txt")) {
-    var whitelists = System.IO.File.ReadAllLines("whitelist.txt");
-} else {
-    System.IO.File.Create("whitelist.txt");
-}
-//op
-if (System.IO.File.Exists("ops.txt")) {
-    var ops = System.IO.File.ReadAllLines("ops.txt");
-} else {
-    System.IO.File.Create("ops.txt");
-}
-//ban
-if (System.IO.File.Exists("bans.txt")) {
-    var ipbans = System.IO.File.ReadAllLines("bans.txt");
-} else {
-    System.IO.File.Create("bans.txt");
+
+var admin = {};
+admin.whiteList = {};
+admin.banList = {};
+admin.opList = {};
+admin.whiteListEnabled = true;
+
+var io = {};
+io.GetFileText = function (path)
+{
+    var file = System.IO.File.OpenText(path);
+    var contents = file.ReadToEnd();
+    file.Close();
+    
+    return contents;
+};
+
+function LoadInfo(path)
+{
+    var result = {};
+
+    if (!System.IO.File.Exists(path)) {
+        try {
+            LogInfo("[Admin] Creating " + path);
+            System.IO.File.CreateText(path).Close();
+        }
+        catch (e) {
+            LogError("[Admin] Could not create " + path + "! (" + e + ")");
+        }
+    }
+    else {
+        try {
+            var contents = io.GetFileText(path);
+            contents = contents.Replace("\r\n", "\n");
+            var lines = contents.split("\n");
+
+            for (var i = 0; i < lines.length; ++i) {
+                var line = lines[i];
+                if (line === "")
+                    continue;
+
+                result[line] = true; // Make it not undefined.
+                //LogInfo("Added " + line + " from " + path + ".");
+            }
+        }
+        catch (e) {
+            LogError("[Admin] Could not load " + path + "! (" + e + ")\n");
+        }
+    }
+    
+    return result;
+};
+
+function onInitialize()
+{
+    admin.opList = LoadInfo("admins.txt");
+    admin.banList = LoadInfo("bans.txt");
+    admin.whiteList = LoadInfo("whitelist.txt");
+    
+    return true;
 }
 
+function onQuit()
+{
+    // Todo: Save admins/whitelist/bans.
+}
 
-function onClientConnect(ip) {
+function onClientConnect(ip)
+{
+    if (admin.banList[ip] != undefined)
+    {
+        LogInfo("Banned user kicked: " + ip);
+        return false;
+    }
+    else if (admin.whiteListEnabled && admin.whiteList[ip] == undefined)
+    {
+        LogInfo("Non-whitelisted user kicked: " + ip);
+        return false;
+    }
+
     LogInfo("Client connecting from " + ip);
-
-    if (ipbans.toString() != null) {
-        for (var i = 0; i < ipbans.Length; i++) {
-            if (ipbans[i] == ip) {
-                LogInfo(ip + " is banned, connection refused");
-                return false;
-            }
-        }
-    }
-
-    if (ops.toString() != null) {
-        for (var i = 0; i < ops.Length; i++) {
-            if (ops[i] == ip) {
-                LogInfo(ip + " is now logged in as op");
-            }
-        }
-    }
-
-    if (whitelists.toString() != null) {
-        for (var i = 0; i < whitelists.Length; i++) {
-            if (whitelists[i] == ip) {
-                LogInfo(ip + " is whitelisted");
-                return true;
-            }
-            else {
-                LogInfo(ip + " is not whitelisted, connection refused");
-                return false;
-            }
-        }
-    }
     return true;
 }
 
@@ -65,74 +94,12 @@ function onClientJoin(client, ip) {
     return true;
 }
 
-function FindInArray(Array, Value) {
-    for (var i = 0; i < Array.length; i++) {
-        if (Array[i] == Value)
-            return i;
-    }
-    return -1;
-}
-
 function onEntityUpdate(entity, changed, client) {
-    //    LogInfo("Player's X changed: " + changed.Position.X);
     return true;
 }
 
 function onChatMessage(message, client) {
-    var Opcheck = FindInArray(ops, client.IP);
     LogInfo("<" + client.Entity.Name + "> " + message);
-
-    if (message.StartsWith("/help")) {
-        client.SendServerMessage("/ban - Bans the ip that is given with it.\n/wl - whitelists the ip given with it. \n/op - Op's the ip given with it.");
-        return false;
-    }
-
-    if (message.StartsWith("/position")) {
-        client.SendServerMessage("X: " + client.Entity.Position.X + " / Y: " + client.Entity.Position.Y + " / Z: " + client.Entity.Position.Z);
-        return false;
-    }
-
-    if (message.StartsWith("/ban ")) {
-        if (Opcheck.toString() != -1) {
-            var MessageLast = message.split(" ")[1];
-            System.IO.File.AppendAllText("bans.txt", MessageLast + "\n");
-            LogInfo(MessageLast + " is now banned");
-            client.SendServerMessage(MessageLast + " is now banned");
-            return false;
-        }
-        else {
-            client.SendServerMessage("You are not allowed to use this command");
-        }
-        return false;
-    }
-
-    if (message.StartsWith("/wl")) {
-        if (Opcheck.toString() != -1) {
-            var MessageLast = message.split(" ")[1];
-            System.IO.File.AppendAllText("whitelist.txt", MessageLast + "\n");
-            LogInfo(MessageLast + " is now whitelisted");
-            client.SendServerMessage(MessageLast + " is now whitelisted");
-            return false;
-        }
-        else {
-            client.SendServerMessage("You are not allowed to use this command");
-        }
-        return false;
-    }
-
-    if (message.StartsWith("/op ")) {
-        if (Opcheck.toString() != -1) {
-            var MessageLast = message.split(" ")[1];
-            System.IO.File.AppendAllText("ops.txt", MessageLast + "\n");
-            LogInfo(MessageLast + " is now op'd");
-            client.SendServerMessage(MessageLast + " is now op'd");
-            return false;
-        }
-        else {
-            client.SendServerMessage("You are not allowed to use this command");
-        }
-        return false;
-    }
 
     var day = 1;
     var time = parseFloat(message);
