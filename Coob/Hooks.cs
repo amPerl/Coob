@@ -30,7 +30,6 @@ namespace Coob
                 hooks[eventName].Remove(functionName);
         }
 
-        /// <summary>Returns true if not cancelled.</summary>
         public ScriptEventArgs Call(string eventName, ScriptEventArgs args)
         {
             if (!hooks.ContainsKey(eventName))
