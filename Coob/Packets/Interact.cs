@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Coob.CoobEventArgs;
 using Coob.Structures;
 
 namespace Coob.Packets
@@ -53,7 +54,8 @@ namespace Coob.Packets
 
             public override bool CallScript()
             {
-                return Root.Scripting.CallFunction<bool>("onInteract", this, Sender);
+                var interactArgs = new InteractEventArgs(Sender, this);
+                return Root.Hooks.Call("OnInteract", interactArgs).Canceled == false;
             }
 
             public override void Process()

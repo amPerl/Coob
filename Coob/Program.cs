@@ -29,8 +29,6 @@ namespace Coob
             Scripting.Initialize();
             Scripting.Load("Coob.js");
 
-            Scripting.SetParameter("coob", Root.Coob);
-
             Scripting.SetFunction("LogInfo", (Action<string>)Log.Info);
             Scripting.SetFunction("LogWarning", (Action<string>)Log.Warning);
             Scripting.SetFunction("LogError", (Action<string>)Log.Error);
@@ -52,15 +50,19 @@ namespace Coob
 
             Scripting.Run();
 
+            Coob = new Coob(new CoobOptions
+                            {
+                                Port = 12345,
+                            });
+
+            Scripting.SetParameter("coob", Root.Coob);
+
             var initializeEventArgs = new InitializeEventArgs(0);
             if (Hooks.Call("OnInitialize", initializeEventArgs).Canceled)
                 return;
 
-            Coob = new Coob(new CoobOptions
-                            {
-                                WorldSeed = initializeEventArgs.WorldSeed,
-                                Port = 12345,
-                            });
+            Coob.Options.WorldSeed = initializeEventArgs.WorldSeed; // Not sure if this is the best way to do this
+
             Coob.StartMessageHandler();
 
             while(Coob.Running)
@@ -73,7 +75,7 @@ namespace Coob
 
             Log.Info("Stopping server...");
             //Scripting.CallFunction("onQuit");
-            Hooks.Call("OnQuit", new QuitEventArgs());
+            Hooks.Call("OnQuit", new QuitEventArgs(null));
 
             Log.Display(); // "Needs" to be called here since it normally gets called in the message handler (which isn't called anymore since server stopped).
         }

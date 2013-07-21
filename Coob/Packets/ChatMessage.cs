@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Coob.CoobEventArgs;
 
 namespace Coob.Packets
 {
@@ -26,7 +27,11 @@ namespace Coob.Packets
 
             public override bool CallScript()
             {
-                return Root.Scripting.CallFunction<bool>("onChatMessage", Message, Sender);
+                //return Root.Scripting.CallFunction<bool>("onChatMessage", Message, Sender);
+                var chatArgs = Root.Hooks.Call("OnChatMessage", new ChatEventArgs(Sender, Message)) as ChatEventArgs;
+
+                Message = chatArgs.Message;
+                return !chatArgs.Canceled;
             }
 
             public override void Process()

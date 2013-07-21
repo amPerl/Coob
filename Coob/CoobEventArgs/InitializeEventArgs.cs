@@ -4,7 +4,7 @@ namespace Coob.CoobEventArgs
     {
         public int WorldSeed;
 
-        public InitializeEventArgs(int defaultWorldSeed)
+        public InitializeEventArgs(int defaultWorldSeed) : base(null)
         {
             WorldSeed = defaultWorldSeed;
         }

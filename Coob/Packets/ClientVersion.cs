@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Coob.CoobEventArgs;
 
 namespace Coob.Packets
 {
@@ -25,7 +26,7 @@ namespace Coob.Packets
 
             public override bool CallScript()
             {
-                return Root.Scripting.CallFunction<bool>("onClientVersion", Version, Sender);
+                return Root.Hooks.Call("OnClientVersion", new ClientVersionEventArgs(Sender, Version)).Canceled == false;
             }
 
             public override void Process()

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Coob.CoobEventArgs;
 using Coob.Structures;
 using System.IO;
 
@@ -69,7 +70,7 @@ namespace Coob.Packets
             {
                 if (IsJoin)
                 {
-                    bool joined = Root.Scripting.CallFunction<bool>("onClientJoin", Sender);
+                    bool joined = Root.Hooks.Call("OnClientJoin", new ClientJoinEventArgs(Sender)).Canceled == false;
 
                     if (joined)
                         Sender.Joined = true;
@@ -77,7 +78,7 @@ namespace Coob.Packets
                     return joined;
                 }
                 else
-                    return Root.Scripting.CallFunction<bool>("onEntityUpdate", Entity, Changes, Sender);
+                    return Root.Hooks.Call("OnEntityUpdate", new EntityUpdateEventArgs(Sender, Entity, Changes)).Canceled == false;
             }
 
             public override void Process()

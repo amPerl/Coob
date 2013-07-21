@@ -1,110 +1,51 @@
 var latestVersion = 3;
 
-var admin = {};
-admin.whiteList = {};
-admin.banList = {};
-admin.opList = {};
-admin.whiteListEnabled = true;
-
-var io = {};
-io.GetFileText = function (path)
+AddHook("OnInitialize", function (args)
 {
-    var file = System.IO.File.OpenText(path);
-    var contents = file.ReadToEnd();
-    file.Close();
-    
-    return contents;
-};
-
-function LoadInfo(path)
-{
-    var result = {};
-
-    if (!System.IO.File.Exists(path)) {
-        try {
-            LogInfo("[Admin] Creating " + path);
-            System.IO.File.CreateText(path).Close();
-        }
-        catch (e) {
-            LogError("[Admin] Could not create " + path + "! (" + e + ")");
-        }
-    }
-    else {
-        try {
-            var contents = io.GetFileText(path);
-            contents = contents.Replace("\r\n", "\n");
-            var lines = contents.split("\n");
-
-            for (var i = 0; i < lines.length; ++i) {
-                var line = lines[i];
-                if (line === "")
-                    continue;
-
-                result[line] = true; // Make it not undefined.
-                //LogInfo("Added " + line + " from " + path + ".");
-            }
-        }
-        catch (e) {
-            LogError("[Admin] Could not load " + path + "! (" + e + ")\n");
-        }
-    }
-    
-    return result;
-};
-
-AddHook("OnInitialize", function (args) {
-    admin.opList = LoadInfo("admins.txt");
-    admin.banList = LoadInfo("bans.txt");
-    admin.whiteList = LoadInfo("whitelist.txt");
+    args.WorldSeed = 1234567890;
 });
 
-function onQuit()
+AddHook("OnClientConnect", function (args)
 {
-    // Todo: Save admins/whitelist/bans.
-}
-
-function onClientConnect(ip)
-{
-    if (admin.banList[ip] != undefined)
-    {
-        LogInfo("Banned user kicked: " + ip);
-        return false;
-    }
-    else if (admin.whiteListEnabled && admin.whiteList[ip] == undefined)
-    {
-        LogInfo("Non-whitelisted user kicked: " + ip);
-        return false;
-    }
-
+    var ip = args.IP;
     LogInfo("Client connecting from " + ip);
-    return true;
-}
+});
 
-function onClientDisconnect() {
-}
+AddHook("OnClientVersion", function (args)
+{
+    LogInfo(args.Client.IP + " version: " + args.Version + ".");
+});
 
-function onClientVersion(version, client) {
-}
+AddHook("OnClientJoin", function (args)
+{
+    var client = args.Client;
 
-function onClientJoin(client, ip) {
     LogInfo("Client #" + client.ID + ", " + client.Entity.Name + " has joined");
-    return true;
-}
+});
 
-function onEntityUpdate(entity, changed, client) {
-    return true;
-}
+AddHook("OnEntityUpdate", function (args)
+{
+    
+});
 
-function onChatMessage(message, client) {
+AddHook("OnChatMessage", function (args)
+{
+    var client = args.Client;
+    var message = args.Message;
+    
     LogInfo("<" + client.Entity.Name + "> " + message);
-
+    
     var day = 1;
     var time = parseFloat(message);
-
+    
     if (!isNaN(time)) {
         coob.SetTime(day, time);
         coob.SendServerMessage("Time set to " + time + " hours.");
+        args.Canceled = true;
     }
+});
 
-    return true;
-}
+AddHook("OnQuit", function (args)
+{
+    
+});

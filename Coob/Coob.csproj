@@ -51,10 +51,16 @@
   <ItemGroup>
     <Compile Include="BinaryWriterExtensions.cs" />
     <Compile Include="Client.cs" />
+    <Compile Include="CoobEventArgs\ChatEventArgs.cs" />
+    <Compile Include="CoobEventArgs\ClientConnectEventArgs.cs" />
     <Compile Include="Coob.cs" />
     <Content Include="CoobPlugin.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Compile Include="CoobEventArgs\ClientJoinEventArgs.cs" />
+    <Compile Include="CoobEventArgs\ClientVersionEventArgs.cs" />
+    <Compile Include="CoobEventArgs\EntityUpdateEventArgs.cs" />
+    <Compile Include="CoobEventArgs\InteractEventArgs.cs" />
     <Compile Include="Exceptions\UserLimitReachedException.cs" />
     <Compile Include="Hooks.cs" />
     <Compile Include="CoobEventArgs\QuitEventArgs.cs" />
@@ -74,7 +80,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScriptEngines\JavascriptEngine.cs" />
     <Compile Include="QVector3.cs" />
-    <Compile Include="ScriptEventArgs.cs" />
+    <Compile Include="CoobEventArgs\ScriptEventArgs.cs" />
     <Compile Include="Structures\Appearance.cs" />
     <Compile Include="Structures\Entity.cs" />
     <Compile Include="Structures\Item.cs" />

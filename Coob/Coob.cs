@@ -6,6 +6,7 @@ using System.Text;
 using System.Net.Sockets;
 using System.Net;
 using System.Threading;
+using Coob.CoobEventArgs;
 using Coob.Structures;
 using Coob.Packets;
 using Jint.Native;
@@ -78,7 +79,8 @@ namespace Coob
 
             string ip = (tcpClient.Client.RemoteEndPoint as IPEndPoint).Address.ToString();
 
-            if (Root.Scripting.CallFunction<bool>("onClientConnect", ip))
+            var clientConnectArgs = new ClientConnectEventArgs(ip);
+            if (!Root.Hooks.Call("OnClientConnect", clientConnectArgs).Canceled)
             {
                 var newClient = new Client(tcpClient);
                 Clients.Add(newClient.ID, newClient);
