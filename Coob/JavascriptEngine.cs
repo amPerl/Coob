@@ -25,9 +25,9 @@ namespace Coob
             engine.AddPermission(new FileIOPermission(PermissionState.Unrestricted));
         }
 
-        public void Load(string SourceFile)
+        public void Load(string sourceFile)
         {
-            source = File.ReadAllText(SourceFile);
+            source = File.ReadAllText(sourceFile);
         }
 
         public void SetParameter(string name, object value)
