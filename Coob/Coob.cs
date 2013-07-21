@@ -54,6 +54,7 @@ namespace Coob
             {
                 clientListener = new TcpListener(IPAddress.Any, options.Port);
                 clientListener.Start();
+                clientListener.BeginAcceptTcpClient(onClientConnect, null);
             }
             catch (SocketException e)
             {
@@ -68,8 +69,6 @@ namespace Coob
 
                 Environment.Exit(1);
             }
-
-            clientListener.BeginAcceptTcpClient(onClientConnect, null);
         }
 
         void onClientConnect(IAsyncResult result)
