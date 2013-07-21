@@ -27,7 +27,6 @@ namespace Coob.Packets
 
             public override bool CallScript()
             {
-                //return Root.Scripting.CallFunction<bool>("onChatMessage", Message, Sender);
                 var chatArgs = Root.Hooks.Call("OnChatMessage", new ChatEventArgs(Sender, Message)) as ChatEventArgs;
 
                 Message = chatArgs.Message;
