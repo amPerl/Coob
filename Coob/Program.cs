@@ -26,16 +26,20 @@ namespace Coob
                 WorldSeed = 19025811,
             });
 
-            Scripting = new JavascriptEngine();
+            //Scripting = new JavascriptEngine();
 
+            //Scripting.Initialize();
+            //Scripting.Load("Coob.js");
+
+            //Scripting.SetParameter("coob", Root.Coob);
+
+            //Scripting.SetFunction("LogInfo", (Action<string>)Log.Info);
+            //Scripting.SetFunction("LogWarning", (Action<string>)Log.Warning);
+            //Scripting.SetFunction("LogError", (Action<string>)Log.Error);
+
+            Scripting = new CSharpEngine();
             Scripting.Initialize();
-            Scripting.Load("Coob.js");
-
-            Scripting.SetParameter("coob", Root.Coob);
-
-            Scripting.SetFunction("LogInfo", (Action<string>)Log.Info);
-            Scripting.SetFunction("LogWarning", (Action<string>)Log.Warning);
-            Scripting.SetFunction("LogError", (Action<string>)Log.Error);
+            Scripting.Load("CoobPlugin.cs");
 
             Hooks = new HookHandler();
             Hooks.ScriptHandlers.Add(Scripting);

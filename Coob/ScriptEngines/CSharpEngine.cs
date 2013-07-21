@@ -7,7 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace Coob.ScriptEngines
+namespace Coob
 {
     class CSharpEngine : IScriptHandler
     {
@@ -40,7 +40,7 @@ namespace Coob.ScriptEngines
             var res = codeProvider.CompileAssemblyFromSource(
                 new System.CodeDom.Compiler.CompilerParameters()
                 {
-                    GenerateInMemory = true
+                    GenerateInMemory = false
                 },
                 source
             );
@@ -53,7 +53,7 @@ namespace Coob.ScriptEngines
 
         public void Run()
         {
-            mainType.GetMethod("main").Invoke(mainClass, new object[]{});
+            mainType.GetMethod("Main").Invoke(mainClass, new object[]{});
         }
 
         public T CallFunction<T>(string functionName, params object[] arguments)

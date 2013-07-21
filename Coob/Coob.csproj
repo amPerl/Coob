@@ -52,6 +52,9 @@
     <Compile Include="BinaryWriterExtensions.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="Coob.cs" />
+    <Content Include="CoobPlugin.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Compile Include="Exceptions\UserLimitReachedException.cs" />
     <Compile Include="Hooks.cs" />
     <Compile Include="ScriptEngines\CSharpEngine.cs" />
