@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using Coob.CoobEventArgs;
+using Jint.Native;
 
 namespace Coob
 {
@@ -19,14 +21,10 @@ namespace Coob
             Console.TreatControlCAsInput = true;
             Log.Info("Starting Coob.");
 
-            Coob = new Coob(new CoobOptions
-            {
-                Port = 12345,
-                //WorldSeed = new Random().Next(0, int.MaxValue), // I set it to random because it's easier to see if EntityUpdate is fixed or not. (fakin loading times tho)
-                WorldSeed = 19025811,
-            });
-
             Scripting = new JavascriptEngine();
+
+            Hooks = new HookHandler();
+            Hooks.ScriptHandlers.Add(Scripting);
 
             Scripting.Initialize();
             Scripting.Load("Coob.js");
@@ -37,30 +35,45 @@ namespace Coob
             Scripting.SetFunction("LogWarning", (Action<string>)Log.Warning);
             Scripting.SetFunction("LogError", (Action<string>)Log.Error);
 
+            // Can't set functions within objects, so it'll have to be in the global namescape. D:
+            Scripting.SetFunction("AddHook", (Action<string, object>)((eventName, function) =>
+            {
+                Hooks.Add(eventName, function);
+            }));
+
+            Scripting.SetFunction("RemoveHook", (Action<string, object>)((eventName, function) =>
+            {
+                Hooks.Delete(eventName, function);
+            }));
+
             //Scripting = new CSharpEngine();
             //Scripting.Initialize();
             //Scripting.Load("CoobPlugin.cs");
 
-            Hooks = new HookHandler();
-            Hooks.ScriptHandlers.Add(Scripting);
-
             Scripting.Run();
 
-            if (!Scripting.CallFunction<bool>("onInitialize"))
+            var initializeEventArgs = new InitializeEventArgs(0);
+            if (Hooks.Call("OnInitialize", initializeEventArgs).Canceled)
                 return;
 
+            Coob = new Coob(new CoobOptions
+                            {
+                                WorldSeed = initializeEventArgs.WorldSeed,
+                                Port = 12345,
+                            });
             Coob.StartMessageHandler();
 
             while(Coob.Running)
             {
                 var input = Console.ReadLine().ToLower();
 
-                if (input == "exit") // Temporary way to quit server properly. Seems to fuck up because the console hates threading.
+                if (input == "exit") // Temporary way to quit server properly. Seems to fuck up because the console hates life.
                     Coob.StopMessageHandler();
             }
 
             Log.Info("Stopping server...");
-            Scripting.CallFunction("onQuit");
+            //Scripting.CallFunction("onQuit");
+            Hooks.Call("OnQuit", new QuitEventArgs());
 
             Log.Display(); // "Needs" to be called here since it normally gets called in the message handler (which isn't called anymore since server stopped).
         }

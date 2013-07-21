@@ -57,6 +57,8 @@
     </Content>
     <Compile Include="Exceptions\UserLimitReachedException.cs" />
     <Compile Include="Hooks.cs" />
+    <Compile Include="CoobEventArgs\QuitEventArgs.cs" />
+    <Compile Include="CoobEventArgs\InitializeEventArgs.cs" />
     <Compile Include="ScriptEngines\CSharpEngine.cs" />
     <Compile Include="ScriptEngines\IScriptHandler.cs" />
     <Compile Include="Log.cs" />
@@ -72,6 +74,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScriptEngines\JavascriptEngine.cs" />
     <Compile Include="QVector3.cs" />
+    <Compile Include="ScriptEventArgs.cs" />
     <Compile Include="Structures\Appearance.cs" />
     <Compile Include="Structures\Entity.cs" />
     <Compile Include="Structures\Item.cs" />

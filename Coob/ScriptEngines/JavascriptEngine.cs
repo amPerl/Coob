@@ -40,11 +40,28 @@ namespace Coob
             engine.SetFunction(name, function);
         }
 
-        public T CallFunction<T>(string functionName, params object[] arguments)
+        public void RunString(string code)
         {
             try
             {
-                return (T)engine.CallFunction(functionName, arguments);
+                engine.Run(code);
+            }
+            catch (JintException ex)
+            {
+                Log.Error(ex.InnerException != null ? (ex.Message + ": " + ex.InnerException.Message) : ex.Message);
+                Log.Display();
+                Environment.Exit(1);
+            }
+        }
+
+        public T CallFunction<T>(object function, params object[] arguments)
+        {
+            try
+            {
+                if (function is JsFunction)
+                    return (T)engine.CallFunction((JsFunction)function, arguments);
+                else
+                    return (T)engine.CallFunction((string)function, arguments);
             }
             catch (Exception ex)
             {
@@ -54,11 +71,14 @@ namespace Coob
             return default(T);
         }
 
-        public void CallFunction(string functionName, params object[] arguments)
+        public void CallFunction(object function, params object[] arguments)
         {
             try
             {
-                engine.CallFunction(functionName, arguments);
+                if (function is JsFunction)
+                    engine.CallFunction((JsFunction)function, arguments);
+                else
+                    engine.CallFunction((string)function, arguments);
             }
             catch (Exception ex)
             {
@@ -73,15 +93,7 @@ namespace Coob
 
         public void Run()
         {
-            try
-            {
-                engine.Run(source);
-            }
-            catch (JintException ex)
-            {
-                Log.Error(ex.InnerException != null ? (ex.Message + ": " + ex.InnerException.Message) : ex.Message);
-                Environment.Exit(1);
-            }
+            RunString(source);
         }
     }
 }

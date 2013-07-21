@@ -56,15 +56,35 @@ namespace Coob
             mainType.GetMethod("Main").Invoke(mainClass, new object[]{});
         }
 
-        public T CallFunction<T>(string functionName, params object[] arguments)
+        public void RunString(string code)
         {
-            var output = mainType.GetMethod(functionName).Invoke(mainClass, arguments);
-            return (T)output;
+            //throw new NotImplementedException();
         }
 
-        public void CallFunction(string functionName, params object[] arguments)
+        public T CallFunction<T>(object function, params object[] arguments)
         {
-            mainType.GetMethod(functionName).Invoke(mainClass, arguments);
+            if (function is MethodInfo)
+            {
+                var output = ((MethodInfo)function).Invoke(mainClass, arguments);
+                return (T)output;
+            }
+            else
+            {
+                var output = mainType.GetMethod((string)function).Invoke(mainClass, arguments);
+                return (T)output;
+            }
+        }
+
+        public void CallFunction(object function, params object[] arguments)
+        {
+            if (function is MethodInfo)
+            {
+                ((MethodInfo)function).Invoke(mainClass, arguments);
+            }
+            else
+            {
+                mainType.GetMethod((string)function).Invoke(mainClass, arguments);
+            }
         }
     }
 }

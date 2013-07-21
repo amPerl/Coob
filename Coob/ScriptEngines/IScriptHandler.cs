@@ -9,7 +9,8 @@ namespace Coob
         void Initialize();
         void Load(string sourceFile);
         void Run();
-        T CallFunction<T>(string functionName, params object[] arguments);
-        void CallFunction(string functionName, params object[] arguments);
+        void RunString(string code);
+        T CallFunction<T>(object function, params object[] arguments);
+        void CallFunction(object function, params object[] arguments);
     }
 }

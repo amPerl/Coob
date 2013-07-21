@@ -60,13 +60,14 @@ namespace Coob
             {
                 if (e.ErrorCode == 10048)
                 {
-                    Console.WriteLine("Something is already running on port " + options.Port + ". Can't start server.");
+                    Log.Error("Something is already running on port " + options.Port + ". Can't start server.");
                 }
                 else
                 {
-                    Console.WriteLine("Unknown error occured while trying to start server:\n" + e);
+                    Log.Error("Unknown error occured while trying to start server:\n" + e);
                 }
 
+                Log.Display();
                 Environment.Exit(1);
             }
         }

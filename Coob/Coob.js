@@ -52,14 +52,13 @@ function LoadInfo(path)
     return result;
 };
 
-function onInitialize()
-{
+AddHook("OnInitialize", function (args) {
     admin.opList = LoadInfo("admins.txt");
     admin.banList = LoadInfo("bans.txt");
     admin.whiteList = LoadInfo("whitelist.txt");
-    
-    return true;
-}
+
+    LogInfo("FAGETS");
+});
 
 function onQuit()
 {
