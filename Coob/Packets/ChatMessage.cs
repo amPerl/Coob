@@ -22,6 +22,10 @@ namespace Coob.Packets
             {
                 int length = client.Reader.ReadInt32();
                 string message = Encoding.Unicode.GetString(client.Reader.ReadBytes(length * 2));
+
+                if (message.Length > Globals.MaxChatMessageLength)
+                    message = message.Substring(0, Globals.MaxChatMessageLength);
+
                 return new ChatMessage(message, client);
             }
 
