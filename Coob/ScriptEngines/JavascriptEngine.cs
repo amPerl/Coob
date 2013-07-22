@@ -6,6 +6,7 @@ using Jint;
 using Jint.Native;
 using System.IO;
 using System.Security.Permissions;
+using System.Threading;
 
 namespace Coob
 {
@@ -23,6 +24,8 @@ namespace Coob
         {
             engine.AddPermission(new UIPermission(PermissionState.Unrestricted));
             engine.AddPermission(new FileIOPermission(PermissionState.Unrestricted));
+
+            engine.SetFunction("CreateThread", new Func<JsFunction, Thread>(createThread));
         }
 
         public void Load(string sourceFile)
@@ -104,6 +107,11 @@ namespace Coob
         public void Run()
         {
             RunString(source);
+        }
+
+        Thread createThread(JsFunction func)
+        {
+            return new Thread(() => engine.CallFunction(func));
         }
     }
 }
