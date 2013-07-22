@@ -26,11 +26,6 @@ namespace Coob
             ScriptManager = new ScriptManager();
             ScriptManager.ScriptHandlers.Add(Scripting);
             ScriptManager.Initialize();
-            Scripting.Load("Coob.js");
-
-            //Scripting = new CSharpEngine();
-            //Scripting.Initialize();
-            //Scripting.Load("CoobPlugin.cs");
 
             Scripting.Run();
 

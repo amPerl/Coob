@@ -92,9 +92,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Coob.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Ionic.Zlib.dll" />
     <Content Include="Jint.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
