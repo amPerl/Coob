@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using Coob.CoobEventArgs;
 
 namespace Coob
 {
@@ -71,7 +72,7 @@ namespace Coob
         public void Disconnect(string reason = "")
         {
             Joined = false;
-            Root.Scripting.CallFunction("onClientDisconnect", this);
+            Root.ScriptManager.CallEvent("OnClientDisconnect", new DisconnectEventArgs(this));
 
             Log.Info("Client {0} disconnected ({1}).", ID, reason);
             tcp.Close();

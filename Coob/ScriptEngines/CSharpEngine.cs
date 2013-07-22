@@ -51,6 +51,10 @@ namespace Coob
             mainClass = Activator.CreateInstance(mainType);
         }
 
+        public void LoadPlugin(string pluginName, string sourceFile)
+        {
+        }
+
         public void Run()
         {
             mainType.GetMethod("Main").Invoke(mainClass, new object[]{});
@@ -95,6 +99,11 @@ namespace Coob
         public string GetScriptExtension()
         {
             return ".cs";
+        }
+
+        public string GetEntryFileName()
+        {
+            return "Main";
         }
     }
 }

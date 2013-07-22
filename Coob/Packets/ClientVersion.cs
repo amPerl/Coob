@@ -26,7 +26,7 @@ namespace Coob.Packets
 
             public override bool CallScript()
             {
-                return Root.Hooks.Call("OnClientVersion", new ClientVersionEventArgs(Sender, Version)).Canceled == false;
+                return Root.ScriptManager.CallEvent("OnClientVersion", new ClientVersionEventArgs(Sender, Version)).Canceled == false;
             }
 
             public override void Process()

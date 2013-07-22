@@ -8,12 +8,10 @@ namespace Coob.CoobEventArgs
 {
     class EntityUpdateEventArgs : ScriptEventArgs
     {
-        public Entity Entity { get; private set; }
         public Entity Changes { get; private set; }
 
-        public EntityUpdateEventArgs(Client client, Entity entity, Entity changes) : base(client)
+        public EntityUpdateEventArgs(Client client, Entity changes) : base(client)
         {
-            Entity = entity;
             Changes = changes;
         }
     }

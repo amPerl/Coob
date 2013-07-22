@@ -59,10 +59,11 @@
     </Content>
     <Compile Include="CoobEventArgs\ClientJoinEventArgs.cs" />
     <Compile Include="CoobEventArgs\ClientVersionEventArgs.cs" />
+    <Compile Include="CoobEventArgs\DisconnectEventArgs.cs" />
     <Compile Include="CoobEventArgs\EntityUpdateEventArgs.cs" />
     <Compile Include="CoobEventArgs\InteractEventArgs.cs" />
     <Compile Include="Exceptions\UserLimitReachedException.cs" />
-    <Compile Include="Hooks.cs" />
+    <Compile Include="ScriptEngines\ScriptManager.cs" />
     <Compile Include="CoobEventArgs\QuitEventArgs.cs" />
     <Compile Include="CoobEventArgs\InitializeEventArgs.cs" />
     <Compile Include="ScriptEngines\CSharpEngine.cs" />
