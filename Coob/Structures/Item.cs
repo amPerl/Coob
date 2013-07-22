@@ -14,34 +14,13 @@ namespace Coob.Structures
         public uint Modifier;
         public uint MinusModifier;
         public byte Rarity, Material, Flags;
-        public ushort Level;
+        public short Level;
         public ItemUpgrade[] Upgrades;
         public uint UpgradeCount;
 
         public Item()
         {
             Upgrades = new ItemUpgrade[32];
-        }
-
-        public void Read(BinaryReader reader)
-        {
-            Type = reader.ReadByte();
-            SubType = reader.ReadByte();
-            reader.ReadInt16(); // skip 2
-            Modifier = reader.ReadUInt32();
-            MinusModifier = reader.ReadUInt32();
-            Rarity = reader.ReadByte();
-            Material = reader.ReadByte();
-            Flags = reader.ReadByte();
-            reader.ReadByte(); // skip 1
-            Level = reader.ReadUInt16();
-            reader.ReadInt16(); // skip 2
-            for (int i = 0; i < 32; i++)
-            {
-                Upgrades[i] = new ItemUpgrade();
-                Upgrades[i].Read(reader);
-            }
-            UpgradeCount = reader.ReadUInt32();
         }
 
         public void CopyFrom(Item from)
@@ -83,11 +62,32 @@ namespace Coob.Structures
 
             writer.Write((short)0); // skip 2
 
-            for (int i = 0; i < 32; i++)
+            for (int i = 0; i < Upgrades.Length; ++i)
             {
                 Upgrades[i].Write(writer);
             }
             writer.Write(UpgradeCount);
+        }
+
+        public void Read(BinaryReader reader)
+        {
+            Type = reader.ReadByte();
+            SubType = reader.ReadByte();
+            reader.ReadInt16(); // skip 2
+            Modifier = reader.ReadUInt32();
+            MinusModifier = reader.ReadUInt32();
+            Rarity = reader.ReadByte();
+            Material = reader.ReadByte();
+            Flags = reader.ReadByte();
+            reader.ReadByte(); // skip 1
+            Level = reader.ReadInt16();
+            reader.ReadInt16(); // skip 2
+            for (int i = 0; i < Upgrades.Length; ++i)
+            {
+                Upgrades[i] = new ItemUpgrade();
+                Upgrades[i].Read(reader);
+            }
+            UpgradeCount = reader.ReadUInt32();
         }
     }
 
