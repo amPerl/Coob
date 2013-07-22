@@ -86,6 +86,16 @@ namespace Coob
             }
         }
 
+        public string GetScriptDirectoryName()
+        {
+            return "Javascript";
+        }
+
+        public string GetScriptExtension()
+        {
+            return ".js";
+        }
+
         private void WriteException(Exception exception)
         {
             Log.Error(exception);

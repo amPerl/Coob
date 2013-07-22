@@ -86,5 +86,15 @@ namespace Coob
                 mainType.GetMethod((string)function).Invoke(mainClass, arguments);
             }
         }
+
+        public string GetScriptDirectoryName()
+        {
+            return "CSharp";
+        }
+
+        public string GetScriptExtension()
+        {
+            return ".cs";
+        }
     }
 }

@@ -12,5 +12,7 @@ namespace Coob
         void RunString(string code);
         T CallFunction<T>(object function, params object[] arguments);
         void CallFunction(object function, params object[] arguments);
+        string GetScriptDirectoryName();
+        string GetScriptExtension();
     }
 }
