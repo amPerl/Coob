@@ -21,7 +21,7 @@ namespace Coob
         public ulong ID {get; private set;}
         public Entity Entity;
         public string IP;
-        private Boolean Disconnecting;
+        private bool disconnecting;
 
         TcpClient tcp;
         byte[] recvBuffer;
@@ -30,7 +30,7 @@ namespace Coob
         {
             Joined = false;
             Entity = null;
-            Disconnecting = false;
+            disconnecting = false;
             tcp = tcpClient;
             IP = (tcp.Client.RemoteEndPoint as IPEndPoint).Address.ToString();
             NetStream = tcp.GetStream();
@@ -55,7 +55,7 @@ namespace Coob
                 Disconnect("Connection reset by peer.");
                 return;
             }
-            if (Disconnecting)
+            if (disconnecting)
                 return;
             int bytesRead = 0;
             try
@@ -75,7 +75,7 @@ namespace Coob
         {
             Joined = false;
             Root.ScriptManager.CallEvent("OnClientDisconnect", new DisconnectEventArgs(this));
-            Disconnecting = true;
+            disconnecting = true;
             Log.Info("Client {0} disconnected ({1}).", ID, reason);
             tcp.Close();
 
