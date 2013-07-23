@@ -10,5 +10,7 @@ namespace Coob
         public static readonly int MaxChatMessageLength = 46; // Currently the max characters that fits before text is cutoff on client
         public static readonly int WorldTickPerSecond = (int)(1000f / 60f);
         public static readonly int EntityUpdatesPerSecond = (int)(1000f / 30f);
+        public static readonly int MaxConcurrentPlayers = 4;
+        public static readonly int ServerVersion = 3;
     }
 }
