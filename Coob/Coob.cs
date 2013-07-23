@@ -34,7 +34,6 @@ namespace Coob
         TcpListener clientListener;
 
         Thread messageHandlerThread;
-        Thread worldThread;
 
         public bool Running { get; private set; }
 
@@ -120,9 +119,6 @@ namespace Coob
         {
             Running = true;
 
-            worldThread = new Thread(updateWorld);
-            worldThread.Start();
-
             messageHandlerThread = new Thread(messageHandler);
             messageHandlerThread.Start();
 
@@ -134,65 +130,70 @@ namespace Coob
             Running = false;
         }
 
-        void updateWorld()
+        readonly Stopwatch elapsedDt = new Stopwatch();
+        float dtSinceLastWorldUpdate = 0;
+        float dtSinceLastEntityUpdate = 0;
+        float accumulator = 0;
+
+        private void UpdateWorld()
         {
-            var elapsedDt = new Stopwatch();
-            float dtSinceLastEntityUpdate = 0;
+            var totalDt = (float)elapsedDt.Elapsed.TotalSeconds;
+            accumulator = totalDt;
+            elapsedDt.Restart();
 
-            while (Running)
+            int times = 0;
+            //Console.WriteLine("------------------------------------");
+            while (accumulator > 0 && times < 4) // max 4 updates per update so that we don't risk updating like 300 times in a row if something froze temporarily.
             {
-                var totalDt = (float)elapsedDt.Elapsed.TotalSeconds;
-                var accumulator = totalDt;
-                elapsedDt.Restart();
+                ++times;
+                float dt = Math.Min(accumulator, Globals.WorldTickPerSecond / 1000f);
+                accumulator -= dt;
+                //Console.WriteLine(dt);
 
-                //int times = 0;
-                //Console.WriteLine("------------------------------------");
-                while (accumulator > Globals.WorldTickPerSecond / 1000f)
+                dtSinceLastWorldUpdate += dt * 1000f; // * 1000 because counting in milliseconds below.
+                dtSinceLastEntityUpdate += dt * 1000f;
+
+                if (dtSinceLastWorldUpdate >= Globals.WorldTickPerSecond)
                 {
-                    //++times;
-                    float dt = Math.Min(accumulator, Globals.WorldTickPerSecond / 1000f);
-                    accumulator -= dt;
-                    //Console.WriteLine(dt);
-
-                    dtSinceLastEntityUpdate += dt * 1000f; // * 1000 because counting in milliseconds below.
-
-                    World.Update(dt);
-
-                    if (dtSinceLastEntityUpdate >= Globals.EntityUpdatesPerSecond)
-                    {
-                        World.SendEntityUpdates();
-                        dtSinceLastEntityUpdate = 0;
-                    }
-
-                    Log.Display();
+                    World.Update(dt + dtSinceLastWorldUpdate);
+                    dtSinceLastWorldUpdate = 0;
                 }
-                //Console.WriteLine("------------------------------------");
-                //Console.WriteLine("Updated " + times + " times");
 
-                Thread.Sleep(Globals.WorldTickPerSecond);
+                if (dtSinceLastEntityUpdate >= Globals.EntityUpdatesPerSecond)
+                {
+                    World.SendEntityUpdates();
+                    dtSinceLastEntityUpdate = 0;
+                }
+
+                Log.Display();
             }
+            //Console.WriteLine("------------------------------------");
+            //Console.WriteLine("Updated " + times + " times");
         }
 
         void messageHandler()
         {
             while (Running)
             {
+                UpdateWorld();
+
                 Packet.Base message = null;
-                if (!MessageQueue.TryDequeue(out message)) continue;
+                if (!MessageQueue.TryDequeue(out message)) goto sleep;
 
                 try
                 {
-                    if (!message.CallScript()) continue;
+                    if (!message.CallScript()) goto sleep;
                 }
                 catch (JsException ex)
                 {
                     var messageText = (ex.InnerException != null ? (ex.Message + ": " + ex.InnerException.Message) : ex.Message);
                     Log.Error("JS Error on {0}: {1} - {2}", message.PacketTypeName, messageText, ex.Value);
-                    continue;
+                    goto sleep;
                 }
 
                 message.Process();
 
+            sleep:
                 Thread.Sleep(1); // Avoid maxing the cpu (as much).
             }
         }
