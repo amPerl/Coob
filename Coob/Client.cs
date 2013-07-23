@@ -86,7 +86,7 @@ namespace Coob
             }
         }
 
-        public void SendMessage(long id, string message)
+        public void SendMessage(ulong id, string message)
         {
             byte[] msgBuffer = Encoding.Unicode.GetBytes(message);
             int msgLength = msgBuffer.Length / 2;

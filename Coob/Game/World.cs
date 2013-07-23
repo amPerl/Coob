@@ -23,7 +23,7 @@ namespace Coob.Game
         {
             // Update stuff
 
-            Root.ScriptManager.CallEvent("OnWorldUpdate", new WorldUpdateEventArgs(dt));
+            var eventArgs = Root.ScriptManager.CallEvent("OnWorldUpdate", new WorldUpdateEventArgs(dt));
         }
 
         public void SendEntityUpdates()
@@ -31,9 +31,7 @@ namespace Coob.Game
 
         }
 
-        /// <summary>
-        /// Sets the current day and time for the client.
-        /// </summary>
+        /// <summary>Sets the current day and time for the client.</summary>
         /// <param name="day">The current day (not sure what use this has).</param>
         /// <param name="time">The elapsed hours in 0-24 range.</param>
         public void SetTime(uint day, float time)
@@ -60,7 +58,7 @@ namespace Coob.Game
                .Where(cl => cl.Joined)
                .ToList()
                .ForEach(
-                   cl => cl.SendMessage((long)id, message)
+                   cl => cl.SendMessage(id, message)
                );
         }
     }
