@@ -37,7 +37,7 @@ namespace Coob.Packets
                     Sender.Disconnect("Invalid version");
                     return;
                 }
-                else if (Root.Coob.Clients.Values.Count >= 0)//Globals.MaxConcurrentPlayers)
+                else if (Root.Coob.Clients.Values.Count >= Globals.MaxConcurrentPlayers)
                 {
                     Sender.Writer.Write(SCPacketIDs.ServerFull);
                     Sender.Disconnect("Server full");
