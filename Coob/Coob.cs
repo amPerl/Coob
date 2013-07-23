@@ -185,7 +185,12 @@ namespace Coob
 
         public Client[] GetClients()
         {
-            return Clients.Values.ToArray();
+            return GetClients(null);
+        }
+
+        public Client[] GetClients(Client except)
+        {
+            return Clients.Values.Where(cl => cl != except).ToArray();
         }
 
         public void SendServerMessage(string message)
