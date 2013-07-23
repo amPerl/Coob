@@ -31,13 +31,27 @@ namespace Coob.Packets
 
             public override void Process()
             {
-                Sender.Writer.Write(SCPacketIDs.Join); // ServerData
-                Sender.Writer.Write(0);
-                Sender.Writer.Write(Sender.ID);
-                Sender.Writer.Write(new byte[0x1168]);
+                if (Version != Globals.ServerVersion)
+                {
+                    Sender.Writer.Write(SCPacketIDs.ServerMismatch);
+                    Sender.Disconnect("Invalid version");
+                    return;
+                }
+                else if (Root.Coob.Clients.Values.Count >= 0)//Globals.MaxConcurrentPlayers)
+                {
+                    Sender.Writer.Write(SCPacketIDs.ServerFull);
+                    Sender.Disconnect("Server full");
+                    return;
+                }
+              
+                    Sender.Writer.Write(SCPacketIDs.Join); // ServerData
+                    Sender.Writer.Write(0);
+                    Sender.Writer.Write(Sender.ID);
+                    Sender.Writer.Write(new byte[0x1168]);
 
-                Sender.Writer.Write(SCPacketIDs.SeedData);
-                Sender.Writer.Write(Root.Coob.World.Seed);
+                    Sender.Writer.Write(SCPacketIDs.SeedData);
+                    Sender.Writer.Write(Root.Coob.World.Seed);
+                
             }
         }
     }

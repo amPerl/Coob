@@ -213,20 +213,7 @@ namespace Coob
 
             return 0;
         }
-
-        public void BroadcastChat(ulong id, string message)
-        {
-            byte[] msgBuffer = Encoding.Unicode.GetBytes(message);
-            int msgLength = msgBuffer.Length / 2;
-
-            foreach (var client in GetClients())
-            {
-                client.Writer.Write(SCPacketIDs.ServerChatMessage);
-                client.Writer.Write(id);
-                client.Writer.Write(msgLength);
-                client.Writer.Write(msgBuffer);
-            }
-        }
+       
 
         public Client[] GetClients()
         {
@@ -238,22 +225,7 @@ namespace Coob
             return Clients.Values.Where(cl => cl != except).ToArray();
         }
 
-        public void SendServerMessage(string message)
-        {
-            Clients.Select(cl => cl.Value)
-                .Where(cl => cl.Joined)
-                .ToList()
-                .ForEach(
-                    cl => cl.SendServerMessage(message)
-                );
-        }
 
-        public void SetTime(uint day, float time)
-        {
-            Clients.Select(cl => cl.Value)
-                .Where(cl => cl.Joined)
-                .ToList()
-                .ForEach(cl => cl.SetTime(day, time));
-        }
+
     }
 }
