@@ -97,9 +97,9 @@ namespace Coob.Packets
                 //    compressed = ZlibHelper.CompressBuffer(ms.ToArray());
                 //}
                 //
-                //foreach (var client in Root.Coob.GetClients())
+                //foreach (var client in Root.Coob.GetClients(Sender))
                 //{
-                //    client.Writer.Write(0);
+                //    client.Writer.Write(SCPacketIDs.EntityUpdate);
                 //    client.Writer.Write(compressed.Length);
                 //    client.Writer.Write(compressed);
                 //}

@@ -31,7 +31,8 @@ namespace Coob
 
             Coob = new Coob(new CoobOptions
                             {
-                                Port = 12345
+                                Port = 12345,
+                                WorldSeed = 123454
                             });
 
             Scripting.SetParameter("coob", Root.Coob);
@@ -40,7 +41,8 @@ namespace Coob
             if (ScriptManager.CallEvent("OnInitialize", initializeEventArgs).Canceled)
                 return;
 
-            Coob.Options.WorldSeed = initializeEventArgs.WorldSeed; // Not sure if this is the best way to do this
+            //Coob.Options.WorldSeed = initializeEventArgs.WorldSeed; // Not sure if this is the best way to do this
+            Log.Info("World seed: " + Coob.Options.WorldSeed);
 
             Coob.StartMessageHandler();
 

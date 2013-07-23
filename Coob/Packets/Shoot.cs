@@ -14,8 +14,8 @@ namespace Coob.Packets
         {
             public ulong EntityID;
 
-			public int ChunkX;
-			public int ChunkY;
+            public int ChunkX;
+            public int ChunkY;
 
             public uint something5;
 
@@ -50,30 +50,30 @@ namespace Coob.Packets
 
             public override void Process()
             {
-                BinaryWriter writer = Sender.Writer;
-
-                writer.Write(EntityID);
-                writer.Write(ChunkX);
-                writer.Write(ChunkY);
-                writer.Write(something5);
-                writer.Pad(4);
-                writer.Write(Position);
-                writer.Write(something13);
-                writer.Write(something14);
-                writer.Write(something15);
-                writer.Write(Velocity);
-                writer.Write(something19);
-                writer.Write(something20);
-                writer.Write(something21);
-                writer.Write(something22);
-                writer.Write(something23);
-                writer.Write(something24);
-                writer.Pad(3);
-                writer.Write(something25);
-                writer.Write(something26);
-                writer.Pad(3);
-                writer.Write(something27);
-                writer.Write(something28);
+                //BinaryWriter writer = Sender.Writer;
+                //
+                //writer.Write(EntityID);
+                //writer.Write(ChunkX);
+                //writer.Write(ChunkY);
+                //writer.Write(something5);
+                //writer.Pad(4);
+                //writer.Write(Position);
+                //writer.Write(something13);
+                //writer.Write(something14);
+                //writer.Write(something15);
+                //writer.Write(Velocity);
+                //writer.Write(something19);
+                //writer.Write(something20);
+                //writer.Write(something21);
+                //writer.Write(something22);
+                //writer.Write(something23);
+                //writer.Write(something24);
+                //writer.Pad(3);
+                //writer.Write(something25);
+                //writer.Write(something26);
+                //writer.Pad(3);
+                //writer.Write(something27);
+                //writer.Write(something28);
             }
 
             public static Base Parse(Client client)

@@ -1,7 +1,7 @@
 ﻿var latestVersion = 3;
 
 AddHook("OnInitialize", function (args) {
-    args.WorldSeed = 123456;
+    //args.WorldSeed = 1234558078;
 });
 
 AddHook("OnClientConnect", function (args) {

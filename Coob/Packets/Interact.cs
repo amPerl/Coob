@@ -60,16 +60,16 @@ namespace Coob.Packets
 
             public override void Process()
             {
-                BinaryWriter writer = Sender.Writer;
-
-                Item.Write(writer);
-                writer.Write(ChunkX);
-                writer.Write(ChunkY);
-                writer.Write(ItemIndex);
-                writer.Write(Something4);
-                writer.Write((byte)InteractType);
-                writer.Write(Something6);
-                writer.Write(Something7);
+                //BinaryWriter writer = Sender.Writer;
+                //
+                //Item.Write(writer);
+                //writer.Write(ChunkX);
+                //writer.Write(ChunkY);
+                //writer.Write(ItemIndex);
+                //writer.Write(Something4);
+                //writer.Write((byte)InteractType);
+                //writer.Write(Something6);
+                //writer.Write(Something7);
             }
         }
     }
