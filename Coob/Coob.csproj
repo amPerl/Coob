@@ -62,7 +62,9 @@
     <Compile Include="CoobEventArgs\DisconnectEventArgs.cs" />
     <Compile Include="CoobEventArgs\EntityUpdateEventArgs.cs" />
     <Compile Include="CoobEventArgs\InteractEventArgs.cs" />
+    <Compile Include="CoobEventArgs\WorldUpdateEventArgs.cs" />
     <Compile Include="Exceptions\UserLimitReachedException.cs" />
+    <Compile Include="Game\World.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="ScriptEngines\ScriptManager.cs" />
     <Compile Include="CoobEventArgs\QuitEventArgs.cs" />

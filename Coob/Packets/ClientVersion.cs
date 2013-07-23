@@ -37,7 +37,7 @@ namespace Coob.Packets
                 Sender.Writer.Write(new byte[0x1168]);
 
                 Sender.Writer.Write(SCPacketIDs.SeedData);
-                Sender.Writer.Write(Root.Coob.Options.WorldSeed);
+                Sender.Writer.Write(Root.Coob.World.Seed);
             }
         }
     }

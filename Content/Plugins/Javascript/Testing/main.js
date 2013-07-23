@@ -23,6 +23,11 @@ AddHook("OnEntityUpdate", function (args) {
 
 });
 
+AddHook("OnWorldUpdate", function (args)
+{
+    var dt = args.DeltaTime;
+});
+
 AddHook("OnChatMessage", function (args) {
     var client = args.Client;
     var message = args.Message;

@@ -48,7 +48,7 @@ namespace Coob.Packets
 
                         client.Entity = entity;
                         entity.ID = client.ID;
-                        Root.Coob.Entities[client.ID] = client.Entity;
+                        Root.Coob.World.Entities[client.ID] = client.Entity;
 
                         entity.ReadByMask(br);
 
@@ -56,7 +56,7 @@ namespace Coob.Packets
                     }
                     else
                     {
-                        entity = Root.Coob.Entities[id];
+                        entity = Root.Coob.World.Entities[id];
 
                         Entity changes = new Entity();
                         changes.ReadByMask(br);

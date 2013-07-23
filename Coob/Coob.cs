@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Net.Sockets;
 using System.Net;
 using System.Threading;
 using Coob.CoobEventArgs;
+using Coob.Game;
 using Coob.Structures;
 using Coob.Packets;
 using Jint.Native;
@@ -16,8 +18,8 @@ namespace Coob
     public class CoobOptions
     {
         public int Port = 12345;
-        public int WorldSeed;
         public uint MaxClients = 1024;
+        public int WorldSeed;
     }
 
     public class Coob
@@ -26,12 +28,13 @@ namespace Coob
         public delegate Packet.Base PacketParserDel(Client client);
         public Dictionary<int, PacketParserDel> PacketParsers;
         public Dictionary<ulong, Client> Clients;
-        public ConcurrentDictionary<ulong, Entity> Entities;
         public CoobOptions Options;
+        public World World { get; private set; }
 
         TcpListener clientListener;
 
         Thread messageHandlerThread;
+        Thread worldThread;
 
         public bool Running { get; private set; }
 
@@ -41,7 +44,7 @@ namespace Coob
             MessageQueue = new ConcurrentQueue<Packet.Base>();
             PacketParsers = new Dictionary<int, PacketParserDel>();
             Clients = new Dictionary<ulong, Client>();
-            Entities = new ConcurrentDictionary<ulong, Entity>();
+            World = new World(options.WorldSeed);
 
             PacketParsers.Add((int)CSPacketIDs.EntityUpdate, Packet.EntityUpdate.Parse);
             PacketParsers.Add((int)CSPacketIDs.Interact, Packet.Interact.Parse);
@@ -113,18 +116,61 @@ namespace Coob
             }
         }
 
-        public void StartMessageHandler()
+        public void StartServer()
         {
             Running = true;
+
+            worldThread = new Thread(updateWorld);
+            worldThread.Start();
+
             messageHandlerThread = new Thread(messageHandler);
             messageHandlerThread.Start();
 
-            Log.Info("Started message handler.");
+            Log.Info("Started message handler and world.");
         }
 
-        public void StopMessageHandler()
+        public void StopServer()
         {
             Running = false;
+        }
+
+        void updateWorld()
+        {
+            var elapsedDt = new Stopwatch();
+            float dtSinceLastEntityUpdate = 0;
+
+            while (Running)
+            {
+                var totalDt = (float)elapsedDt.Elapsed.TotalSeconds;
+                var accumulator = totalDt;
+                elapsedDt.Restart();
+
+                //int times = 0;
+                //Console.WriteLine("------------------------------------");
+                while (accumulator > Globals.WorldTickPerSecond / 1000f)
+                {
+                    //++times;
+                    float dt = Math.Min(accumulator, Globals.WorldTickPerSecond / 1000f);
+                    accumulator -= dt;
+                    //Console.WriteLine(dt);
+
+                    dtSinceLastEntityUpdate += dt * 1000f; // * 1000 because counting in milliseconds below.
+
+                    World.Update(dt);
+
+                    if (dtSinceLastEntityUpdate >= Globals.EntityUpdatesPerSecond)
+                    {
+                        World.SendEntityUpdates();
+                        dtSinceLastEntityUpdate = 0;
+                    }
+
+                    Log.Display();
+                }
+                //Console.WriteLine("------------------------------------");
+                //Console.WriteLine("Updated " + times + " times");
+
+                Thread.Sleep(Globals.WorldTickPerSecond);
+            }
         }
 
         void messageHandler()
@@ -132,23 +178,22 @@ namespace Coob
             while (Running)
             {
                 Packet.Base message = null;
-                if (!MessageQueue.TryDequeue(out message)) goto displayLog;
+                if (!MessageQueue.TryDequeue(out message)) continue;
 
                 try
                 {
-                    if (!message.CallScript()) goto displayLog;
+                    if (!message.CallScript()) continue;
                 }
                 catch (JsException ex)
                 {
                     var messageText = (ex.InnerException != null ? (ex.Message + ": " + ex.InnerException.Message) : ex.Message);
                     Log.Error("JS Error on {0}: {1} - {2}", message.PacketTypeName, messageText, ex.Value);
-                    goto displayLog;
+                    continue;
                 }
 
                 message.Process();
 
-            displayLog:
-                Log.Display();
+                Thread.Sleep(1); // Avoid maxing the cpu (as much).
             }
         }
 
