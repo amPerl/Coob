@@ -84,6 +84,9 @@ namespace Coob
                 Root.Coob.Clients.Remove(this.ID);
                 Log.Info("Clients count: {0}", Root.Coob.Clients.Count);
             }
+            if (Root.Coob.ClientNames.ContainsKey(Entity.Name)) {
+                Root.Coob.ClientNames.Remove(Entity.Name);
+            }
         }
 
         public void SendMessage(ulong id, string message)

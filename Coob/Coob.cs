@@ -24,14 +24,15 @@ namespace Coob
 
     public class Coob
     {
-        public ConcurrentQueue<Packet.Base> MessageQueue;
+        public readonly ConcurrentQueue<Packet.Base> MessageQueue;
         public delegate Packet.Base PacketParserDel(Client client);
-        public Dictionary<int, PacketParserDel> PacketParsers;
-        public Dictionary<ulong, Client> Clients;
+        public readonly Dictionary<int, PacketParserDel> PacketParsers;
+        public readonly Dictionary<ulong, Client> Clients;
+        public readonly Dictionary<string, Client> ClientNames;
         public CoobOptions Options;
         public World World { get; private set; }
 
-        TcpListener clientListener;
+        readonly TcpListener clientListener;
 
         Thread messageHandlerThread;
 
@@ -42,7 +43,8 @@ namespace Coob
             this.Options = options;
             MessageQueue = new ConcurrentQueue<Packet.Base>();
             PacketParsers = new Dictionary<int, PacketParserDel>();
-            Clients = new Dictionary<ulong, Client>();
+            Clients = new Dictionary<ulong, Client>((int)Options.MaxClients);
+            ClientNames = new Dictionary<string, Client>((int)Options.MaxClients);
             World = new World(options.WorldSeed);
 
             PacketParsers.Add((int)CSPacketIDs.EntityUpdate, Packet.EntityUpdate.Parse);
@@ -226,7 +228,21 @@ namespace Coob
             return Clients.Values.Where(cl => cl != except).ToArray();
         }
 
+        public string GetPlayerListString() {
+            if (Clients.Count == 0)
+                return "Nobody is connected.";
+            StringBuilder sb = new StringBuilder(Clients.Count*5);
+            sb.Append("Players: ");
+            foreach (var clientName in ClientNames.Values) {
+                sb.Append(clientName);
+                sb.Append(", ");
+            }
 
+            sb[sb.Length - 2] = '.';
+            sb.Remove(sb.Length - 1, 1);
+
+            return sb.ToString();
+        }
 
     }
 }

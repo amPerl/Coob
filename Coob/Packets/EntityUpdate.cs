@@ -72,8 +72,10 @@ namespace Coob.Packets
                 {
                     bool joined = Root.ScriptManager.CallEvent("OnClientJoin", new ClientJoinEventArgs(Sender)).Canceled == false;
 
-                    if (joined)
+                    if (joined) {
                         Sender.Joined = true;
+                        Root.Coob.ClientNames.Add(Sender.Entity.Name, Sender);
+                    }
 
                     return joined;
                 }
