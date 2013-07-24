@@ -39,7 +39,7 @@ namespace Coob.Packets
 
             public override void Process()
             {
-                Root.Coob.BroadcastChat(Sender.ID, Message);
+                Root.Coob.World.BroadcastChat(Sender.ID, Message);
             }
         }
 
