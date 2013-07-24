@@ -48,9 +48,20 @@ namespace Coob
             while(Coob.Running)
             {
                 var input = Console.ReadLine().ToLower();
+                var inputArgs = input.Split(' ');
+                if (inputArgs.Length == 0)
+                    continue;
 
-                if (input == "exit") // Temporary way to quit server properly. Seems to fuck up because the console hates life.
-                    Coob.StopServer();
+                input = inputArgs[0].ToLowerInvariant();
+
+                switch (input) {
+                    case "exit":
+                        Coob.StopServer();
+                        break;
+                    case "list":
+                        Log.Info(Coob.GetPlayerListString());
+                        break;
+                }
             }
 
             Log.Info("Stopping server...");
