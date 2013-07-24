@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Jint;
+using Jint.Debugger;
 using Jint.Native;
 using System.IO;
 using System.Security.Permissions;
@@ -19,7 +20,6 @@ namespace Coob
         public JavascriptEngine()
         {
             engine = new JintEngine();
-            source = "";
         }
 
         public void Initialize()
@@ -138,7 +138,12 @@ namespace Coob
 
         private void WriteException(Exception exception)
         {
-            Log.Error(exception);
+            var jsException = exception as JsException;
+
+            if (jsException != null)
+                Log.Error("Script error: " + jsException.Message + "\n(" + jsException.Value + ")");
+            else
+                Log.Error("Script error: " + exception.Message + (exception.InnerException != null ? ("(" + exception.InnerException.Message + ")") : ""));
         }
 
         public void Run()

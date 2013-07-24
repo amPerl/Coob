@@ -43,7 +43,7 @@ namespace Coob
             MessageQueue = new ConcurrentQueue<Packet.Base>();
             PacketParsers = new Dictionary<int, PacketParserDel>();
             Clients = new Dictionary<ulong, Client>();
-            World = new World(options.WorldSeed);
+            World = new World(options.WorldSeed, this);
 
             PacketParsers.Add((int)CSPacketIDs.EntityUpdate, Packet.EntityUpdate.Parse);
             PacketParsers.Add((int)CSPacketIDs.Interact, Packet.Interact.Parse);

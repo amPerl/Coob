@@ -12,11 +12,13 @@ namespace Coob.Game
     {
         public int Seed { get; set; }
         public ConcurrentDictionary<ulong, Entity> Entities { get; private set; }
+        public Coob Coob { get; private set; }
 
-        public World(int seed)
+        public World(int seed, Coob coob)
         {
             Seed = seed;
             Entities = new ConcurrentDictionary<ulong, Entity>();
+            Coob = coob;
         }
 
         public void Update(float dt)
@@ -36,30 +38,35 @@ namespace Coob.Game
         /// <param name="time">The elapsed hours in 0-24 range.</param>
         public void SetTime(uint day, float time)
         {
-            Root.Coob.Clients.Select(cl => cl.Value)
-                .Where(cl => cl.Joined)
-                .ToList()
-                .ForEach(cl => cl.SetTime(day, time));
+            foreach (var client in Coob.GetClients())
+            {
+                if (client.Joined)
+                {
+                    client.SetTime(day, time);
+                }
+            }
         }
 
         public void SendServerMessage(string message)
         {
-            Root.Coob.Clients.Select(cl => cl.Value)
-                .Where(cl => cl.Joined)
-                .ToList()
-                .ForEach(
-                    cl => cl.SendServerMessage(message)
-                );
+            foreach(var client in Coob.GetClients())
+            {
+                if (client.Joined)
+                {
+                    client.SendServerMessage(message);
+                }
+            }
         }
 
         public void BroadcastChat(ulong id, string message)
         {
-            Root.Coob.Clients.Select(cl => cl.Value)
-               .Where(cl => cl.Joined)
-               .ToList()
-               .ForEach(
-                   cl => cl.SendMessage(id, message)
-               );
+            foreach (var client in Coob.GetClients())
+            {
+                if (client.Joined)
+                {
+                    client.SendMessage(id, message);
+                }
+            }
         }
     }
 }

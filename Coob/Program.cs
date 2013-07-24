@@ -36,6 +36,7 @@ namespace Coob
                             });
 
             Scripting.SetParameter("coob", Root.Coob);
+            Scripting.SetParameter("world", Root.Coob.World);
 
             var initializeEventArgs = new InitializeEventArgs(0);
             if (ScriptManager.CallEvent("OnInitialize", initializeEventArgs).Canceled)
