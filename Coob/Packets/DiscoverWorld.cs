@@ -19,7 +19,7 @@ namespace Coob.Packets
                 ChunkY = chunkY;
             }
 
-            public static Base Parse(Client client)
+            public static Base Parse(Client client, Coob coob)
             {
                 return new UpdateChunk(
                     client.Reader.ReadInt32(),
@@ -48,7 +48,7 @@ namespace Coob.Packets
                 SectorY = sectorY;
             }
 
-            public static Base Parse(Client client)
+            public static Base Parse(Client client, Coob coob)
             {
                 return new UpdateSector(
                     client.Reader.ReadInt32(),

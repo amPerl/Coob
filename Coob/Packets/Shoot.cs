@@ -76,7 +76,7 @@ namespace Coob.Packets
                 //writer.Write(something28);
             }
 
-            public static Base Parse(Client client)
+            public static Base Parse(Client client, Coob coob)
             {
                 NetReader reader = client.Reader;
                 var shoot = new Shoot(client);

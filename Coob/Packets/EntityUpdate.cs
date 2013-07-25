@@ -25,7 +25,7 @@ namespace Coob.Packets
                 this.IsJoin = join;
             }
 
-            public static Base Parse(Client client)
+            public static Base Parse(Client client, Coob coob)
             {
                 int length = client.Reader.ReadInt32();
 
@@ -48,7 +48,7 @@ namespace Coob.Packets
 
                         client.Entity = entity;
                         entity.ID = client.ID;
-                        Root.Coob.World.Entities[client.ID] = client.Entity;
+                        coob.World.Entities[client.ID] = client.Entity;
 
                         entity.ReadByMask(br);
 
@@ -56,7 +56,7 @@ namespace Coob.Packets
                     }
                     else
                     {
-                        entity = Root.Coob.World.Entities[id];
+                        entity = coob.World.Entities[id];
 
                         Entity changes = new Entity();
                         changes.ReadByMask(br);
@@ -97,7 +97,7 @@ namespace Coob.Packets
                 //    compressed = ZlibHelper.CompressBuffer(ms.ToArray());
                 //}
                 //
-                //foreach (var client in Root.Coob.GetClients(Sender))
+                //foreach (var client in Sender.Coob.GetClients(Sender))
                 //{
                 //    client.Writer.Write(SCPacketIDs.EntityUpdate);
                 //    client.Writer.Write(compressed.Length);

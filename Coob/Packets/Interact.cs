@@ -35,7 +35,7 @@ namespace Coob.Packets
             {
             }
 
-            public static Base Parse(Client client)
+            public static Base Parse(Client client, Coob coob)
             {
                 Item Item = new Item();
                 Item.Read(client.Reader);

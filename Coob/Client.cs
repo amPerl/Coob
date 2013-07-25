@@ -21,12 +21,13 @@ namespace Coob
         public ulong ID {get; private set;}
         public Entity Entity;
         public string IP;
+        public Coob Coob { get; private set; }
         private bool disconnecting;
 
         TcpClient tcp;
         byte[] recvBuffer;
 
-        public Client(TcpClient tcpClient)
+        public Client(TcpClient tcpClient, Coob coob)
         {
             Joined = false;
             Entity = null;
@@ -36,8 +37,9 @@ namespace Coob
             NetStream = tcp.GetStream();
             Reader = new NetReader(NetStream);
             Writer = new BinaryWriter(NetStream);
+            Coob = coob;
 
-            ID = Root.Coob.CreateID();
+            ID = Coob.CreateID();
 
             if (ID == 0)
             {
@@ -64,7 +66,7 @@ namespace Coob
 
                 if (bytesRead == 4)
                 {
-                    Root.Coob.HandleRecvPacket(BitConverter.ToInt32(recvBuffer, 0), this);
+                    Coob.HandleRecvPacket(BitConverter.ToInt32(recvBuffer, 0), this);
                 }
                 NetStream.BeginRead(recvBuffer, 0, 4, idCallback, null);
             }
@@ -79,10 +81,19 @@ namespace Coob
             Log.Info("Client {0} disconnected ({1}).", ID, reason);
             tcp.Close();
 
-            if (Root.Coob.Clients.ContainsKey(this.ID))
+            if (Coob.Clients.ContainsKey(this.ID))
             {
-                Root.Coob.Clients.Remove(this.ID);
-                Log.Info("Clients count: {0}", Root.Coob.Clients.Count);
+                Coob.Clients.Remove(this.ID);
+
+                Entity removedEntity;
+                if (!Coob.World.Entities.TryRemove(this.ID, out removedEntity))
+                {
+                    throw new NotImplementedException("Failed to remove entity from Entities");
+                }
+
+                Coob.World.SendServerMessage(string.Format("{0} disconnected. ({1})", Entity.Name, reason));
+
+                Log.Info("Clients count: {0}", Coob.Clients.Count);
             }
         }
 

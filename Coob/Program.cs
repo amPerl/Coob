@@ -35,8 +35,8 @@ namespace Coob
                                 WorldSeed = 1234,
                             });
 
-            Scripting.SetParameter("coob", Root.Coob);
-            Scripting.SetParameter("world", Root.Coob.World);
+            Scripting.SetParameter("coob", Coob);
+            Scripting.SetParameter("world", Coob.World);
 
             var initializeEventArgs = new InitializeEventArgs(0);
             if (ScriptManager.CallEvent("OnInitialize", initializeEventArgs).Canceled)

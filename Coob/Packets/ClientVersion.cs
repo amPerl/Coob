@@ -18,7 +18,7 @@ namespace Coob.Packets
                 this.Version = version;
             }
 
-            public static Base Parse(Client client)
+            public static Base Parse(Client client, Coob coob)
             {
                 int version = client.Reader.ReadInt32();
                 return new ClientVersion(version, client);
@@ -37,7 +37,7 @@ namespace Coob.Packets
                     Sender.Disconnect("Invalid version");
                     return;
                 }
-                else if (Root.Coob.Clients.Values.Count >= Globals.MaxConcurrentPlayers)
+                else if (Sender.Coob.Clients.Values.Count >= Globals.MaxConcurrentPlayers)
                 {
                     Sender.Writer.Write(SCPacketIDs.ServerFull);
                     Sender.Disconnect("Server full");
@@ -50,7 +50,7 @@ namespace Coob.Packets
                     Sender.Writer.Write(new byte[0x1168]);
 
                     Sender.Writer.Write(SCPacketIDs.SeedData);
-                    Sender.Writer.Write(Root.Coob.World.Seed);
+                    Sender.Writer.Write(Sender.Coob.World.Seed);
                 
             }
         }

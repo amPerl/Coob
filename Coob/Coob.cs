@@ -25,7 +25,7 @@ namespace Coob
     public class Coob
     {
         public ConcurrentQueue<Packet.Base> MessageQueue;
-        public delegate Packet.Base PacketParserDel(Client client);
+        public delegate Packet.Base PacketParserDel(Client client, Coob coob);
         public Dictionary<int, PacketParserDel> PacketParsers;
         public Dictionary<ulong, Client> Clients;
         public CoobOptions Options;
@@ -84,7 +84,7 @@ namespace Coob
             var clientConnectArgs = new ClientConnectEventArgs(ip);
             if (!Root.ScriptManager.CallEvent("OnClientConnect", clientConnectArgs).Canceled)
             {
-                var newClient = new Client(tcpClient);
+                var newClient = new Client(tcpClient, this);
                 Clients.Add(newClient.ID, newClient);
             }
             else
@@ -104,7 +104,7 @@ namespace Coob
                 return;
             }
 
-            Packet.Base message = PacketParsers[id].Invoke(client);
+            Packet.Base message = PacketParsers[id].Invoke(client, this);
             MessageQueue.Enqueue(message);
 
             if (!(message is Packet.EntityUpdate) &&

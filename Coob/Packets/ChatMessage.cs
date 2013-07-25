@@ -18,7 +18,7 @@ namespace Coob.Packets
                 this.Message = message;
             }
 
-            public static Base Parse(Client client)
+            public static Base Parse(Client client, Coob coob)
             {
                 int length = client.Reader.ReadInt32();
                 string message = Encoding.Unicode.GetString(client.Reader.ReadBytes(length * 2));
@@ -39,7 +39,7 @@ namespace Coob.Packets
 
             public override void Process()
             {
-                Root.Coob.World.BroadcastChat(Sender.ID, Message);
+                Sender.Coob.World.BroadcastChat(Sender.ID, Message);
             }
         }
 
