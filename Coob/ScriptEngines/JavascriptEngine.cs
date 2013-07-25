@@ -148,6 +148,12 @@ namespace Coob
 
         public void Run()
         {
+            if (source == null)
+            {
+                Log.Error("No plugins found.");
+                return;
+            }
+
             RunString(source);
         }
 
