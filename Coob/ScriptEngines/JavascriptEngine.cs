@@ -156,10 +156,5 @@ namespace Coob
 
             RunString(source);
         }
-
-        Thread CreateThread(JsFunction func)
-        {
-            return new Thread(() => engine.CallFunction(func));
-        }
     }
 }
