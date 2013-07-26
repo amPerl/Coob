@@ -125,8 +125,8 @@ namespace Coob.Structures
             {
                 Rotation = new Vector3
                 {
-                    Roll = reader.ReadSingle(),
                     Pitch = reader.ReadSingle(),
+                    Roll = reader.ReadSingle(),
                     Yaw = reader.ReadSingle()
                 };
             }
@@ -357,12 +357,7 @@ namespace Coob.Structures
             }
             if (bitArray.Get(1))
             {
-                Rotation = new Vector3
-                {
-                    Pitch = from.Rotation.Pitch,
-                    Roll = from.Rotation.Roll,
-                    Yaw = from.Rotation.Yaw
-                };
+                Rotation = from.Rotation.Clone();
             }
             if (bitArray.Get(2))
             {
@@ -787,7 +782,7 @@ namespace Coob.Structures
             }
             if (bitArray.Get(45))
             {
-                writer.Write(Name);
+                writer.Write(Encoding.UTF8.GetBytes(Name));
                 writer.Write(new byte[16-Name.Length]);
             }
             if (bitArray.Get(46))

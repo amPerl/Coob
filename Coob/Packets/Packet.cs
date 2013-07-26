@@ -34,7 +34,7 @@ namespace Coob.Packets
         EntityUpdate = 0,
         Interact = 6,
         Hit = 7,
-        Unknown8 = 8,
+        Stealth = 8,
         Shoot = 9,
         ClientChatMessage = 10,
         ChunkDiscovered = 11,
@@ -51,9 +51,9 @@ namespace Coob.Packets
         ServerUpdate = 4,
         CurrentTime = 5,
         ServerChatMessage = 10,
+        SeedData = 15,
+        Join = 16,
         ServerFull = 18,
         ServerMismatch = 19,
-        Join = 16,
-        SeedData = 15,
     }
 }

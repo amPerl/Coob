@@ -47,6 +47,8 @@ namespace Coob
 
             PacketParsers.Add((int)CSPacketIDs.EntityUpdate, Packet.EntityUpdate.Parse);
             PacketParsers.Add((int)CSPacketIDs.Interact, Packet.Interact.Parse);
+            // TODO: PacketParsers.Add((int)CSPacketIDs.Hit, Packet.Hit.Parse);
+            // TODO: PacketParsers.Add((int)CSPacketIDs.Stealth, Packet.Stealth.Parse);
             PacketParsers.Add((int)CSPacketIDs.Shoot, Packet.Shoot.Parse);
             PacketParsers.Add((int)CSPacketIDs.ClientChatMessage, Packet.ChatMessage.Parse);
             PacketParsers.Add((int)CSPacketIDs.ChunkDiscovered, Packet.UpdateChunk.Parse);

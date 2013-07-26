@@ -23,7 +23,7 @@ namespace Coob
             byte[] compressed;
             using (var input = new MemoryStream(buffer))
             using (var compressStream = new MemoryStream())
-            using (var compressor = new DeflateStream(compressStream, CompressionMode.Compress))
+            using (var compressor = new ZlibStream(compressStream, CompressionMode.Compress, CompressionLevel.Default, true))
             {
                 input.CopyTo(compressor);
                 compressor.Close();
