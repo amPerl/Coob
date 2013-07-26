@@ -225,7 +225,7 @@ namespace Coob
 
         public Client[] GetClients(Client except)
         {
-            return Clients.Values.Where(cl => cl != except).ToArray();
+            return Clients.Values.Where(cl => cl != except && cl.Joined).ToArray();
         }
 
 

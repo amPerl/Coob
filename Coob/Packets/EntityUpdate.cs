@@ -15,6 +15,7 @@ namespace Coob.Packets
             public Entity Entity;
             public Entity Changes;
             public long UpdateBitmask;
+            public static byte[] FullBitmask = new byte[] { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00 };
             public bool IsJoin;
 
             public EntityUpdate(Entity entity, Entity changes, bool join, Client client)
@@ -97,12 +98,31 @@ namespace Coob.Packets
                     byte[] uncompressed = ms.ToArray();
                     compressed = ZlibHelper.CompressBuffer(uncompressed);
                 }
-                
-                foreach (var client in Sender.Coob.GetClients(Sender))
+
+                byte[] peercompressed;
+                foreach (var peer in Sender.Coob.GetClients(Sender))
                 {
-                    client.Writer.Write(SCPacketIDs.EntityUpdate);
-                    client.Writer.Write(compressed.Length);
-                    client.Writer.Write(compressed);
+                    peer.Writer.Write(SCPacketIDs.EntityUpdate);
+                    peer.Writer.Write(compressed.Length);
+                    peer.Writer.Write(compressed);
+
+                    if (IsJoin)
+                    {
+                        using (var ms = new MemoryStream())
+                        using (var bw = new BinaryWriter(ms))
+                        {
+                            bw.Write(peer.Entity.ID);
+                            bw.Write(Changes.LastBitmask);
+                            peer.Entity.WriteByMask(EntityUpdate.FullBitmask, bw);
+
+                            byte[] uncompressed = ms.ToArray();
+                            peercompressed = ZlibHelper.CompressBuffer(uncompressed);
+                        }
+
+                        Sender.Writer.Write(SCPacketIDs.EntityUpdate);
+                        Sender.Writer.Write(peercompressed.Length);
+                        Sender.Writer.Write(peercompressed);
+                    }
                 }
             }
         }

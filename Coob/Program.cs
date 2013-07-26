@@ -18,7 +18,7 @@ namespace Coob
         static void Main(string[] args)
         {
             Console.Title = "Coob";
-            Console.TreatControlCAsInput = true;
+            //Console.TreatControlCAsInput = true;
             Log.Info("Starting Coob.");
 
             Scripting = new JavascriptEngine();

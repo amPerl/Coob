@@ -573,7 +573,6 @@ namespace Coob.Structures
             }
         }
 
-
         public void WriteByMask(byte[] bitmask, BinaryWriter writer)
         {
             BitArray bitArray = new BitArray(bitmask);
