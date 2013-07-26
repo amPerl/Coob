@@ -27,8 +27,6 @@ namespace Coob
             engine.AddPermission(new UIPermission(PermissionState.Unrestricted));
             engine.AddPermission(new FileIOPermission(PermissionState.Unrestricted));
             engine.AddPermission(new WebPermission(PermissionState.Unrestricted));
-
-            engine.SetFunction("CreateThread", new Func<JsFunction, Thread>(CreateThread));
         }
 
         public void Load(string sourceFile)
