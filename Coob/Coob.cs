@@ -99,6 +99,10 @@ namespace Coob
         {
             if (!PacketParsers.ContainsKey(id))
             {
+                if (client.Joined)
+                {
+                    client.SendMessage(0, "[COOB] Unknown Packet (" + id + ") Disconnecting...");
+                }
                 Log.Error("Unknown packet: {0} from client {1}", id, client.ID);
                 client.Disconnect("Unknown data");
                 return;
