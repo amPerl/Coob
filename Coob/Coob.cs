@@ -196,7 +196,7 @@ namespace Coob
                 message.Process();
 
             sleep:
-                Thread.Sleep(5); // Avoid maxing the cpu (as much).
+                ;// Thread.Sleep(5); // Avoid maxing the cpu (as much).
             }
         }
 
