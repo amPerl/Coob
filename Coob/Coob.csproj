@@ -67,6 +67,7 @@
     <Compile Include="Exceptions\UserLimitReachedException.cs" />
     <Compile Include="Game\World.cs" />
     <Compile Include="Globals.cs" />
+    <Compile Include="Packets\Hit.cs" />
     <Compile Include="ScriptEngines\ScriptManager.cs" />
     <Compile Include="CoobEventArgs\QuitEventArgs.cs" />
     <Compile Include="CoobEventArgs\InitializeEventArgs.cs" />
