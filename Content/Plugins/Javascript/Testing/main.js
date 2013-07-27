@@ -53,8 +53,30 @@ AddHook("OnChatMessage", function (args) {
         world.SendServerMessage("Time set to " + time + " hours.");
         args.Canceled = true;
     }
+    else
+    {
+        if (message == "togglepvp")
+        {
+            client.PVP = !client.PVP;
+            
+            if (client.PVP)
+                client.SendServerMessage("PVP is now enabled.");
+            else
+                client.SendServerMessage("PVP is now disabled.");
+        }
+    }
 });
 
 AddHook("OnQuit", function (args) {
 
+});
+
+AddHook("OnEntityAttacked", function (args) {
+    var attacker = args.Attacker;
+    var target = args.Target;
+    
+    if (!args.Killed)
+        world.SendServerMessage(attacker.Name + " attacked " + target.Name + ".");
+    else
+        world.SendServerMessage(attacker.Name + " killed " + target.Name + ".");
 });
