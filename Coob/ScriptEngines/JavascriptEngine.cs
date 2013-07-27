@@ -60,6 +60,12 @@ namespace Coob
                 {
                     source = source.Replace(trimmed, PreprocessIncludes(File.ReadAllText(includePath), directory));
                 }
+                else
+                {
+                    Log.Error("Could not find file to include \"" + trimmed + "\" in plugin " + directory + ".");
+                    Log.Display();
+                    Environment.Exit(1);
+                }
             }
             return source;
         }
