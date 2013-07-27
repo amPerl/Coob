@@ -1,5 +1,7 @@
 ﻿var latestVersion = 3;
-
+﻿var serverName = "Server Name";
+﻿var MOTD = "Welcome to " + serverName + "!";
+﻿
 AddHook("OnInitialize", function (args) {
     //args.WorldSeed = 1234558078;
 });
@@ -18,6 +20,7 @@ AddHook("OnClientJoin", function (args) {
 
     LogInfo("Client #" + client.ID + ", " + client.Entity.Name + " has joined");
     world.SendServerMessage(client.Entity.Name + " has joined.");
+    client.SendServerMessage(MOTD)
 });
 
 AddHook("OnClientDisconnect", function (args) {
