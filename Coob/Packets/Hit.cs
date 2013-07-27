@@ -69,8 +69,6 @@ namespace Coob.Packets
                 
                 return hit;
             }
-<<<<<<< HEAD
-=======
 
             public void write(BinaryWriter bw)
             {
@@ -88,8 +86,6 @@ namespace Coob.Packets
                 bw.Write(ShowLight);
                 bw.Pad(1);
             }
-        
->>>>>>> d73a65acf84c3fd33c856b2825414078fb6ef2d7
 
             public override bool CallScript()
             {
@@ -98,12 +94,7 @@ namespace Coob.Packets
 
             public override void Process()
             {
-<<<<<<< HEAD
                 // Todo: Process Hit in world.
-=======
-                
-                
->>>>>>> d73a65acf84c3fd33c856b2825414078fb6ef2d7
             }
         }
     }
