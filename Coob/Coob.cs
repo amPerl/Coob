@@ -75,6 +75,8 @@ namespace Coob
                 Log.Display();
                 Environment.Exit(1);
             }
+
+            Log.Info("Listening on port: " + options.Port);
         }
 
         void onClientConnect(IAsyncResult result)
