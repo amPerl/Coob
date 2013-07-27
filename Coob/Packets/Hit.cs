@@ -43,8 +43,53 @@ namespace Coob.Packets
                 hit.HitType = client.Reader.ReadByte();
                 hit.ShowLight = client.Reader.ReadByte();
                 client.Reader.ReadBytes(1);
+
+
+
+
+                coob.World.HitPackets.Add(hit);
+
+                // I'm sure this logic is not supposed to sit here,
+                // does someone wanna move it to a better area?
+                // Process() wasn't being called
+                if (Globals.PVP && hit.EntityID != hit.TargetID)
+                {
+                    Client attacker = Root.Coob.Clients[hit.EntityID];
+                    Client defender = Root.Coob.Clients[hit.TargetID];
+                    if (attacker != null && defender != null)
+                    {
+                        defender.Entity.HP -= hit.Damage;
+                        if (defender.Entity.HP < 1) // DEAD!
+                        {
+                            Root.Coob.World.SendServerMessage(defender.Entity.Name + " has been killed by " + attacker.Entity.Name + "!");
+                        }
+                        
+                    }
+                }
+                
                 return hit;
             }
+<<<<<<< HEAD
+=======
+
+            public void write(BinaryWriter bw)
+            {
+                bw.Write(EntityID);
+                bw.Write(TargetID);
+                bw.Write(Damage);
+                bw.Write(Critical);
+                bw.Pad(3);
+                bw.Write(StunDuration);
+                bw.Write(Something8);
+                Position.Write(bw);
+                HitDirection.Write(bw);
+                bw.Write(Skill);
+                bw.Write(HitType);
+                bw.Write(ShowLight);
+                bw.Pad(1);
+            }
+        
+>>>>>>> d73a65acf84c3fd33c856b2825414078fb6ef2d7
 
             public override bool CallScript()
             {
@@ -53,7 +98,12 @@ namespace Coob.Packets
 
             public override void Process()
             {
+<<<<<<< HEAD
                 // Todo: Process Hit in world.
+=======
+                
+                
+>>>>>>> d73a65acf84c3fd33c856b2825414078fb6ef2d7
             }
         }
     }

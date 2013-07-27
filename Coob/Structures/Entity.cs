@@ -409,7 +409,7 @@ namespace Coob.Structures
             }
             if (bitArray.Get(14))
             {
-                Flags1 = from.Flags1;
+                Flags1 = Globals.PVP ? (byte)0x20 : from.Flags1;
                 Flags2 = from.Flags2;
             }
             if (bitArray.Get(15))

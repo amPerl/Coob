@@ -163,7 +163,7 @@ namespace Coob
 
                 if (dtSinceLastEntityUpdate >= Globals.EntityUpdatesPerSecond)
                 {
-                    World.SendEntityUpdates();
+                    World.SendServerUpdate();
                     dtSinceLastEntityUpdate = 0;
                 }
 
