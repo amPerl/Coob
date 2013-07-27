@@ -46,7 +46,6 @@ namespace Coob.Packets
                 return hit;
             }
 
-
             public override bool CallScript()
             {
                 return true;
