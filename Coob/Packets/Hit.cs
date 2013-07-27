@@ -59,7 +59,25 @@ namespace Coob.Packets
                 hit.HitType = client.Reader.ReadByte();
                 hit.ShowLight = client.Reader.ReadByte();
                 client.Reader.ReadBytes(1);
+                coob.World.HitPackets.Add(hit);
                 return hit;
+            }
+
+            public void write(BinaryWriter bw)
+            {
+                bw.Write(EntityID);
+                bw.Write(TargetID);
+                bw.Write(Damage);
+                bw.Write(Critical);
+                bw.Pad(3);
+                bw.Write(StunDuration);
+                bw.Write(Something8);
+                Position.Write(bw);
+                HitDirection.Write(bw);
+                bw.Write(Skill);
+                bw.Write(HitType);
+                bw.Write(ShowLight);
+                bw.Pad(1);
             }
         
 

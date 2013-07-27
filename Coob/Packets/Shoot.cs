@@ -48,32 +48,36 @@ namespace Coob.Packets
                 return true;
             }
 
+            public void write(BinaryWriter writer)
+            {
+ 
+                writer.Write(EntityID);
+                writer.Write(ChunkX);
+                writer.Write(ChunkY);
+                writer.Write(something5);
+                writer.Pad(4);
+                writer.Write(Position);
+                writer.Write(something13);
+                writer.Write(something14);
+                writer.Write(something15);
+                writer.Write(Velocity);
+                writer.Write(something19);
+                writer.Write(something20);
+                writer.Write(something21);
+                writer.Write(something22);
+                writer.Write(something23);
+                writer.Write(something24);
+                writer.Pad(3);
+                writer.Write(something25);
+                writer.Write(something26);
+                writer.Pad(3);
+                writer.Write(something27);
+                writer.Write(something28);
+            }
+
             public override void Process()
             {
-                //BinaryWriter writer = Sender.Writer;
-                //
-                //writer.Write(EntityID);
-                //writer.Write(ChunkX);
-                //writer.Write(ChunkY);
-                //writer.Write(something5);
-                //writer.Pad(4);
-                //writer.Write(Position);
-                //writer.Write(something13);
-                //writer.Write(something14);
-                //writer.Write(something15);
-                //writer.Write(Velocity);
-                //writer.Write(something19);
-                //writer.Write(something20);
-                //writer.Write(something21);
-                //writer.Write(something22);
-                //writer.Write(something23);
-                //writer.Write(something24);
-                //writer.Pad(3);
-                //writer.Write(something25);
-                //writer.Write(something26);
-                //writer.Pad(3);
-                //writer.Write(something27);
-                //writer.Write(something28);
+
             }
 
             public static Base Parse(Client client, Coob coob)
@@ -103,7 +107,7 @@ namespace Coob.Packets
                 reader.ReadBytes(3);
                 shoot.something27 = reader.ReadUInt32();
                 shoot.something28 = reader.ReadUInt32();
-
+                coob.World.ShootPackets.Add(shoot);
                 return shoot;
             }
         }
