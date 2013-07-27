@@ -2,6 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coob", "Coob\Coob.csproj", "{B6AFC2FC-71DF-4F14-B756-BF1EFF17DC07}"
+	ProjectSection(ProjectDependencies) = postProject
+		{864789F1-FCA3-45F4-A630-602E5CBAF8B1} = {864789F1-FCA3-45F4-A630-602E5CBAF8B1}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Content", "Content\Content.csproj", "{864789F1-FCA3-45F4-A630-602E5CBAF8B1}"
 EndProject
