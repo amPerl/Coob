@@ -37,6 +37,7 @@ namespace Coob
         public void LoadPlugin(string pluginName, string sourceFile)
         {
             Log.Info("Loading Javascript plugin \"{0}\"", pluginName);
+            Console.WriteLine("TESTTTTT");
 
             string pluginSource = File.ReadAllText(sourceFile).Replace("\r\n", "\n");
             pluginSource = PreprocessIncludes(pluginSource, Path.GetDirectoryName(sourceFile));
@@ -76,9 +77,12 @@ namespace Coob
 
         public void RunString(string code)
         {
+            if (code == null)
+                return;
             try
             {
                 engine.Run(code);
+                
             }
             catch (JintException ex)
             {
