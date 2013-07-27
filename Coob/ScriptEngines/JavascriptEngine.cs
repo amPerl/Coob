@@ -38,15 +38,16 @@ namespace Coob
         {
             Log.Info("Loading Javascript plugin \"{0}\"", pluginName);
 
-            string pluginSource = File.ReadAllText(sourceFile);
+            string pluginSource = File.ReadAllText(sourceFile).Replace("\r\n", "\n");
             pluginSource = PreprocessIncludes(pluginSource, Path.GetDirectoryName(sourceFile));
 
-            source += pluginSource;
+            source += pluginSource + "\n";
         }
 
         public string PreprocessIncludes(string source, string directory)
         {
-            foreach (var line in source.Split('\n'))
+            var lines = source.Split('\n');
+            foreach (var line in lines)
             {
                 string trimmed = line.Trim();
                 if (!trimmed.StartsWith("#include \"")) continue;
