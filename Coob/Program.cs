@@ -29,18 +29,16 @@ namespace Coob
 
             Scripting.Run();
 
+            var eventArgs = Root.ScriptManager.CallEvent("OnInitialize", new InitializeEventArgs()) as InitializeEventArgs;
+
             Coob = new Coob(new CoobOptions
                             {
                                 Port = 12345,
-                                WorldSeed = 1234,
+                                WorldSeed = eventArgs.WorldSeed,
                             });
 
             Scripting.SetParameter("coob", Coob);
             Scripting.SetParameter("world", Coob.World);
-
-            var initializeEventArgs = new InitializeEventArgs(0);
-            if (ScriptManager.CallEvent("OnInitialize", initializeEventArgs).Canceled)
-                return;
 
             Log.Info("World seed: " + Coob.World.Seed);
 
