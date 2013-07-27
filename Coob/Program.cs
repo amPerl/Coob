@@ -40,10 +40,6 @@ namespace Coob
             Scripting.SetParameter("coob", Coob);
             Scripting.SetParameter("world", Coob.World);
 
-            var initializeEventArgs = new InitializeEventArgs();
-            if (ScriptManager.CallEvent("OnInitialize", initializeEventArgs).Canceled)
-                return;
-
             Log.Info("World seed: " + Coob.World.Seed);
 
             Coob.StartServer();
