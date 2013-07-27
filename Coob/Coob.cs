@@ -228,7 +228,18 @@ namespace Coob
             return Clients.Values.Where(cl => cl != except && cl.Joined).ToArray();
         }
 
+        public Client GetClient(ulong id)
+        {
+            if (Clients.ContainsKey(id))
+                return Clients[id];
 
+            return null;
+        }
 
+        public Client GetClient(string name)
+        {
+            name = name.ToLower();
+            return Clients.Values.FirstOrDefault(client => client.Entity.Name.ToLower() == name);
+        }
     }
 }
