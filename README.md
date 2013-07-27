@@ -19,7 +19,7 @@ You can log in and move around with other players as of writing this.
 
 <b>Author:</b> Perl
 
-<b>Contributors:</b><br>
-Skippy<br>
-PhonicUK<br>
-xEnt22<br>
+<b>Contributors:</b> (incomplete)<br>
+<a href="https://github.com/Skippeh">Skippy</a><br>
+<a href="https://github.com/PhonicUK">PhonicUK</a><br>
+<a href="https://github.com/xEnt22">xEnt22</a><br>
