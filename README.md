@@ -23,3 +23,4 @@ You can log in and move around with other players as of writing this.
 <a href="https://github.com/Skippeh">Skippy</a><br>
 <a href="https://github.com/PhonicUK">PhonicUK</a><br>
 <a href="https://github.com/xEnt22">xEnt22</a><br>
+<a href="https://github.com/matpow2/cuwo/#special-thanks">Everyone who contributed to cuwo</a><br>
