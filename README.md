@@ -2,26 +2,24 @@
 
 A CubeWorld Server. Standalone server written in C# with JavaScript scripting support.
 
-Website: None yet, here's the forum thread: http://cubeworldforum.org/topic/10274-coob-a-net-cubeworld-server-with-javascript-scripting/
+Website: None yet, <a href="http://cubeworldforum.org/topic/10274-coob-a-net-cubeworld-server-with-javascript-scripting/">there's only a forum thread.</a>
 
 ====
 
 FAQ:
 
-Q: What works?
-A: You can move around and fight other players if you want to, but it's still buggy and prone to crashes. The server is still in early development so things will change.
+<b>Q: What works?</b><br>
+<b>A:</b> You can move around and fight other players if you want to, but it's still buggy and prone to crashes. <i>The server is still in early development so things will change.</i>
 
-Q: Can I play yet?
-A: You can download the latest version and compile it for testing but no guarantee on stability.
-You can log in and move around the game with other players as of writing this.
-
-====
-
-Author: Perl
+<b>Q: Can I play yet?</b><br>
+<b>A:</b> You can download the latest version and compile it for testing but no guarantee on stability.
+You can log in and move around with other players as of writing this.
 
 ====
 
-Contributors:
-Skippy
-PhonicUK
-xEnt22
+<b>Author:</b> Perl
+
+<b>Contributors:</b><br>
+Skippy<br>
+PhonicUK<br>
+xEnt22<br>
