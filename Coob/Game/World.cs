@@ -16,9 +16,8 @@ namespace Coob.Game
         public ConcurrentDictionary<ulong, Entity> Entities { get; private set; }
         public Coob Coob { get; private set; }
 
-
-        public List<Packets.Packet.Hit> HitPackets = new List<Packets.Packet.Hit>();
-        public List<Packets.Packet.Shoot> ShootPackets = new List<Packets.Packet.Shoot>();
+        public List<Packet.Hit> HitPackets = new List<Packet.Hit>();
+        public List<Packet.Shoot> ShootPackets = new List<Packet.Shoot>();
 
         public World(int seed, Coob coob)
         {
@@ -36,54 +35,59 @@ namespace Coob.Game
 
         public void SendServerUpdate()
         {
-            // Start of our Server-wide Updates
-
             byte[] compressed;
 
             using (var ms = new MemoryStream())
             using (var bw = new BinaryWriter(ms))
             {
-
                 uint items_1_length = 0;
                 bw.Write(items_1_length);
+
                 bw.Write(HitPackets.Count);
-                foreach (Packets.Packet.Hit hit in HitPackets)
+                foreach (Packet.Hit hit in HitPackets)
                 {
-                    hit.write(bw);
+                    hit.Write(bw);
                 }
+
                 uint items_3_length = 0;
                 bw.Write(items_3_length);
+
                 uint sound_actions_length = 0;
-                bw.Write((uint)sound_actions_length);
+                bw.Write(sound_actions_length);
 
                 bw.Write(ShootPackets.Count);
-                foreach (Packets.Packet.Shoot shoot in ShootPackets)
+                foreach (Packet.Shoot shoot in ShootPackets)
                 {
                     shoot.write(bw);
                 }
 
                 uint items_6_length = 0;
                 bw.Write(items_6_length);
+
                 uint chunk_items_length = 0;
                 bw.Write(chunk_items_length);
+
                 uint items_8_length = 0;
                 bw.Write(items_8_length);
+
                 uint pickups_length = 0;
                 bw.Write(pickups_length);
+
                 uint kill_actions = 0;
                 bw.Write(kill_actions);
+
                 uint damage_actions = 0;
                 bw.Write(damage_actions);
+
                 uint items_12_length = 0;
                 bw.Write(items_12_length);
+
                 uint missions_length = 0;
                 bw.Write(missions_length);
-
 
                 byte[] uncompressed = ms.ToArray();
                 compressed = ZlibHelper.CompressBuffer(uncompressed);
             }
-
 
             // Send all the compressed data to every client
             foreach (Client client in Coob.GetClients())

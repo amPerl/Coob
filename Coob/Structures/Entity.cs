@@ -86,8 +86,13 @@ namespace Coob.Structures
 
         #endregion
 
-        public Entity()
+        public Coob Coob;
+        public Client Client;
+
+        public Entity(Coob coob, Client owner)
         {
+            Client = owner;
+            Coob = coob;
             Position = new QVector3();
             Rotation = new Vector3();
             Velocity = new Vector3();
@@ -181,6 +186,21 @@ namespace Coob.Structures
             if (bitArray.Get(14))
             {
                 Flags1 = reader.ReadByte();
+
+                // Not sure how necessary this is.
+                if (Client != null && Client.PVP)
+                {
+                    if (Flags1 == 0x40) // Non-hostile
+                        Flags1 = 0x20;
+                }
+                else if (Client != null && !Client.PVP)
+                {
+                    if (Flags1 == 0x20) // Hostile
+                        Flags1 = 0x40;
+                }
+
+                Log.Info("Flags1: " + Flags1);
+
                 Flags2 = reader.ReadByte();
             }
             if (bitArray.Get(15))
@@ -409,7 +429,7 @@ namespace Coob.Structures
             }
             if (bitArray.Get(14))
             {
-                Flags1 = Globals.PVP ? (byte)0x20 : from.Flags1;
+                Flags1 = from.Flags1;
                 Flags2 = from.Flags2;
             }
             if (bitArray.Get(15))

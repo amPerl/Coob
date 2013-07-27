@@ -45,9 +45,10 @@ namespace Coob.Packets
 
                     if (client.Entity == null)
                     {
-                        entity = new Entity();
+                        entity = new Entity(coob, null);
 
                         client.Entity = entity;
+                        entity.Client = client;
                         entity.ID = client.ID;
                         coob.World.Entities[client.ID] = client.Entity;
 
@@ -59,7 +60,7 @@ namespace Coob.Packets
                     {
                         entity = coob.World.Entities[id];
 
-                        Entity changes = new Entity();
+                        Entity changes = new Entity(coob, client);
                         changes.ReadByMask(br);
 
                         return new EntityUpdate(client.Entity, changes, false, client);

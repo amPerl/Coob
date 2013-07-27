@@ -22,6 +22,7 @@ namespace Coob
         public Entity Entity;
         public string IP;
         public Coob Coob { get; private set; }
+        public bool PVP;
         private bool disconnecting;
 
         TcpClient tcp;

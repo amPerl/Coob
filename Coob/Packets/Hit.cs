@@ -24,6 +24,9 @@ namespace Coob.Packets
             public byte HitType;
             public byte ShowLight;
 
+            public Entity Attacker;
+            public Entity Target;
+
             public Hit(Client client) : base(client) { }
 
             public static Base Parse(Client client, Coob coob)
@@ -44,33 +47,15 @@ namespace Coob.Packets
                 hit.ShowLight = client.Reader.ReadByte();
                 client.Reader.ReadBytes(1);
 
-
-
-
                 coob.World.HitPackets.Add(hit);
 
-                // I'm sure this logic is not supposed to sit here,
-                // does someone wanna move it to a better area?
-                // Process() wasn't being called
-                if (Globals.PVP && hit.EntityID != hit.TargetID)
-                {
-                    Client attacker = Root.Coob.Clients[hit.EntityID];
-                    Client defender = Root.Coob.Clients[hit.TargetID];
-                    if (attacker != null && defender != null)
-                    {
-                        defender.Entity.HP -= hit.Damage;
-                        if (defender.Entity.HP < 1) // DEAD!
-                        {
-                            Root.Coob.World.SendServerMessage(defender.Entity.Name + " has been killed by " + attacker.Entity.Name + "!");
-                        }
-                        
-                    }
-                }
-                
+                hit.Attacker = coob.World.Entities[hit.EntityID];
+                hit.Target = coob.World.Entities[hit.TargetID];
+
                 return hit;
             }
 
-            public void write(BinaryWriter bw)
+            public override void Write(BinaryWriter bw)
             {
                 bw.Write(EntityID);
                 bw.Write(TargetID);
@@ -94,7 +79,18 @@ namespace Coob.Packets
 
             public override void Process()
             {
-                // Todo: Process Hit in world.
+                if (EntityID != TargetID)
+                {
+                    if (Attacker != null && Target != null)
+                    {
+                        // If target is an npc(probably friendly npc's too) or attacker and target has pvp enabled.
+                        if (Target.Client == null || (Attacker.Client != null && Attacker.Client.PVP && Target.Client != null && Target.Client.PVP))
+                        {
+                            Target.HP -= Damage;
+                            Root.ScriptManager.CallEvent("OnEntityAttacked", new EntityAttackedEventArgs(Attacker, Target));
+                        }
+                    }
+                }
             }
         }
     }

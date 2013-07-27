@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -26,6 +27,7 @@ namespace Coob.Packets
 
             public abstract bool CallScript();
             public abstract void Process();
+            public virtual void Write(BinaryWriter writer) { }
         }
     }
 

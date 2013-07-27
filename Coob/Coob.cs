@@ -134,7 +134,7 @@ namespace Coob
 
         readonly Stopwatch elapsedDt = new Stopwatch();
         float dtSinceLastWorldUpdate = 0;
-        float dtSinceLastEntityUpdate = 0;
+        float dtSinceLastServerUpdate = 0;
         float accumulator = 0;
 
         private void UpdateWorld()
@@ -153,7 +153,7 @@ namespace Coob
                 //Console.WriteLine(dt);
 
                 dtSinceLastWorldUpdate += dt * 1000f; // * 1000 because counting in milliseconds below.
-                dtSinceLastEntityUpdate += dt * 1000f;
+                dtSinceLastServerUpdate += dt * 1000f;
 
                 if (dtSinceLastWorldUpdate >= Globals.WorldTickPerSecond)
                 {
@@ -161,10 +161,10 @@ namespace Coob
                     dtSinceLastWorldUpdate = 0;
                 }
 
-                if (dtSinceLastEntityUpdate >= Globals.EntityUpdatesPerSecond)
+                if (dtSinceLastServerUpdate >= Globals.EntityUpdatesPerSecond)
                 {
                     World.SendServerUpdate();
-                    dtSinceLastEntityUpdate = 0;
+                    dtSinceLastServerUpdate = 0;
                 }
 
                 Log.Display();

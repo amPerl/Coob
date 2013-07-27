@@ -61,6 +61,7 @@
     <Compile Include="CoobEventArgs\ClientJoinEventArgs.cs" />
     <Compile Include="CoobEventArgs\ClientVersionEventArgs.cs" />
     <Compile Include="CoobEventArgs\DisconnectEventArgs.cs" />
+    <Compile Include="CoobEventArgs\EntityAttackedEventArgs.cs" />
     <Compile Include="CoobEventArgs\EntityUpdateEventArgs.cs" />
     <Compile Include="CoobEventArgs\InteractEventArgs.cs" />
     <Compile Include="CoobEventArgs\WorldUpdateEventArgs.cs" />
