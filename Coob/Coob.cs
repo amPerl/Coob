@@ -54,6 +54,7 @@ namespace Coob
             PacketParsers.Add((int)CSPacketIDs.ChunkDiscovered, Packet.UpdateChunk.Parse);
             PacketParsers.Add((int)CSPacketIDs.SectorDiscovered, Packet.UpdateSector.Parse);
             PacketParsers.Add((int)CSPacketIDs.ClientVersion, Packet.ClientVersion.Parse);
+            PacketParsers.Add((int)CSPacketIDs.Hit, Packet.Hit.Parse);
 
             try
             {
