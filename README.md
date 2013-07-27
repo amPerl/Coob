@@ -14,13 +14,9 @@ A: You can move around and fight other players if you want to, but it's still bu
 Q: Can I play yet?
 A: You can download the latest version and compile it for testing but no guarantee on stability.
 You can log in and move around the game with other players as of writing this.
-
 ====
-
 Author: Perl
-
 ====
-
 Contributors:
 Skippy
 PhonicUK
