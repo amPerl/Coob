@@ -17,6 +17,17 @@ AddHook("OnClientJoin", function (args) {
     var client = args.Client;
 
     LogInfo("Client #" + client.ID + ", " + client.Entity.Name + " has joined");
+    world.SendServerMessage(client.Entity.Name + " has joined.");
+});
+
+AddHook("OnClientDisconnect", function (args) {
+    var client = args.Client;
+    var reason = args.Reason;
+    
+    LogInfo("OnClientDisconnect");
+    LogInfo(client.Entity.Name + " disconnected.");
+    LogInfo("Clients count: " + coob.Clients.Count);
+    world.SendServerMessage(client.Entity.Name + " disconnected. (" + reason + ")");
 });
 
 AddHook("OnEntityUpdate", function (args) {

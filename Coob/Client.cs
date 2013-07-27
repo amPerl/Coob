@@ -76,14 +76,13 @@ namespace Coob
         public void Disconnect(string reason = "")
         {
             Joined = false;
-            Root.ScriptManager.CallEvent("OnClientDisconnect", new DisconnectEventArgs(this));
             disconnecting = true;
-            Log.Info("Client {0} disconnected ({1}).", ID, reason);
             tcp.Close();
 
-            if (Coob.Clients.ContainsKey(this.ID))
+            if (Coob.Clients.ContainsKey(ID))
             {
-                Coob.Clients.Remove(this.ID);
+                var client = Coob.Clients[ID];
+                Coob.Clients.Remove(ID);
 
                 Entity removedEntity;
                 if (!Coob.World.Entities.TryRemove(this.ID, out removedEntity))
@@ -91,9 +90,7 @@ namespace Coob
                     throw new NotImplementedException("Failed to remove entity from Entities");
                 }
 
-                Coob.World.SendServerMessage(string.Format("{0} disconnected. ({1})", Entity.Name, reason));
-
-                Log.Info("Clients count: {0}", Coob.Clients.Count);
+                Root.ScriptManager.CallEvent("OnClientDisconnect", new ClientDisconnectEventArgs(client, reason));
             }
         }
 

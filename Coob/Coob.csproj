@@ -57,6 +57,7 @@
     <Content Include="CoobPlugin.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Compile Include="CoobEventArgs\ClientDisconnectEventArgs.cs" />
     <Compile Include="CoobEventArgs\ClientJoinEventArgs.cs" />
     <Compile Include="CoobEventArgs\ClientVersionEventArgs.cs" />
     <Compile Include="CoobEventArgs\DisconnectEventArgs.cs" />
