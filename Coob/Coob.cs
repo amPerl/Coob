@@ -184,19 +184,18 @@ namespace Coob
                 {
                     try
                     {
-                        if (!message.CallScript()) goto sleep;
+                        if (!message.CallScript()) continue;
                     }
                     catch (JsException ex)
                     {
                         var messageText = (ex.InnerException != null ? (ex.Message + ": " + ex.InnerException.Message) : ex.Message);
                         Log.Error("JS Error on {0}: {1} - {2}", message.PacketTypeName, messageText, ex.Value);
-                        goto sleep;
+                        continue;
                     }
 
                     message.Process();
                 }
 
-            sleep:
                 Thread.Sleep(5); // Avoid maxing the cpu (as much).
             }
         }
