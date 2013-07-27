@@ -59,7 +59,30 @@ namespace Coob.Packets
                 hit.HitType = client.Reader.ReadByte();
                 hit.ShowLight = client.Reader.ReadByte();
                 client.Reader.ReadBytes(1);
+
+
+
+
                 coob.World.HitPackets.Add(hit);
+
+                // I'm sure this logic is not supposed to sit here,
+                // does someone wanna move it to a better area?
+                // Process() wasn't being called
+                if (Globals.PVP && hit.EntityID != hit.TargetID)
+                {
+                    Client attacker = Root.Coob.Clients[hit.EntityID];
+                    Client defender = Root.Coob.Clients[hit.TargetID];
+                    if (attacker != null && defender != null)
+                    {
+                        defender.Entity.HP -= hit.Damage;
+                        if (defender.Entity.HP < 1) // DEAD!
+                        {
+                            Root.Coob.World.SendServerMessage(defender.Entity.Name + " has been killed by " + attacker.Entity.Name + "!");
+                        }
+                        
+                    }
+                }
+                
                 return hit;
             }
 
@@ -88,6 +111,7 @@ namespace Coob.Packets
 
             public override void Process()
             {
+                
                 
             }
         }
