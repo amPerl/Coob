@@ -94,9 +94,14 @@ namespace Coob.Game
             {
                 if (!client.Joined)
                     continue;
+
+                try
+                {
                     client.Writer.Write(SCPacketIDs.ServerUpdate);
                     client.Writer.Write((uint)compressed.Length);
                     client.Writer.Write(compressed);
+                }
+                catch (IOException ioEx) { }
             }
 
             // Clear data

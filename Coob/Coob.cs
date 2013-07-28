@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Net.Sockets;
@@ -187,6 +188,7 @@ namespace Coob
                     try
                     {
                         if (!message.CallScript()) continue;
+                        message.Process();
                     }
                     catch (JsException ex)
                     {
@@ -194,8 +196,10 @@ namespace Coob
                         Log.Error("JS Error on {0}: {1} - {2}", message.PacketTypeName, messageText, ex.Value);
                         continue;
                     }
-
-                    message.Process();
+                    catch (IOException ioEx)
+                    {
+                        // Client disconnected while we were writing to its netwriter.
+                    }
                 }
 
                 Thread.Sleep(5); // Avoid maxing the cpu (as much).
