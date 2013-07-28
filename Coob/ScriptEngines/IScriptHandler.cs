@@ -10,7 +10,7 @@ namespace Coob
         void Load(string sourceFile);
         void LoadPlugin(string pluginName, string entryFile);
         void Run();
-        void RunString(string code);
+        object RunString(string code);
         T CallFunction<T>(object function, params object[] arguments);
         void CallFunction(object function, params object[] arguments);
         string GetScriptDirectoryName();

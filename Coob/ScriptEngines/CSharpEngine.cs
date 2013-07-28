@@ -60,8 +60,9 @@ namespace Coob
             mainType.GetMethod("Main").Invoke(mainClass, new object[]{});
         }
 
-        public void RunString(string code)
+        public object RunString(string code)
         {
+            return null;
             //throw new NotImplementedException();
         }
 

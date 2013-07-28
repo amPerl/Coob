@@ -80,17 +80,18 @@ namespace Coob
             engine.SetFunction(name, function);
         }
 
-        public void RunString(string code)
+        public object RunString(string code)
         {
             try
             {
-                engine.Run(code);
+                return engine.Run(code);
             }
             catch (JintException ex)
             {
                 Log.Error(ex.InnerException != null ? (ex.Message + ": " + ex.InnerException.Message) : ex.Message);
                 Log.Display();
                 //Environment.Exit(1);
+                return null;
             }
         }
 
