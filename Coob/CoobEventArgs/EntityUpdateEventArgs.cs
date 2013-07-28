@@ -6,7 +6,7 @@ using Coob.Structures;
 
 namespace Coob.CoobEventArgs
 {
-    class EntityUpdateEventArgs : ScriptEventArgs
+    public class EntityUpdateEventArgs : ScriptEventArgs
     {
         public Entity Changes { get; private set; }
 
