@@ -19,7 +19,6 @@ namespace Coob
 
         public void Initialize()
         {
-
             foreach (var scriptHandler in ScriptHandlers)
             {
                 scriptHandler.Initialize();
@@ -39,12 +38,12 @@ namespace Coob
                     RemoveHook(eventName, function);
                 }));
 
-                string pluginDirectory = Path.Combine(@"Plugins\", scriptHandler.GetScriptDirectoryName());
+                string pluginDirectory = Path.Combine(@"Plugins", scriptHandler.GetScriptDirectoryName());
                 if (Directory.Exists(pluginDirectory))
                 {
                     foreach (string directory in Directory.GetDirectories(pluginDirectory))
                     {
-                        string pluginName = directory.Substring(directory.LastIndexOf('\\') + 1);
+                        string pluginName = directory.Substring(directory.LastIndexOf('/') + 1);
 
                         string entryPath = Path.Combine(directory, scriptHandler.GetEntryFileName() + scriptHandler.GetScriptExtension());
                         if (File.Exists(entryPath))
