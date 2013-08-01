@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Coob.CoobEventArgs
+﻿namespace Coob.CoobEventArgs
 {
-    class DisconnectEventArgs : ScriptEventArgs
+    public class DisconnectEventArgs : ScriptEventArgs
     {
-        public DisconnectEventArgs(Client client) : base(client) { }
+        public DisconnectEventArgs(Client client)
+            : base(client)
+        {
+
+        }
     }
 }

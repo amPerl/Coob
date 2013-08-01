@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 
 namespace Coob
 {
@@ -24,16 +20,15 @@ namespace Coob
 
         public static void Pad(this BinaryWriter writer, int length)
         {
-            var nullArray = new byte[length];
-            writer.Write(nullArray);
+            writer.Write(new byte[length]);
         }
 
-        public static void Write(this BinaryWriter writer, Packets.SCPacketIDs pId)
+        public static void Write(this BinaryWriter writer, Packets.ScPacketIDs pId)
         {
             writer.Write((int)pId);
         }
 
-        public static void Write(this BinaryWriter writer, Packets.CSPacketIDs pId)
+        public static void Write(this BinaryWriter writer, Packets.CsPacketIDs pId)
         {
             writer.Write((int)pId);
         }

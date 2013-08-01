@@ -1,15 +1,12 @@
 ﻿using Microsoft.CSharp;
 using System;
 using System.CodeDom.Compiler;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 
-namespace Coob
+namespace Coob.ScriptEngines
 {
-    class CSharpEngine : IScriptHandler
+    public class CSharpEngine : IScriptHandler
     {
         private string source;
 
@@ -37,14 +34,7 @@ namespace Coob
         public void Load(string sourceFile)
         {
             source = File.ReadAllText(sourceFile);
-            var res = codeProvider.CompileAssemblyFromSource(
-                new System.CodeDom.Compiler.CompilerParameters()
-                {
-                    GenerateInMemory = false
-                },
-                source
-            );
-
+            var res = codeProvider.CompileAssemblyFromSource(new CompilerParameters { GenerateInMemory = false }, source);
             compiledAssembly = res.CompiledAssembly;
 
             mainType = compiledAssembly.GetType("CoobPlugin");
@@ -53,11 +43,12 @@ namespace Coob
 
         public void LoadPlugin(string pluginName, string sourceFile)
         {
+
         }
 
         public void Run()
         {
-            mainType.GetMethod("Main").Invoke(mainClass, new object[]{});
+            mainType.GetMethod("Main").Invoke(mainClass, new object[] { });
         }
 
         public object RunString(string code)
@@ -68,16 +59,11 @@ namespace Coob
 
         public T CallFunction<T>(object function, params object[] arguments)
         {
-            if (function is MethodInfo)
-            {
-                var output = ((MethodInfo)function).Invoke(mainClass, arguments);
-                return (T)output;
-            }
-            else
-            {
-                var output = mainType.GetMethod((string)function).Invoke(mainClass, arguments);
-                return (T)output;
-            }
+            var methodInfo = function as MethodInfo;
+            if (methodInfo != null)
+                return (T)methodInfo.Invoke(mainClass, arguments);
+
+            return (T)mainType.GetMethod((string)function).Invoke(mainClass, arguments);
         }
 
         public void CallFunction(object function, params object[] arguments)

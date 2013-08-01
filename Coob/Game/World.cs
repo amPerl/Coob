@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Coob.CoobEventArgs;
 using Coob.Structures;
 using Coob.Packets;
@@ -30,7 +28,7 @@ namespace Coob.Game
         {
             // Update stuff
 
-            var eventArgs = Root.ScriptManager.CallEvent("OnWorldUpdate", new WorldUpdateEventArgs(dt));
+            var eventArgs = Program.ScriptManager.CallEvent("OnWorldUpdate", new WorldUpdateEventArgs(dt));
         }
 
         public void SendServerUpdate()
@@ -40,68 +38,64 @@ namespace Coob.Game
             using (var ms = new MemoryStream())
             using (var bw = new BinaryWriter(ms))
             {
-                uint items_1_length = 0;
-                bw.Write(items_1_length);
+                const uint Items1Length = 0;
+                bw.Write(Items1Length);
 
                 bw.Write(HitPackets.Count);
                 foreach (Packet.Hit hit in HitPackets)
-                {
                     hit.Write(bw);
-                }
 
-                uint items_3_length = 0;
-                bw.Write(items_3_length);
+                const uint Items3Length = 0;
+                bw.Write(Items3Length);
 
-                uint sound_actions_length = 0;
-                bw.Write(sound_actions_length);
+                const uint SoundActionsLength = 0;
+                bw.Write(SoundActionsLength);
 
                 bw.Write(ShootPackets.Count);
                 foreach (Packet.Shoot shoot in ShootPackets)
-                {
-                    shoot.write(bw);
-                }
+                    shoot.Write(bw);
 
-                uint items_6_length = 0;
-                bw.Write(items_6_length);
+                const uint Items6Length = 0;
+                bw.Write(Items6Length);
 
-                uint chunk_items_length = 0;
-                bw.Write(chunk_items_length);
+                const uint ChunkItemsLength = 0;
+                bw.Write(ChunkItemsLength);
 
-                uint items_8_length = 0;
-                bw.Write(items_8_length);
+                const uint Items8Length = 0;
+                bw.Write(Items8Length);
 
-                uint pickups_length = 0;
-                bw.Write(pickups_length);
+                const uint PickupsLength = 0;
+                bw.Write(PickupsLength);
 
-                uint kill_actions = 0;
-                bw.Write(kill_actions);
+                const uint KillActions = 0;
+                bw.Write(KillActions);
 
-                uint damage_actions = 0;
-                bw.Write(damage_actions);
+                const uint DamageActions = 0;
+                bw.Write(DamageActions);
 
-                uint items_12_length = 0;
-                bw.Write(items_12_length);
+                const uint Items12Length = 0;
+                bw.Write(Items12Length);
 
-                uint missions_length = 0;
-                bw.Write(missions_length);
+                const uint MissionsLength = 0;
+                bw.Write(MissionsLength);
 
                 byte[] uncompressed = ms.ToArray();
                 compressed = ZlibHelper.CompressBuffer(uncompressed);
             }
 
             // Send all the compressed data to every client
-            foreach (Client client in Coob.GetClients())
+            foreach (Client client in Coob.GetClients().Where(client => client.Joined))
             {
-                if (!client.Joined)
-                    continue;
-
                 try
                 {
-                    client.Writer.Write(SCPacketIDs.ServerUpdate);
+                    client.Writer.Write(ScPacketIDs.ServerUpdate);
                     client.Writer.Write((uint)compressed.Length);
                     client.Writer.Write(compressed);
                 }
-                catch (IOException ioEx) { }
+                catch (IOException)
+                {
+
+                }
             }
 
             // Clear data
@@ -114,37 +108,20 @@ namespace Coob.Game
         /// <param name="time">The elapsed hours in 0-24 range.</param>
         public void SetTime(uint day, float time)
         {
-            foreach (var client in Coob.GetClients())
-            {
-                if (client.Joined)
-                {
-                    client.SetTime(day, time);
-                }
-            }
+            foreach (var client in Coob.GetClients().Where(client => client.Joined))
+                client.SetTime(day, time);
         }
 
         public void SendServerMessage(string message)
         {
-            foreach(var client in Coob.GetClients())
-            {
-                if (client.Joined)
-                {
-                    client.SendServerMessage(message);
-                }
-            }
+            foreach (var client in Coob.GetClients().Where(client => client.Joined))
+                client.SendServerMessage(message);
         }
 
         public void BroadcastChat(ulong id, string message)
         {
-            foreach (var client in Coob.GetClients())
-            {
-                if (client.Joined)
-                {
-                    client.SendMessage(id, message);
-                }
-            }
+            foreach (var client in Coob.GetClients().Where(client => client.Joined))
+                client.SendMessage(id, message);
         }
     }
-
- 
 }

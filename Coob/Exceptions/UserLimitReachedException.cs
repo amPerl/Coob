@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Coob.Exceptions
 {
-    class UserLimitReachedException : Exception
+    public class UserLimitReachedException : Exception
     {
-        public UserLimitReachedException() : base() { }
+
     }
 }

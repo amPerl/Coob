@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using Coob.CoobEventArgs;
+﻿using Coob.CoobEventArgs;
 using Coob.Structures;
 
 namespace Coob.Packets
 {
     public partial class Packet
     {
-
         public enum InteractType : byte
         {
-            NPC = 2,
+            Npc = 2,
             Normal = 3,
             Pickup = 5,
             Drop = 6,
@@ -33,15 +27,17 @@ namespace Coob.Packets
             public Interact(Client client)
                 : base(client)
             {
+
             }
 
             public static Base Parse(Client client, Coob coob)
             {
-                Item Item = new Item();
-                Item.Read(client.Reader);
+                Item item = new Item();
+                item.Read(client.Reader);
+
                 return new Interact(client)
                 {
-                    Item = Item,
+                    Item = item,
                     ChunkX = client.Reader.ReadInt32(),
                     ChunkY = client.Reader.ReadInt32(),
                     ItemIndex = client.Reader.ReadInt32(),
@@ -55,7 +51,7 @@ namespace Coob.Packets
             public override bool CallScript()
             {
                 var interactArgs = new InteractEventArgs(Sender, this);
-                return Root.ScriptManager.CallEvent("OnInteract", interactArgs).Canceled == false;
+                return Program.ScriptManager.CallEvent("OnInteract", interactArgs).Canceled == false;
             }
 
             public override void Process()

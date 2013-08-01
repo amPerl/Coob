@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 
 namespace Coob.Structures
 {
@@ -21,10 +17,6 @@ namespace Coob.Structures
         public float BodyPitch, ArmPitch, ArmRoll, ArmYaw;
         public float FeetPitch, WingPitch, BackPitch;
         public Vector3 BodyOffset, HeadOffset, HandOffset, FootOffset, BackOffset, WingOffset;
-
-        public Appearance()
-        {
-        }
 
         public void Read(BinaryReader reader)
         {
@@ -63,17 +55,18 @@ namespace Coob.Structures
             FeetPitch = reader.ReadSingle();
             WingPitch = reader.ReadSingle();
             BackPitch = reader.ReadSingle();
-            BodyOffset = new Vector3 { X = reader.ReadSingle(), Y = reader.ReadSingle(), Z = reader.ReadSingle() };
-            HeadOffset = new Vector3 { X = reader.ReadSingle(), Y = reader.ReadSingle(), Z = reader.ReadSingle() };
-            HandOffset = new Vector3 { X = reader.ReadSingle(), Y = reader.ReadSingle(), Z = reader.ReadSingle() };
-            FootOffset = new Vector3 { X = reader.ReadSingle(), Y = reader.ReadSingle(), Z = reader.ReadSingle() };
-            BackOffset = new Vector3 { X = reader.ReadSingle(), Y = reader.ReadSingle(), Z = reader.ReadSingle() };
-            WingOffset = new Vector3 { X = reader.ReadSingle(), Y = reader.ReadSingle(), Z = reader.ReadSingle() };
+            BodyOffset = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+            HeadOffset = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+            HandOffset = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+            FootOffset = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+            BackOffset = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+            WingOffset = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
         }
 
         public void CopyFrom(Appearance from)
         {
-            if (from == null) return;
+            if (from == null)
+                return;
 
             NotUsed1 = from.NotUsed1;
             NotUsed2 = from.NotUsed2;

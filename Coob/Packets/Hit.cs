@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using Coob.CoobEventArgs;
 using Coob.Structures;
 
@@ -12,8 +8,8 @@ namespace Coob.Packets
     {
         public class Hit : Base
         {
-            public ulong EntityID;
-            public ulong TargetID;
+            public ulong EntityId;
+            public ulong TargetId;
             public float Damage;
             public byte Critical;
             public uint StunDuration;
@@ -27,14 +23,18 @@ namespace Coob.Packets
             public Entity Attacker;
             public Entity Target;
 
-            public Hit(Client client) : base(client) { }
+            public Hit(Client client)
+                : base(client)
+            {
+
+            }
 
             public static Base Parse(Client client, Coob coob)
             {
                 var hit = new Hit(client);
 
-                hit.EntityID = client.Reader.ReadUInt64();
-                hit.TargetID = client.Reader.ReadUInt64();
+                hit.EntityId = client.Reader.ReadUInt64();
+                hit.TargetId = client.Reader.ReadUInt64();
                 hit.Damage = client.Reader.ReadSingle();
                 hit.Critical = client.Reader.ReadByte();
                 client.Reader.ReadBytes(3);
@@ -49,16 +49,16 @@ namespace Coob.Packets
 
                 coob.World.HitPackets.Add(hit);
 
-                hit.Attacker = coob.World.Entities[hit.EntityID];
-                hit.Target = coob.World.Entities[hit.TargetID];
+                hit.Attacker = coob.World.Entities[hit.EntityId];
+                hit.Target = coob.World.Entities[hit.TargetId];
 
                 return hit;
             }
 
             public override void Write(BinaryWriter bw)
             {
-                bw.Write(EntityID);
-                bw.Write(TargetID);
+                bw.Write(EntityId);
+                bw.Write(TargetId);
                 bw.Write(Damage);
                 bw.Write(Critical);
                 bw.Pad(3);
@@ -79,18 +79,18 @@ namespace Coob.Packets
 
             public override void Process()
             {
-                if (EntityID != TargetID)
-                {
-                    if (Attacker != null && Target != null)
-                    {
-                        // If target is an npc(probably friendly npc's too) or attacker and target has pvp enabled.
-                        if (Target.Client == null || (Attacker.Client != null && Attacker.Client.PVP && Target.Client != null && Target.Client.PVP))
-                        {
-                            Target.HP -= Damage;
-                            Root.ScriptManager.CallEvent("OnEntityAttacked", new EntityAttackedEventArgs(Attacker, Target));
-                        }
-                    }
-                }
+                if (EntityId == TargetId)
+                    return;
+
+                if (Attacker == null || Target == null)
+                    return;
+
+                // If target is an npc(probably friendly npc's too) or attacker and target has pvp enabled.
+                if (Target.Client != null && (Attacker.Client == null || !Attacker.Client.Pvp || Target.Client == null || !Target.Client.Pvp))
+                    return;
+
+                Target.Hp -= Damage;
+                Program.ScriptManager.CallEvent("OnEntityAttacked", new EntityAttackedEventArgs(Attacker, Target));
             }
         }
     }

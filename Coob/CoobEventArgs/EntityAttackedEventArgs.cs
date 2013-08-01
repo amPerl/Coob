@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Coob.Structures;
+﻿using Coob.Structures;
 
 namespace Coob.CoobEventArgs
 {
@@ -12,11 +8,12 @@ namespace Coob.CoobEventArgs
         public Entity Target { get; private set; }
         public bool Killed { get; private set; }
 
-        public EntityAttackedEventArgs(Entity attacker, Entity target) : base(null)
+        public EntityAttackedEventArgs(Entity attacker, Entity target)
+            : base(null)
         {
             Attacker = attacker;
             Target = target;
-            Killed = Target.HP <= 0;
+            Killed = Target.Hp <= 0;
         }
     }
 }

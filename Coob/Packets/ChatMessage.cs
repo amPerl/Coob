@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using Coob.CoobEventArgs;
 
 namespace Coob.Packets
@@ -15,7 +12,7 @@ namespace Coob.Packets
             public ChatMessage(string message, Client client)
                 : base(client)
             {
-                this.Message = message;
+                Message = message;
             }
 
             public static Base Parse(Client client, Coob coob)
@@ -31,7 +28,7 @@ namespace Coob.Packets
 
             public override bool CallScript()
             {
-                var chatArgs = Root.ScriptManager.CallEvent("OnChatMessage", new ChatEventArgs(Sender, Message)) as ChatEventArgs;
+                var chatArgs = (ChatEventArgs)Program.ScriptManager.CallEvent("OnChatMessage", new ChatEventArgs(Sender, Message));
 
                 Message = chatArgs.Message;
                 return !chatArgs.Canceled;
@@ -39,9 +36,8 @@ namespace Coob.Packets
 
             public override void Process()
             {
-                Sender.Coob.World.BroadcastChat(Sender.ID, Message);
+                Sender.Coob.World.BroadcastChat(Sender.Id, Message);
             }
         }
-
     }
 }

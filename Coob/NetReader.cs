@@ -6,10 +6,10 @@ namespace Coob
 {
     public class NetReader : BinaryReader
     {
-        NetworkStream ns;
-        byte[] tempBuffer;
+        readonly NetworkStream ns;
+        readonly byte[] tempBuffer;
 
-        public NetReader(NetworkStream stream) : 
+        public NetReader(NetworkStream stream) :
             base(stream)
         {
             ns = stream;
@@ -18,14 +18,14 @@ namespace Coob
 
         public override byte ReadByte()
         {
-            byte val = (byte)ns.ReadByte();
-            return val;
+            return (byte)ns.ReadByte();
         }
 
         public override byte[] ReadBytes(int n)
         {
             byte[] bytes = new byte[n];
             ns.Read(bytes, 0, n);
+
             return bytes;
         }
 
@@ -62,11 +62,11 @@ namespace Coob
         public QVector3 ReadQVector3()
         {
             return new QVector3
-                   {
-                       X = ReadInt64(),
-                       Y = ReadInt64(),
-                       Z = ReadInt64(),
-                   };
+            {
+                X = ReadInt64(),
+                Y = ReadInt64(),
+                Z = ReadInt64(),
+            };
         }
 
         public Vector3 ReadVector3()

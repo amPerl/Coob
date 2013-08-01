@@ -4,25 +4,16 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Net.Sockets;
 using System.Net;
 using System.Threading;
 using Coob.CoobEventArgs;
 using Coob.Game;
-using Coob.Structures;
 using Coob.Packets;
 using Jint.Native;
 
 namespace Coob
 {
-    public class CoobOptions
-    {
-        public int Port = 12345;
-        public uint MaxClients = 1024;
-        public int WorldSeed;
-    }
-
     public class Coob
     {
         public ConcurrentQueue<Packet.Base> MessageQueue;
@@ -32,46 +23,50 @@ namespace Coob
         public CoobOptions Options;
         public World World { get; private set; }
 
-        TcpListener clientListener;
+        private readonly TcpListener clientListener;
+        private Thread messageHandlerThread;
 
-        Thread messageHandlerThread;
+        private readonly Stopwatch elapsedDt;
+        private float dtSinceLastWorldUpdate;
+        private float dtSinceLastServerUpdate;
+        private float accumulator;
 
         public bool Running { get; private set; }
 
         public Coob(CoobOptions options)
         {
-            this.Options = options;
+            Options = options;
+
+            elapsedDt = new Stopwatch();
+
             MessageQueue = new ConcurrentQueue<Packet.Base>();
             PacketParsers = new Dictionary<int, PacketParserDel>();
             Clients = new Dictionary<ulong, Client>();
             World = new World(options.WorldSeed, this);
 
-            PacketParsers.Add((int)CSPacketIDs.EntityUpdate, Packet.EntityUpdate.Parse);
-            PacketParsers.Add((int)CSPacketIDs.Interact, Packet.Interact.Parse);
-            PacketParsers.Add((int)CSPacketIDs.Hit, Packet.Hit.Parse);
+            // TODO Refactor with new design later
+            PacketParsers.Add((int)CsPacketIDs.EntityUpdate, Packet.EntityUpdate.Parse);
+            PacketParsers.Add((int)CsPacketIDs.Interact, Packet.Interact.Parse);
+            PacketParsers.Add((int)CsPacketIDs.Hit, Packet.Hit.Parse);
             // TODO: PacketParsers.Add((int)CSPacketIDs.Stealth, Packet.Stealth.Parse);
-            PacketParsers.Add((int)CSPacketIDs.Shoot, Packet.Shoot.Parse);
-            PacketParsers.Add((int)CSPacketIDs.ClientChatMessage, Packet.ChatMessage.Parse);
-            PacketParsers.Add((int)CSPacketIDs.ChunkDiscovered, Packet.UpdateChunk.Parse);
-            PacketParsers.Add((int)CSPacketIDs.SectorDiscovered, Packet.UpdateSector.Parse);
-            PacketParsers.Add((int)CSPacketIDs.ClientVersion, Packet.ClientVersion.Parse);
+            PacketParsers.Add((int)CsPacketIDs.Shoot, Packet.Shoot.Parse);
+            PacketParsers.Add((int)CsPacketIDs.ClientChatMessage, Packet.ChatMessage.Parse);
+            PacketParsers.Add((int)CsPacketIDs.ChunkDiscovered, Packet.UpdateChunk.Parse);
+            PacketParsers.Add((int)CsPacketIDs.SectorDiscovered, Packet.UpdateSector.Parse);
+            PacketParsers.Add((int)CsPacketIDs.ClientVersion, Packet.ClientVersion.Parse);
 
             try
             {
                 clientListener = new TcpListener(IPAddress.Any, options.Port);
                 clientListener.Start();
-                clientListener.BeginAcceptTcpClient(onClientConnect, null);
+                clientListener.BeginAcceptTcpClient(OnClientConnect, null);
             }
             catch (SocketException e)
             {
                 if (e.ErrorCode == 10048)
-                {
                     Log.Error("Something is already running on port " + options.Port + ". Can't start server.");
-                }
                 else
-                {
                     Log.Error("Unknown error occured while trying to start server:\n" + e);
-                }
 
                 Log.Display();
                 Environment.Exit(1);
@@ -80,31 +75,29 @@ namespace Coob
             Log.Info("Listening on port: " + options.Port);
         }
 
-        void onClientConnect(IAsyncResult result)
+        void OnClientConnect(IAsyncResult result)
         {
             var tcpClient = clientListener.EndAcceptTcpClient(result);
 
-            string ip = (tcpClient.Client.RemoteEndPoint as IPEndPoint).Address.ToString();
+            string ip = ((IPEndPoint)tcpClient.Client.RemoteEndPoint).Address.ToString();
 
             var clientConnectArgs = new ClientConnectEventArgs(ip);
-            if (!Root.ScriptManager.CallEvent("OnClientConnect", clientConnectArgs).Canceled)
+            if (!Program.ScriptManager.CallEvent("OnClientConnect", clientConnectArgs).Canceled)
             {
                 var newClient = new Client(tcpClient, this);
-                Clients.Add(newClient.ID, newClient);
+                Clients.Add(newClient.Id, newClient);
             }
             else
-            {
                 tcpClient.Close();
-            }
 
-            clientListener.BeginAcceptTcpClient(onClientConnect, null);
+            clientListener.BeginAcceptTcpClient(OnClientConnect, null);
         }
 
         public void HandleRecvPacket(int id, Client client)
         {
             if (!PacketParsers.ContainsKey(id))
             {
-                Log.Error("Unknown packet: {0} from client {1}", id, client.ID);
+                Log.Error("Unknown packet: {0} from client {1}", id, client.Id);
                 client.Disconnect("Unknown data");
                 return;
             }
@@ -124,7 +117,7 @@ namespace Coob
         {
             Running = true;
 
-            messageHandlerThread = new Thread(messageHandler);
+            messageHandlerThread = new Thread(MessageHandler);
             messageHandlerThread.Start();
 
             Log.Info("Started message handler and world.");
@@ -134,11 +127,6 @@ namespace Coob
         {
             Running = false;
         }
-
-        readonly Stopwatch elapsedDt = new Stopwatch();
-        float dtSinceLastWorldUpdate = 0;
-        float dtSinceLastServerUpdate = 0;
-        float accumulator = 0;
 
         private void UpdateWorld()
         {
@@ -176,27 +164,28 @@ namespace Coob
             //Console.WriteLine("Updated " + times + " times");
         }
 
-        void messageHandler()
+        void MessageHandler()
         {
             while (Running)
             {
                 UpdateWorld();
 
-                Packet.Base message = null;
+                Packet.Base message;
                 while (MessageQueue.TryDequeue(out message))
                 {
                     try
                     {
-                        if (!message.CallScript()) continue;
+                        if (!message.CallScript())
+                            continue;
+
                         message.Process();
                     }
                     catch (JsException ex)
                     {
                         var messageText = (ex.InnerException != null ? (ex.Message + ": " + ex.InnerException.Message) : ex.Message);
                         Log.Error("JS Error on {0}: {1} - {2}", message.PacketTypeName, messageText, ex.Value);
-                        continue;
                     }
-                    catch (IOException ioEx)
+                    catch (IOException)
                     {
                         // Client disconnected while we were writing to its netwriter.
                     }
@@ -210,19 +199,17 @@ namespace Coob
         /// Returns the lowest unused client ID. Returns -1 if limit is exceeded.
         /// </summary>
         /// <returns></returns>
-        public ulong CreateID()
+        public ulong CreateId()
         {
             for (ulong i = 1; i < Options.MaxClients; i++)
             {
-                if (Clients.ContainsKey(i) == false)
-                {
+                if (!Clients.ContainsKey(i))
                     return i;
-                }
             }
 
             return 0;
         }
-       
+
 
         public Client[] GetClients()
         {
@@ -236,10 +223,7 @@ namespace Coob
 
         public Client GetClient(ulong id)
         {
-            if (Clients.ContainsKey(id))
-                return Clients[id];
-
-            return null;
+            return Clients.ContainsKey(id) ? Clients[id] : null;
         }
 
         public Client GetClient(string name)
