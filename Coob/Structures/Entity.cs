@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -8,6 +10,9 @@ namespace Coob.Structures
 
     public class Entity
     {
+        public const int EquipmentCount = 13;
+        public const int SkillCount = 11;
+
         #region Fields
         public ulong Id;
         public byte[] LastBitmask;
@@ -83,284 +88,160 @@ namespace Coob.Structures
 
         #endregion
 
-        public Coob Coob;
         public Client Client;
 
-        // TODO Find a better way to do this
-
+        // TODO Fix ctor
         public Entity(Coob coob, Client owner)
         {
             Client = owner;
-            Coob = coob;
             Position = new QVector3();
             Rotation = new Vector3();
             Velocity = new Vector3();
             Acceleration = new Vector3();
             ExtraVelocity = new Vector3();
-
             Appearance = new Appearance();
-
             RayHit = new Vector3();
-
             ItemData = new Item();
 
-            Equipment = new Item[13];
-            for (int i = 0; i < 13; i++)
+            Equipment = new Item[EquipmentCount];
+            for (int i = 0; i < EquipmentCount; i++)
                 Equipment[i] = new Item();
 
-            Skills = new uint[11];
+            Skills = new uint[SkillCount];
         }
 
         public void ReadByMask(BinaryReader reader)
         {
+            List<Action> maskActions = new List<Action>
+            {
+                () => Position = new QVector3(reader.ReadInt64(), reader.ReadInt64(), reader.ReadInt64()),
+                () => Rotation = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle()),
+                () => Velocity = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle()),
+                () => Acceleration = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle()),
+                () => ExtraVelocity = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle()),
+                () => LookPitch = reader.ReadSingle(),
+                () => PhysicsFlags = reader.ReadUInt32(),
+                () => SpeedFlags = reader.ReadByte(),
+                () => EntityType = reader.ReadUInt32(),
+                () => CurrentMode = reader.ReadByte(),
+                () => LastShootTime = reader.ReadUInt32(),
+                () => HitCounter = reader.ReadUInt32(),
+                () => LastHitTime = reader.ReadUInt32(),
+                () => Appearance.Read(reader),
+                () =>
+                {
+                    Flags1 = reader.ReadByte();
+
+                    // Not sure how necessary this is.
+                    if (Client != null && Client.Pvp)
+                    {
+                        if (Flags1 == 0x40) // Non-hostile
+                            Flags1 = 0x20;
+                    }
+                    else if (Client != null && !Client.Pvp)
+                    {
+                        if (Flags1 == 0x20) // Hostile
+                            Flags1 = 0x40;
+                    }
+
+                    Flags2 = reader.ReadByte();
+                },
+                () => RollTime = reader.ReadUInt32(),
+                () => StunTime = reader.ReadInt32(),
+                () => SlowedTime = reader.ReadUInt32(),
+                () => MakeBlueTime = reader.ReadUInt32(),
+                () => SpeedUpTime = reader.ReadUInt32(),
+                () => ShowPatchTime = reader.ReadSingle(),
+                () => ClassType = reader.ReadByte(),
+                () => Specialization = reader.ReadByte(),
+                () => ChargedMp = reader.ReadSingle(),
+                () =>
+                {
+                    notUsed1 = reader.ReadUInt32();
+                    notUsed2 = reader.ReadUInt32();
+                    notUsed3 = reader.ReadUInt32();
+                },
+                () =>
+                {
+                    notUsed4 = reader.ReadUInt32();
+                    notUsed5 = reader.ReadUInt32();
+                    notUsed6 = reader.ReadUInt32(); 
+                },
+                () => RayHit = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle()),
+                () => Hp = reader.ReadSingle(),
+                () => Mp = reader.ReadSingle(),
+                () => BlockPower = reader.ReadSingle(),
+                () =>
+                {
+                    MaxHpMultiplier = reader.ReadSingle();
+                    ShootSpeed = reader.ReadSingle();
+                    DamageMultiplier = reader.ReadSingle();
+                    ArmorMultiplier = reader.ReadSingle();
+                    ResistanceMultiplier = reader.ReadSingle();
+                },
+                () => notUsed7 = reader.ReadByte(),
+                () => notUsed8 = reader.ReadByte(),
+                () => Level = reader.ReadUInt32(),
+                () => CurrentXp = reader.ReadUInt32(),
+                () => ParentOwner = reader.ReadUInt64(),
+                () =>
+                {
+                    unknownOrNotUsed1 = reader.ReadUInt32();
+                    unknownOrNotUsed2 = reader.ReadUInt32();
+                },
+                () => unknownOrNotUsed3 = reader.ReadByte(),
+                () => unknownOrNotUsed4 = reader.ReadUInt32(),
+                () =>
+                {
+                    unknownOrNotUsed5 = reader.ReadUInt32();
+                    notUsed11 = reader.ReadUInt32();
+                    notUsed12 = reader.ReadUInt32();
+                },
+                () =>
+                {
+                    notUsed13 = reader.ReadUInt32();
+                    notUsed14 = reader.ReadUInt32();
+                    notUsed15 = reader.ReadUInt32();
+                    notUsed16 = reader.ReadUInt32();
+                    notUsed17 = reader.ReadUInt32();
+                    notUsed18 = reader.ReadUInt32();
+                },
+                () =>
+                {
+                    notUsed20 = reader.ReadUInt32();
+                    notUsed21 = reader.ReadUInt32();
+                    notUsed22 = reader.ReadUInt32();
+                },
+                () => notUsed19 = reader.ReadByte(),
+                () => ItemData.Read(reader),
+                () =>
+                {
+                    for (int i = 0; i < EquipmentCount; ++i)
+                    {
+                        Item item = new Item();
+                        item.Read(reader);
+                        Equipment[i] = item;
+                    }
+                },
+                () => Name = Encoding.ASCII.GetString(reader.ReadBytes(16)).TrimEnd(' ', '\0'),
+                () =>
+                {
+                    Skills = new uint[SkillCount];
+                    for (int i = 0; i < SkillCount; ++i)
+                        Skills[i] = reader.ReadUInt32();
+                },
+                () => IceBlockFour = reader.ReadUInt32()
+            };
+            
             LastBitmask = reader.ReadBytes(8);
             BitArray bitArray = new BitArray(LastBitmask);
 
-            if (bitArray.Get(0))
+            for (int i = 0; i < maskActions.Count; ++i)
             {
-                Position = new QVector3
-                {
-                    X = reader.ReadInt64(),
-                    Y = reader.ReadInt64(),
-                    Z = reader.ReadInt64()
-                };
-            }
-            if (bitArray.Get(1))
-            {
-                Rotation = new Vector3
-                {
-                    Pitch = reader.ReadSingle(),
-                    Roll = reader.ReadSingle(),
-                    Yaw = reader.ReadSingle()
-                };
-            }
-            if (bitArray.Get(2))
-            {
-                Velocity = new Vector3 { X = reader.ReadSingle(), Y = reader.ReadSingle(), Z = reader.ReadSingle() };
-            }
-            if (bitArray.Get(3))
-            {
-                Acceleration = new Vector3 { X = reader.ReadSingle(), Y = reader.ReadSingle(), Z = reader.ReadSingle() };
-            }
-            if (bitArray.Get(4))
-            {
-                ExtraVelocity = new Vector3 { X = reader.ReadSingle(), Y = reader.ReadSingle(), Z = reader.ReadSingle() };
-            }
-            if (bitArray.Get(5))
-            {
-                LookPitch = reader.ReadSingle();
-            }
-            if (bitArray.Get(6))
-            {
-                PhysicsFlags = reader.ReadUInt32();
-            }
-            if (bitArray.Get(7))
-            {
-                SpeedFlags = reader.ReadByte();
-            }
-            if (bitArray.Get(8))
-            {
-                EntityType = reader.ReadUInt32();
-            }
-            if (bitArray.Get(9))
-            {
-                CurrentMode = reader.ReadByte();
-            }
-            if (bitArray.Get(10))
-            {
-                LastShootTime = reader.ReadUInt32();
-            }
-            if (bitArray.Get(11))
-            {
-                HitCounter = reader.ReadUInt32();
-            }
-            if (bitArray.Get(12))
-            {
-                LastHitTime = reader.ReadUInt32();
-            }
-            if (bitArray.Get(13))
-            {
-                Appearance.Read(reader);
-            }
-            if (bitArray.Get(14))
-            {
-                Flags1 = reader.ReadByte();
+                if (!bitArray.Get(i))
+                    continue;
 
-                // Not sure how necessary this is.
-                if (Client != null && Client.Pvp)
-                {
-                    if (Flags1 == 0x40) // Non-hostile
-                        Flags1 = 0x20;
-                }
-                else if (Client != null && !Client.Pvp)
-                {
-                    if (Flags1 == 0x20) // Hostile
-                        Flags1 = 0x40;
-                }
-
-                Log.Info("Flags1: " + Flags1);
-
-                Flags2 = reader.ReadByte();
-            }
-            if (bitArray.Get(15))
-            {
-                RollTime = reader.ReadUInt32();
-            }
-            if (bitArray.Get(16))
-            {
-                StunTime = reader.ReadInt32();
-            }
-            if (bitArray.Get(17))
-            {
-                SlowedTime = reader.ReadUInt32();
-            }
-            if (bitArray.Get(18))
-            {
-                MakeBlueTime = reader.ReadUInt32();
-            }
-            if (bitArray.Get(19))
-            {
-                SpeedUpTime = reader.ReadUInt32();
-            }
-            if (bitArray.Get(20))
-            {
-                ShowPatchTime = reader.ReadSingle();
-            }
-            if (bitArray.Get(21))
-            {
-                ClassType = reader.ReadByte();
-            }
-            if (bitArray.Get(22))
-            {
-                Specialization = reader.ReadByte();
-            }
-            if (bitArray.Get(23))
-            {
-                ChargedMp = reader.ReadSingle();
-            }
-            if (bitArray.Get(24))
-            {
-                notUsed1 = reader.ReadUInt32();
-                notUsed2 = reader.ReadUInt32();
-                notUsed3 = reader.ReadUInt32();
-            }
-            if (bitArray.Get(25))
-            {
-                notUsed4 = reader.ReadUInt32();
-                notUsed5 = reader.ReadUInt32();
-                notUsed6 = reader.ReadUInt32();
-            }
-            if (bitArray.Get(26))
-            {
-                RayHit = new Vector3 { X = reader.ReadSingle(), Y = reader.ReadSingle(), Z = reader.ReadSingle() };
-            }
-            if (bitArray.Get(27))
-            {
-                Hp = reader.ReadSingle();
-            }
-            if (bitArray.Get(28))
-            {
-                Mp = reader.ReadSingle();
-            }
-            if (bitArray.Get(29))
-            {
-                BlockPower = reader.ReadSingle();
-            }
-            if (bitArray.Get(30))
-            {
-                MaxHpMultiplier = reader.ReadSingle();
-                ShootSpeed = reader.ReadSingle();
-                DamageMultiplier = reader.ReadSingle();
-                ArmorMultiplier = reader.ReadSingle();
-                ResistanceMultiplier = reader.ReadSingle();
-            }
-            if (bitArray.Get(31))
-            {
-                notUsed7 = reader.ReadByte();
-            }
-            if (bitArray.Get(32))
-            {
-                notUsed8 = reader.ReadByte();
-            }
-            if (bitArray.Get(33))
-            {
-                Level = reader.ReadUInt32();
-            }
-            if (bitArray.Get(34))
-            {
-                CurrentXp = reader.ReadUInt32();
-            }
-            if (bitArray.Get(35))
-            {
-                ParentOwner = reader.ReadUInt64();
-            }
-            if (bitArray.Get(36))
-            {
-                unknownOrNotUsed1 = reader.ReadUInt32();
-                unknownOrNotUsed2 = reader.ReadUInt32();
-            }
-            if (bitArray.Get(37))
-            {
-                unknownOrNotUsed3 = reader.ReadByte();
-            }
-            if (bitArray.Get(38))
-            {
-                unknownOrNotUsed4 = reader.ReadUInt32();
-            }
-            if (bitArray.Get(39))
-            {
-                unknownOrNotUsed5 = reader.ReadUInt32();
-                notUsed11 = reader.ReadUInt32();
-                notUsed12 = reader.ReadUInt32();
-            }
-            if (bitArray.Get(40))
-            {
-                notUsed13 = reader.ReadUInt32();
-                notUsed14 = reader.ReadUInt32();
-                notUsed15 = reader.ReadUInt32();
-                notUsed16 = reader.ReadUInt32();
-                notUsed17 = reader.ReadUInt32();
-                notUsed18 = reader.ReadUInt32();
-            }
-            if (bitArray.Get(41))
-            {
-                notUsed20 = reader.ReadUInt32();
-                notUsed21 = reader.ReadUInt32();
-                notUsed22 = reader.ReadUInt32();
-            }
-            if (bitArray.Get(42))
-            {
-                notUsed19 = reader.ReadByte();
-            }
-            if (bitArray.Get(43))
-            {
-                ItemData.Read(reader);
-            }
-            if (bitArray.Get(44))
-            {
-                for (int i = 0; i < 13; i++)
-                {
-                    Item item = new Item();
-                    item.Read(reader);
-                    Equipment[i] = item;
-                }
-            }
-            if (bitArray.Get(45))
-            {
-                Name = Encoding.ASCII.GetString(reader.ReadBytes(16));
-                Name = Name.TrimEnd(' ', '\0');
-            }
-            if (bitArray.Get(46))
-            {
-                Skills = new uint[11];
-                for (int i = 0; i < 11; i++)
-                {
-                    Skills[i] = reader.ReadUInt32();
-                }
-            }
-            if (bitArray.Get(47))
-            {
-                IceBlockFour = reader.ReadUInt32();
+                maskActions[i]();
             }
         }
 
@@ -801,7 +682,7 @@ namespace Coob.Structures
             if (bitArray.Get(45))
             {
                 writer.Write(Encoding.UTF8.GetBytes(Name));
-                writer.Write(new byte[16-Name.Length]);
+                writer.Write(new byte[16 - Name.Length]);
             }
             if (bitArray.Get(46))
             {

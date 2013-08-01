@@ -26,7 +26,7 @@ namespace Coob.Packets
             public Hit(Client client)
                 : base(client)
             {
-                
+
             }
 
             public static Base Parse(Client client, Coob coob)

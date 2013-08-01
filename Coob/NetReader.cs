@@ -6,10 +6,10 @@ namespace Coob
 {
     public class NetReader : BinaryReader
     {
-	    readonly NetworkStream ns;
-	    readonly byte[] tempBuffer;
+        readonly NetworkStream ns;
+        readonly byte[] tempBuffer;
 
-        public NetReader(NetworkStream stream) : 
+        public NetReader(NetworkStream stream) :
             base(stream)
         {
             ns = stream;

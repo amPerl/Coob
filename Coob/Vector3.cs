@@ -15,7 +15,7 @@ namespace Coob
             set { x = value; }
         }
 
-		// Alias of X
+        // Alias of X
         public float Pitch
         {
             get { return x; }
@@ -28,7 +28,7 @@ namespace Coob
             set { y = value; }
         }
 
-		// Alias of Y
+        // Alias of Y
         public float Roll
         {
             get { return y; }
@@ -41,7 +41,7 @@ namespace Coob
             set { z = value; }
         }
 
-		// Alias of Z
+        // Alias of Z
         public float Yaw
         {
             get { return z; }

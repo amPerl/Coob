@@ -21,7 +21,8 @@ namespace Coob.Structures
 
         public void CopyFrom(Item from)
         {
-            if (from == null) return;
+            if (from == null)
+                return;
 
             Type = from.Type;
             SubType = from.SubType;
@@ -61,7 +62,7 @@ namespace Coob.Structures
 
             foreach (ItemUpgrade t in Upgrades)
                 t.Write(writer);
-            
+
             writer.Write(UpgradeCount);
         }
 
@@ -78,7 +79,7 @@ namespace Coob.Structures
             reader.ReadByte(); // skip 1
             Level = reader.ReadInt16();
             reader.ReadInt16(); // skip 2
-            
+
             for (int i = 0; i < Upgrades.Length; ++i)
             {
                 Upgrades[i] = new ItemUpgrade();

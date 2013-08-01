@@ -46,10 +46,10 @@ namespace Coob.ScriptEngines
             foreach (var line in lines)
             {
                 string trimmed = line.Trim();
-                
+
                 if (!trimmed.StartsWith("#include \""))
                     continue;
-                
+
                 if (trimmed.Length < 11)
                     continue;
 

@@ -43,9 +43,7 @@ namespace Coob.Game
 
                 bw.Write(HitPackets.Count);
                 foreach (Packet.Hit hit in HitPackets)
-                {
                     hit.Write(bw);
-                }
 
                 const uint Items3Length = 0;
                 bw.Write(Items3Length);
@@ -55,9 +53,7 @@ namespace Coob.Game
 
                 bw.Write(ShootPackets.Count);
                 foreach (Packet.Shoot shoot in ShootPackets)
-                {
                     shoot.Write(bw);
-                }
 
                 const uint Items6Length = 0;
                 bw.Write(Items6Length);
@@ -98,7 +94,7 @@ namespace Coob.Game
                 }
                 catch (IOException)
                 {
-                    
+
                 }
             }
 

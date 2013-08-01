@@ -39,7 +39,7 @@ namespace Coob
 
             Coob.StartServer();
 
-            while(Coob.Running)
+            while (Coob.Running)
             {
                 var input = Console.ReadLine() ?? "";
 

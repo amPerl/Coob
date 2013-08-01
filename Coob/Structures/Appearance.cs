@@ -55,12 +55,12 @@ namespace Coob.Structures
             FeetPitch = reader.ReadSingle();
             WingPitch = reader.ReadSingle();
             BackPitch = reader.ReadSingle();
-            BodyOffset = new Vector3 { X = reader.ReadSingle(), Y = reader.ReadSingle(), Z = reader.ReadSingle() };
-            HeadOffset = new Vector3 { X = reader.ReadSingle(), Y = reader.ReadSingle(), Z = reader.ReadSingle() };
-            HandOffset = new Vector3 { X = reader.ReadSingle(), Y = reader.ReadSingle(), Z = reader.ReadSingle() };
-            FootOffset = new Vector3 { X = reader.ReadSingle(), Y = reader.ReadSingle(), Z = reader.ReadSingle() };
-            BackOffset = new Vector3 { X = reader.ReadSingle(), Y = reader.ReadSingle(), Z = reader.ReadSingle() };
-            WingOffset = new Vector3 { X = reader.ReadSingle(), Y = reader.ReadSingle(), Z = reader.ReadSingle() };
+            BodyOffset = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+            HeadOffset = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+            HandOffset = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+            FootOffset = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+            BackOffset = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+            WingOffset = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
         }
 
         public void CopyFrom(Appearance from)

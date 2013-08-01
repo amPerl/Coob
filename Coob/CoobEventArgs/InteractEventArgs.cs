@@ -7,7 +7,7 @@ namespace Coob.CoobEventArgs
         public InteractEventArgs(Client client, Packet.Interact packet)
             : base(client)
         {
-            
+
         }
     }
 }

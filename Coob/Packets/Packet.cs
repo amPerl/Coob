@@ -25,7 +25,7 @@ namespace Coob.Packets
             public abstract void Process();
             public virtual void Write(BinaryWriter writer)
             {
-                
+
             }
         }
     }

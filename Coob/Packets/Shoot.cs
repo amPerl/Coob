@@ -47,7 +47,7 @@ namespace Coob.Packets
 
             public override void Write(BinaryWriter writer)
             {
- 
+
                 writer.Write(EntityId);
                 writer.Write(ChunkX);
                 writer.Write(ChunkY);

@@ -47,7 +47,7 @@ namespace Coob
 
         public static void Info(object message)
         {
-			// Can't use the method below because if the message contains { or } it will throw invalid string format exception.
+            // Can't use the method below because if the message contains { or } it will throw invalid string format exception.
             QueuedMessages.Enqueue(new LogMessage("INFO", message.ToString(), ConsoleColor.DarkGreen, ConsoleColor.Green));
         }
 

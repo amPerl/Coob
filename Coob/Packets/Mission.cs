@@ -42,7 +42,7 @@ namespace Coob.Packets
                 client.Reader.ReadBytes(2);
                 mission.Something10 = client.Reader.ReadSingle();
                 mission.Something11 = client.Reader.ReadSingle();
-                mission.ChunkX =  client.Reader.ReadUInt32();
+                mission.ChunkX = client.Reader.ReadUInt32();
                 mission.ChunkY = client.Reader.ReadUInt32();
 
                 return mission;

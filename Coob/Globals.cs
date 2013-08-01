@@ -4,7 +4,7 @@
     {
         public static readonly int ServerVersion = 3;
 
-		// Currently the max characters that fits before text is cutoff on client
+        // Currently the max characters that fits before text is cutoff on client
         public static readonly int MaxChatMessageLength = 46;
         public static readonly int WorldTickPerSecond = (int)(1000f / 60f);
         public static readonly int EntityUpdatesPerSecond = (int)(1000f / 30f);

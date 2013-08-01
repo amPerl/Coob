@@ -23,7 +23,7 @@ namespace Coob
         public CoobOptions Options;
         public World World { get; private set; }
 
-	    private readonly TcpListener clientListener;
+        private readonly TcpListener clientListener;
         private Thread messageHandlerThread;
 
         private readonly Stopwatch elapsedDt;
@@ -44,7 +44,7 @@ namespace Coob
             Clients = new Dictionary<ulong, Client>();
             World = new World(options.WorldSeed, this);
 
-			// TODO Refactor with new design later
+            // TODO Refactor with new design later
             PacketParsers.Add((int)CsPacketIDs.EntityUpdate, Packet.EntityUpdate.Parse);
             PacketParsers.Add((int)CsPacketIDs.Interact, Packet.Interact.Parse);
             PacketParsers.Add((int)CsPacketIDs.Hit, Packet.Hit.Parse);
@@ -176,9 +176,9 @@ namespace Coob
                     try
                     {
                         if (!message.CallScript())
-							continue;
-                        
-						message.Process();
+                            continue;
+
+                        message.Process();
                     }
                     catch (JsException ex)
                     {
@@ -209,7 +209,7 @@ namespace Coob
 
             return 0;
         }
-       
+
 
         public Client[] GetClients()
         {

@@ -16,14 +16,14 @@ namespace Coob
         public NetReader Reader;
         public BinaryWriter Writer;
         public NetworkStream NetStream;
-        public ulong Id {get; private set;}
+        public ulong Id { get; private set; }
         public Entity Entity;
         public string Ip;
         public Coob Coob { get; private set; }
         public bool Pvp;
         private bool disconnecting;
 
-	    private readonly TcpClient tcp;
+        private readonly TcpClient tcp;
         private readonly byte[] recvBuffer;
 
         public Client(TcpClient tcpClient, Coob coob)
@@ -58,7 +58,7 @@ namespace Coob
             if (disconnecting)
                 return;
 
-	        try
+            try
             {
                 int bytesRead = NetStream.EndRead(result);
 
@@ -69,7 +69,7 @@ namespace Coob
             }
             catch
             {
-	            Disconnect("Read error");
+                Disconnect("Read error");
             }
         }
 
@@ -79,17 +79,17 @@ namespace Coob
             disconnecting = true;
             tcp.Close();
 
-	        if (!Coob.Clients.ContainsKey(Id))
-		        return;
+            if (!Coob.Clients.ContainsKey(Id))
+                return;
 
-	        var client = Coob.Clients[Id];
-	        Coob.Clients.Remove(Id);
+            var client = Coob.Clients[Id];
+            Coob.Clients.Remove(Id);
 
-	        Entity removedEntity;
-	        if (!Coob.World.Entities.TryRemove(Id, out removedEntity))
-		        throw new ArgumentException("Failed to remove entity from Entities");
+            Entity removedEntity;
+            if (!Coob.World.Entities.TryRemove(Id, out removedEntity))
+                throw new ArgumentException("Failed to remove entity from Entities");
 
-	        Program.ScriptManager.CallEvent("OnClientDisconnect", new ClientDisconnectEventArgs(client, reason));
+            Program.ScriptManager.CallEvent("OnClientDisconnect", new ClientDisconnectEventArgs(client, reason));
         }
 
         public void SendMessage(ulong id, string message)

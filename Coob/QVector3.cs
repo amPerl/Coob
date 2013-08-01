@@ -19,7 +19,7 @@ namespace Coob
             Z = z;
         }
 
-        public QVector3 (long xyz)
+        public QVector3(long xyz)
         {
             X = xyz;
             Y = xyz;

@@ -4,7 +4,8 @@
     {
         public string Message { get; set; }
 
-        public ChatEventArgs(Client client, string message) : base(client)
+        public ChatEventArgs(Client client, string message)
+            : base(client)
         {
             Message = message;
         }

@@ -22,18 +22,18 @@ namespace Coob.ScriptEngines
             {
                 scriptHandler.Initialize();
 
-                scriptHandler.SetFunction("LogInfo",    (Action<object>)Log.Info);
+                scriptHandler.SetFunction("LogInfo", (Action<object>)Log.Info);
                 scriptHandler.SetFunction("LogWarning", (Action<object>)Log.Warning);
-                scriptHandler.SetFunction("LogError",   (Action<object>)Log.Error);
+                scriptHandler.SetFunction("LogError", (Action<object>)Log.Error);
 
                 // Can't set functions within objects, so it'll have to be in the global namespace.
-                scriptHandler.SetFunction("AddHook",    (Action<string, object>)AddHook);
+                scriptHandler.SetFunction("AddHook", (Action<string, object>)AddHook);
                 scriptHandler.SetFunction("RemoveHook", (Action<string, object>)RemoveHook);
 
                 string pluginDirectory = Path.Combine(@"Plugins", scriptHandler.GetScriptDirectoryName());
                 if (!Directory.Exists(pluginDirectory))
                     continue;
-                
+
                 foreach (string directory in Directory.GetDirectories(pluginDirectory))
                 {
                     string pluginName = directory.Substring(directory.LastIndexOf('/') + 1);
