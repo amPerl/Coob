@@ -1,6 +1,5 @@
 ﻿using System;
 
-
 public class CoobPlugin
 {
     public void Main()

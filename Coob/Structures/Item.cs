@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 
 namespace Coob.Structures
 {
@@ -36,6 +32,7 @@ namespace Coob.Structures
             Flags = from.Flags;
             Level = from.Level;
             UpgradeCount = from.UpgradeCount;
+
             for (int i = 0; i < 32; i++)
             {
                 Upgrades[i] = new ItemUpgrade();
@@ -62,10 +59,11 @@ namespace Coob.Structures
 
             writer.Write((short)0); // skip 2
 
-            for (int i = 0; i < Upgrades.Length; ++i)
+            foreach (ItemUpgrade t in Upgrades)
             {
-                Upgrades[i].Write(writer);
+                t.Write(writer);
             }
+            
             writer.Write(UpgradeCount);
         }
 
@@ -82,11 +80,13 @@ namespace Coob.Structures
             reader.ReadByte(); // skip 1
             Level = reader.ReadInt16();
             reader.ReadInt16(); // skip 2
+            
             for (int i = 0; i < Upgrades.Length; ++i)
             {
                 Upgrades[i] = new ItemUpgrade();
                 Upgrades[i].Read(reader);
             }
+
             UpgradeCount = reader.ReadUInt32();
         }
     }
@@ -107,7 +107,8 @@ namespace Coob.Structures
 
         public void CopyFrom(ItemUpgrade from)
         {
-            if (from == null) return;
+            if (from == null)
+                return;
 
             X = from.X;
             Y = from.Y;

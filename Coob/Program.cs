@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using Coob.CoobEventArgs;
-using Jint.Native;
+using Coob.ScriptEngines;
 
 namespace Coob
 {
-    class Root
+    public class Program
     {
         public static Coob Coob;
         public static IScriptHandler Scripting;
@@ -29,7 +24,7 @@ namespace Coob
 
             Scripting.Run();
 
-            var initArgs = Root.ScriptManager.CallEvent("OnInitialize", new InitializeEventArgs()) as InitializeEventArgs;
+            var initArgs = (InitializeEventArgs)ScriptManager.CallEvent("OnInitialize", new InitializeEventArgs());
 
             Coob = new Coob(new CoobOptions
                             {
@@ -46,9 +41,9 @@ namespace Coob
 
             while(Coob.Running)
             {
-                var input = Console.ReadLine().ToLower();
+                var input = Console.ReadLine() ?? "";
 
-                if (input == "exit") // Temporary way to quit server properly. Seems to fuck up because the console hates life.
+                if (input.ToLower() == "exit") // Temporary way to quit server properly. Seems to fuck up because the console hates life.
                     Coob.StopServer();
             }
 

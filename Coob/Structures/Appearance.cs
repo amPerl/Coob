@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 
 namespace Coob.Structures
 {
@@ -21,10 +17,6 @@ namespace Coob.Structures
         public float BodyPitch, ArmPitch, ArmRoll, ArmYaw;
         public float FeetPitch, WingPitch, BackPitch;
         public Vector3 BodyOffset, HeadOffset, HandOffset, FootOffset, BackOffset, WingOffset;
-
-        public Appearance()
-        {
-        }
 
         public void Read(BinaryReader reader)
         {
@@ -73,7 +65,8 @@ namespace Coob.Structures
 
         public void CopyFrom(Appearance from)
         {
-            if (from == null) return;
+            if (from == null)
+                return;
 
             NotUsed1 = from.NotUsed1;
             NotUsed2 = from.NotUsed2;

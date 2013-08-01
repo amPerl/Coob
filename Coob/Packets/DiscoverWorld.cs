@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Coob.Packets
+﻿namespace Coob.Packets
 {
-    partial class Packet
+    public partial class Packet
     {
-
         public class UpdateChunk : Base
         {
             public int ChunkX, ChunkY;
@@ -34,6 +28,7 @@ namespace Coob.Packets
 
             public override void Process()
             {
+
             }
         }
 
@@ -63,6 +58,7 @@ namespace Coob.Packets
 
             public override void Process()
             {
+
             }
         }
     }

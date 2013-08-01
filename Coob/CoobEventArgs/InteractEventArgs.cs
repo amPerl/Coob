@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Coob.Packets;
+﻿using Coob.Packets;
 
 namespace Coob.CoobEventArgs
 {
     public class InteractEventArgs : ScriptEventArgs
     {
-        public InteractEventArgs(Client client, Packet.Interact packet) : base(client)
+        public InteractEventArgs(Client client, Packet.Interact packet)
+            : base(client)
         {
             
         }

@@ -1,20 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Jint;
-using Jint.Debugger;
 using Jint.Native;
 using System.IO;
 using System.Security.Permissions;
-using System.Threading;
 using System.Net;
 
-namespace Coob
+namespace Coob.ScriptEngines
 {
     public class JavascriptEngine : IScriptHandler
     {
-        private JintEngine engine;
+        private readonly JintEngine engine;
         private string source;
 
         public JavascriptEngine()
@@ -44,21 +39,26 @@ namespace Coob
             source += pluginSource + "\n";
         }
 
-        public string PreprocessIncludes(string source, string directory)
+        public string PreprocessIncludes(string pluginSource, string directory)
         {
-            var lines = source.Split('\n');
+            var lines = pluginSource.Split('\n');
+
             foreach (var line in lines)
             {
                 string trimmed = line.Trim();
-                if (!trimmed.StartsWith("#include \"")) continue;
-                if (trimmed.Length < 11) continue;
+                
+                if (!trimmed.StartsWith("#include \""))
+                    continue;
+                
+                if (trimmed.Length < 11)
+                    continue;
 
                 string includeName = trimmed.Substring(10, trimmed.Length - 10 - 1);
 
                 string includePath = Path.Combine(directory, includeName);
                 if (File.Exists(includePath))
                 {
-                    source = source.Replace(trimmed, PreprocessIncludes(File.ReadAllText(includePath), directory));
+                    pluginSource = pluginSource.Replace(trimmed, PreprocessIncludes(File.ReadAllText(includePath), directory));
                 }
                 else
                 {
@@ -67,7 +67,8 @@ namespace Coob
                     Environment.Exit(1);
                 }
             }
-            return source;
+
+            return pluginSource;
         }
 
         public void SetParameter(string name, object value)
@@ -99,10 +100,9 @@ namespace Coob
         {
             try
             {
-                if (function is JsFunction)
-                    return (T)engine.CallFunction((JsFunction)function, arguments);
-                else
-                    return (T)engine.CallFunction((string)function, arguments);
+                return function is JsFunction
+                           ? (T)engine.CallFunction((JsFunction)function, arguments)
+                           : (T)engine.CallFunction((string)function, arguments);
             }
             catch (Exception ex)
             {

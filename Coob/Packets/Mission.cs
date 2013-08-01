@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using Coob.CoobEventArgs;
-using Coob.Structures;
+﻿using System.IO;
 
 namespace Coob.Packets
 {
@@ -19,7 +13,7 @@ namespace Coob.Packets
             public uint Something3;
             public uint Something4;
             public uint Something5;
-            public uint MonsterID;
+            public uint MonsterId;
             public uint QuestLevel;
             public byte Something8;
             public byte Something9;
@@ -41,7 +35,7 @@ namespace Coob.Packets
                 mission.Something3 = client.Reader.ReadUInt32();
                 mission.Something4 = client.Reader.ReadUInt32();
                 mission.Something5 = client.Reader.ReadUInt32();
-                mission.MonsterID = client.Reader.ReadUInt32();
+                mission.MonsterId = client.Reader.ReadUInt32();
                 mission.QuestLevel = client.Reader.ReadUInt32();
                 mission.Something8 = client.Reader.ReadByte();
                 mission.Something9 = client.Reader.ReadByte();
@@ -63,7 +57,7 @@ namespace Coob.Packets
                 bw.Write(Something3);
                 bw.Write(Something4);
                 bw.Write(Something5);
-                bw.Write(MonsterID);
+                bw.Write(MonsterId);
                 bw.Write(QuestLevel);
                 bw.Write(Something8);
                 bw.Write(Something9);

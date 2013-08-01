@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 
 namespace Coob.Packets
 {
@@ -12,7 +8,7 @@ namespace Coob.Packets
         {
             public Client Sender;
 
-            public Base(Client client)
+            protected Base(Client client)
             {
                 Sender = client;
             }
@@ -21,17 +17,20 @@ namespace Coob.Packets
             {
                 get
                 {
-                    return this.GetType().Name;
+                    return GetType().Name;
                 }
             }
 
             public abstract bool CallScript();
             public abstract void Process();
-            public virtual void Write(BinaryWriter writer) { }
+            public virtual void Write(BinaryWriter writer)
+            {
+                
+            }
         }
     }
 
-    public enum CSPacketIDs : int
+    public enum CsPacketIDs
     {
         EntityUpdate = 0,
         Interact = 6,
@@ -44,7 +43,7 @@ namespace Coob.Packets
         ClientVersion = 17,
     }
 
-    public enum SCPacketIDs : int
+    public enum ScPacketIDs
     {
         EntityUpdate = 0,
         MultipleEntityUpdate = 1, // Not used

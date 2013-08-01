@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Coob.CoobEventArgs;
 using Coob.Structures;
 using System.IO;
@@ -15,15 +12,15 @@ namespace Coob.Packets
             public Entity Entity;
             public Entity Changes;
             public long UpdateBitmask;
-            public static byte[] FullBitmask = new byte[] { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00 };
+            public static readonly byte[] FullBitmask = new byte[] { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00 };
             public bool IsJoin;
 
             public EntityUpdate(Entity entity, Entity changes, bool join, Client client)
                 : base(client)
             {
-                this.Entity = entity;
-                this.Changes = changes;
-                this.IsJoin = join;
+                Entity = entity;
+                Changes = changes;
+                IsJoin = join;
             }
 
             public static Base Parse(Client client, Coob coob)
@@ -33,38 +30,32 @@ namespace Coob.Packets
                 byte[] compressedData = client.Reader.ReadBytes(length);
                 byte[] maskedData = ZlibHelper.UncompressBuffer(compressedData);
 
-                Entity entity;
-
                 using (var ms = new MemoryStream(maskedData))
                 using (var br = new BinaryReader(ms))
                 {
                     ulong id = br.ReadUInt64();
 
-                    if (id != client.ID)
+                    if (id != client.Id)
                         throw new NotImplementedException();
 
                     if (client.Entity == null)
                     {
-                        entity = new Entity(coob, null);
+                        Entity entity = new Entity(coob, null);
 
                         client.Entity = entity;
                         entity.Client = client;
-                        entity.ID = client.ID;
-                        coob.World.Entities[client.ID] = client.Entity;
+                        entity.Id = client.Id;
+                        coob.World.Entities[client.Id] = client.Entity;
 
                         entity.ReadByMask(br);
 
                         return new EntityUpdate(client.Entity, client.Entity, true, client);
                     }
-                    else
-                    {
-                        entity = coob.World.Entities[id];
 
-                        Entity changes = new Entity(coob, client);
-                        changes.ReadByMask(br);
+                    Entity changes = new Entity(coob, client);
+                    changes.ReadByMask(br);
 
-                        return new EntityUpdate(client.Entity, changes, false, client);
-                    }
+                    return new EntityUpdate(client.Entity, changes, false, client);
                 }
             }
 
@@ -72,27 +63,27 @@ namespace Coob.Packets
             {
                 if (IsJoin)
                 {
-                    bool joined = Root.ScriptManager.CallEvent("OnClientJoin", new ClientJoinEventArgs(Sender)).Canceled == false;
+                    bool joined = Program.ScriptManager.CallEvent("OnClientJoin", new ClientJoinEventArgs(Sender)).Canceled == false;
 
                     if (joined)
                         Sender.Joined = true;
 
                     return joined;
                 }
-                else
-                    return Root.ScriptManager.CallEvent("OnEntityUpdate", new EntityUpdateEventArgs(Sender, Changes)).Canceled == false;
+
+                return Program.ScriptManager.CallEvent("OnEntityUpdate", new EntityUpdateEventArgs(Sender, Changes)).Canceled == false;
             }
 
             public override void Process()
             {
                 Entity.CopyByMask(Changes);
-                
+
                 byte[] compressed;
-                
+
                 using (var ms = new MemoryStream())
                 using (var bw = new BinaryWriter(ms))
                 {
-                    bw.Write(Entity.ID);
+                    bw.Write(Entity.Id);
                     bw.Write(Changes.LastBitmask);
                     Entity.WriteByMask(Changes.LastBitmask, bw);
 
@@ -100,30 +91,30 @@ namespace Coob.Packets
                     compressed = ZlibHelper.CompressBuffer(uncompressed);
                 }
 
-                byte[] peercompressed;
                 foreach (var peer in Sender.Coob.GetClients(Sender))
                 {
-                    peer.Writer.Write(SCPacketIDs.EntityUpdate);
+                    peer.Writer.Write(ScPacketIDs.EntityUpdate);
                     peer.Writer.Write(compressed.Length);
                     peer.Writer.Write(compressed);
 
-                    if (IsJoin)
+                    if (!IsJoin)
+                        continue;
+
+                    byte[] peerCompressed;
+                    using (var ms = new MemoryStream())
+                    using (var bw = new BinaryWriter(ms))
                     {
-                        using (var ms = new MemoryStream())
-                        using (var bw = new BinaryWriter(ms))
-                        {
-                            bw.Write(peer.Entity.ID);
-                            bw.Write(Changes.LastBitmask);
-                            peer.Entity.WriteByMask(EntityUpdate.FullBitmask, bw);
+                        bw.Write(peer.Entity.Id);
+                        bw.Write(Changes.LastBitmask);
+                        peer.Entity.WriteByMask(FullBitmask, bw);
 
-                            byte[] uncompressed = ms.ToArray();
-                            peercompressed = ZlibHelper.CompressBuffer(uncompressed);
-                        }
-
-                        Sender.Writer.Write(SCPacketIDs.EntityUpdate);
-                        Sender.Writer.Write(peercompressed.Length);
-                        Sender.Writer.Write(peercompressed);
+                        byte[] uncompressed = ms.ToArray();
+                        peerCompressed = ZlibHelper.CompressBuffer(uncompressed);
                     }
+
+                    Sender.Writer.Write(ScPacketIDs.EntityUpdate);
+                    Sender.Writer.Write(peerCompressed.Length);
+                    Sender.Writer.Write(peerCompressed);
                 }
             }
         }

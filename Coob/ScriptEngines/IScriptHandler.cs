@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Coob
+namespace Coob.ScriptEngines
 {
-    interface IScriptHandler
+    public interface IScriptHandler
     {
         void SetFunction(string name, Delegate function);
         void SetParameter(string name, object value);

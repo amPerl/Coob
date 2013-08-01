@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
+using Coob.CoobEventArgs;
 
-namespace Coob
+namespace Coob.ScriptEngines
 {
-    class ScriptManager
+    public class ScriptManager
     {
-        private Dictionary<string, List<object>> hooks;
+        private readonly Dictionary<string, List<object>> hooks;
         public List<IScriptHandler> ScriptHandlers;
 
         public ScriptManager()
@@ -28,28 +27,21 @@ namespace Coob
                 scriptHandler.SetFunction("LogError",   (Action<object>)Log.Error);
 
                 // Can't set functions within objects, so it'll have to be in the global namespace.
-                scriptHandler.SetFunction("AddHook", (Action<string, object>)((eventName, function) =>
-                {
-                    AddHook(eventName, function);
-                }));
-
-                scriptHandler.SetFunction("RemoveHook", (Action<string, object>)((eventName, function) =>
-                {
-                    RemoveHook(eventName, function);
-                }));
+                scriptHandler.SetFunction("AddHook",    (Action<string, object>)AddHook);
+                scriptHandler.SetFunction("RemoveHook", (Action<string, object>)RemoveHook);
 
                 string pluginDirectory = Path.Combine(@"Plugins", scriptHandler.GetScriptDirectoryName());
-                if (Directory.Exists(pluginDirectory))
+                if (!Directory.Exists(pluginDirectory))
+                    continue;
+                
+                foreach (string directory in Directory.GetDirectories(pluginDirectory))
                 {
-                    foreach (string directory in Directory.GetDirectories(pluginDirectory))
-                    {
-                        string pluginName = directory.Substring(directory.LastIndexOf('/') + 1);
+                    string pluginName = directory.Substring(directory.LastIndexOf('/') + 1);
 
-                        string entryPath = Path.Combine(directory, scriptHandler.GetEntryFileName() + scriptHandler.GetScriptExtension());
-                        if (File.Exists(entryPath))
-                        {
-                            scriptHandler.LoadPlugin(pluginName, entryPath);
-                        }
+                    string entryPath = Path.Combine(directory, scriptHandler.GetEntryFileName() + scriptHandler.GetScriptExtension());
+                    if (File.Exists(entryPath))
+                    {
+                        scriptHandler.LoadPlugin(pluginName, entryPath);
                     }
                 }
             }
@@ -86,7 +78,8 @@ namespace Coob
                 return args;
             }
 
-            foreach (object functionName in hooks[name].ToArray()) // ToArray because if event removes a function from this event, it'll cause an exception. (collection modified)
+            // ToArray because if event removes a function from this event, it'll cause an exception. (collection modified)
+            foreach (object functionName in hooks[name].ToArray())
             {
                 ScriptHandlers.ForEach(sh => sh.CallFunction(functionName, args));
             }
