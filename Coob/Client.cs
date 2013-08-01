@@ -41,9 +41,7 @@ namespace Coob
             Id = Coob.CreateId();
 
             if (Id == 0)
-            {
                 throw new UserLimitReachedException();
-            }
 
             recvBuffer = new byte[4];
             NetStream.BeginRead(recvBuffer, 0, 4, IdCallback, null);
@@ -65,9 +63,7 @@ namespace Coob
                 int bytesRead = NetStream.EndRead(result);
 
                 if (bytesRead == 4)
-                {
                     Coob.HandleRecvPacket(BitConverter.ToInt32(recvBuffer, 0), this);
-                }
 
                 NetStream.BeginRead(recvBuffer, 0, 4, IdCallback, null);
             }
@@ -91,9 +87,7 @@ namespace Coob
 
 	        Entity removedEntity;
 	        if (!Coob.World.Entities.TryRemove(Id, out removedEntity))
-	        {
 		        throw new ArgumentException("Failed to remove entity from Entities");
-	        }
 
 	        Program.ScriptManager.CallEvent("OnClientDisconnect", new ClientDisconnectEventArgs(client, reason));
         }

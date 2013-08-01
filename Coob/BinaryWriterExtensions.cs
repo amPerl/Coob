@@ -20,8 +20,7 @@ namespace Coob
 
         public static void Pad(this BinaryWriter writer, int length)
         {
-            var nullArray = new byte[length];
-            writer.Write(nullArray);
+            writer.Write(new byte[length]);
         }
 
         public static void Write(this BinaryWriter writer, Packets.ScPacketIDs pId)

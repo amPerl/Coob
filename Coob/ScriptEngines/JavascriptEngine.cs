@@ -57,9 +57,7 @@ namespace Coob.ScriptEngines
 
                 string includePath = Path.Combine(directory, includeName);
                 if (File.Exists(includePath))
-                {
                     pluginSource = pluginSource.Replace(trimmed, PreprocessIncludes(File.ReadAllText(includePath), directory));
-                }
                 else
                 {
                     Log.Error("Could not find file to include \"" + trimmed + "\" in plugin " + directory + ".");

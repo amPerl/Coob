@@ -60,9 +60,7 @@ namespace Coob.Structures
             writer.Write((short)0); // skip 2
 
             foreach (ItemUpgrade t in Upgrades)
-            {
                 t.Write(writer);
-            }
             
             writer.Write(UpgradeCount);
         }

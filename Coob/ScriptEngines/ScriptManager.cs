@@ -40,9 +40,7 @@ namespace Coob.ScriptEngines
 
                     string entryPath = Path.Combine(directory, scriptHandler.GetEntryFileName() + scriptHandler.GetScriptExtension());
                     if (File.Exists(entryPath))
-                    {
                         scriptHandler.LoadPlugin(pluginName, entryPath);
-                    }
                 }
             }
         }
@@ -50,9 +48,7 @@ namespace Coob.ScriptEngines
         public void Run()
         {
             foreach (var scriptHandler in ScriptHandlers)
-            {
                 scriptHandler.Run();
-            }
         }
 
         public void AddHook(string eventName, object function)
@@ -80,9 +76,7 @@ namespace Coob.ScriptEngines
 
             // ToArray because if event removes a function from this event, it'll cause an exception. (collection modified)
             foreach (object functionName in hooks[name].ToArray())
-            {
                 ScriptHandlers.ForEach(sh => sh.CallFunction(functionName, args));
-            }
 
             return args;
         }

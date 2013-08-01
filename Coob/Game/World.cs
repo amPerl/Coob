@@ -113,27 +113,19 @@ namespace Coob.Game
         public void SetTime(uint day, float time)
         {
             foreach (var client in Coob.GetClients().Where(client => client.Joined))
-            {
                 client.SetTime(day, time);
-            }
         }
 
         public void SendServerMessage(string message)
         {
             foreach (var client in Coob.GetClients().Where(client => client.Joined))
-            {
                 client.SendServerMessage(message);
-            }
         }
 
         public void BroadcastChat(ulong id, string message)
         {
             foreach (var client in Coob.GetClients().Where(client => client.Joined))
-            {
                 client.SendMessage(id, message);
-            }
         }
     }
-
- 
 }

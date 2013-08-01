@@ -58,13 +58,9 @@ namespace Coob
             catch (SocketException e)
             {
                 if (e.ErrorCode == 10048)
-                {
                     Log.Error("Something is already running on port " + options.Port + ". Can't start server.");
-                }
                 else
-                {
                     Log.Error("Unknown error occured while trying to start server:\n" + e);
-                }
 
                 Log.Display();
                 Environment.Exit(1);
@@ -86,9 +82,7 @@ namespace Coob
                 Clients.Add(newClient.Id, newClient);
             }
             else
-            {
                 tcpClient.Close();
-            }
 
             clientListener.BeginAcceptTcpClient(OnClientConnect, null);
         }
@@ -209,9 +203,7 @@ namespace Coob
             for (ulong i = 1; i < Options.MaxClients; i++)
             {
                 if (!Clients.ContainsKey(i))
-                {
                     return i;
-                }
             }
 
             return 0;
@@ -230,10 +222,7 @@ namespace Coob
 
         public Client GetClient(ulong id)
         {
-            if (Clients.ContainsKey(id))
-                return Clients[id];
-
-            return null;
+            return Clients.ContainsKey(id) ? Clients[id] : null;
         }
 
         public Client GetClient(string name)

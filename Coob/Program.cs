@@ -27,10 +27,10 @@ namespace Coob
             var initArgs = (InitializeEventArgs)ScriptManager.CallEvent("OnInitialize", new InitializeEventArgs());
 
             Coob = new Coob(new CoobOptions
-                            {
-                                Port = initArgs.Port,
-                                WorldSeed = initArgs.WorldSeed,
-                            });
+            {
+                Port = initArgs.Port,
+                WorldSeed = initArgs.WorldSeed,
+            });
 
             Scripting.SetParameter("coob", Coob);
             Scripting.SetParameter("world", Coob.World);

@@ -9,13 +9,7 @@ namespace Coob
 
         public QVector3 Clone()
         {
-			// TODO Can't you just return new QVector3(X, Y, Z);?
-            return new QVector3
-            {
-	            X = X,
-				Y = Y,
-				Z = Z
-            };
+            return new QVector3(X, Y, Z);
         }
 
         public QVector3(long x, long y, long z)

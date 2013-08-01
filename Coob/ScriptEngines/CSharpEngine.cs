@@ -59,16 +59,11 @@ namespace Coob.ScriptEngines
 
         public T CallFunction<T>(object function, params object[] arguments)
         {
-            if (function is MethodInfo)
-            {
-                var output = ((MethodInfo)function).Invoke(mainClass, arguments);
-                return (T)output;
-            }
-            else
-            {
-                var output = mainType.GetMethod((string)function).Invoke(mainClass, arguments);
-                return (T)output;
-            }
+            var methodInfo = function as MethodInfo;
+            if (methodInfo != null)
+                return (T)methodInfo.Invoke(mainClass, arguments);
+
+            return (T)mainType.GetMethod((string)function).Invoke(mainClass, arguments);
         }
 
         public void CallFunction(object function, params object[] arguments)
