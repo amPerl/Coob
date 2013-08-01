@@ -23,8 +23,8 @@ namespace Coob
         public bool Pvp;
         private bool disconnecting;
 
-	    readonly TcpClient tcp;
-	    readonly byte[] recvBuffer;
+	    private readonly TcpClient tcp;
+        private readonly byte[] recvBuffer;
 
         public Client(TcpClient tcpClient, Coob coob)
         {

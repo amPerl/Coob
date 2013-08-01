@@ -23,15 +23,21 @@ namespace Coob
         public CoobOptions Options;
         public World World { get; private set; }
 
-	    readonly TcpListener clientListener;
+	    private readonly TcpListener clientListener;
+        private Thread messageHandlerThread;
 
-        Thread messageHandlerThread;
+        private readonly Stopwatch elapsedDt;
+        private float dtSinceLastWorldUpdate;
+        private float dtSinceLastServerUpdate;
+        private float accumulator;
 
         public bool Running { get; private set; }
 
         public Coob(CoobOptions options)
         {
             Options = options;
+
+            elapsedDt = new Stopwatch();
 
             MessageQueue = new ConcurrentQueue<Packet.Base>();
             PacketParsers = new Dictionary<int, PacketParserDel>();
@@ -111,7 +117,7 @@ namespace Coob
         {
             Running = true;
 
-            messageHandlerThread = new Thread(messageHandler);
+            messageHandlerThread = new Thread(MessageHandler);
             messageHandlerThread.Start();
 
             Log.Info("Started message handler and world.");
@@ -121,11 +127,6 @@ namespace Coob
         {
             Running = false;
         }
-
-        readonly Stopwatch elapsedDt = new Stopwatch();
-        float dtSinceLastWorldUpdate;
-        float dtSinceLastServerUpdate;
-        float accumulator;
 
         private void UpdateWorld()
         {
@@ -163,7 +164,7 @@ namespace Coob
             //Console.WriteLine("Updated " + times + " times");
         }
 
-        void messageHandler()
+        void MessageHandler()
         {
             while (Running)
             {

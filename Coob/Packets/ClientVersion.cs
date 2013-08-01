@@ -16,8 +16,7 @@ namespace Coob.Packets
 
             public static Base Parse(Client client, Coob coob)
             {
-                int version = client.Reader.ReadInt32();
-                return new ClientVersion(version, client);
+                return new ClientVersion(client.Reader.ReadInt32(), client);
             }
 
             public override bool CallScript()

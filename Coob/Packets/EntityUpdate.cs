@@ -9,10 +9,11 @@ namespace Coob.Packets
     {
         public class EntityUpdate : Base
         {
+            public static readonly byte[] FullBitmask = new byte[] { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00 };
+
             public Entity Entity;
             public Entity Changes;
             public long UpdateBitmask;
-            public static readonly byte[] FullBitmask = new byte[] { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00 };
             public bool IsJoin;
 
             public EntityUpdate(Entity entity, Entity changes, bool join, Client client)
