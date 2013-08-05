@@ -9,7 +9,7 @@ namespace Coob
 
         public QVector3 Clone()
         {
-            return new QVector3() { X = this.X, Y = this.Y, Z = this.Z };
+            return new QVector3(X, Y, Z);
         }
 
         public QVector3(long x, long y, long z)
@@ -19,7 +19,7 @@ namespace Coob
             Z = z;
         }
 
-        public QVector3 (long xyz)
+        public QVector3(long xyz)
         {
             X = xyz;
             Y = xyz;

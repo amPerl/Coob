@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace Coob.Structures
@@ -11,8 +10,11 @@ namespace Coob.Structures
 
     public class Entity
     {
+        public const int EquipmentCount = 13;
+        public const int SkillCount = 11;
+
         #region Fields
-        public ulong ID;
+        public ulong Id;
         public byte[] LastBitmask;
 
         public QVector3 Position;
@@ -39,329 +41,207 @@ namespace Coob.Structures
         public float ShowPatchTime;
         public byte ClassType;
         public byte Specialization;
-        public float ChargedMP;
+        public float ChargedMp;
         public Vector3 RayHit;
-        public float HP;
-        public float MP;
+        public float Hp;
+        public float Mp;
         public float BlockPower;
-        public float MaxHPMultiplier;
+        public float MaxHpMultiplier;
         public float ShootSpeed;
         public float DamageMultiplier;
         public float ArmorMultiplier;
         public float ResistanceMultiplier;
         public uint Level;
-        public uint CurrentXP;
+        public uint CurrentXp;
         public Item ItemData;
         public Item[] Equipment;
         public uint IceBlockFour;
         public uint[] Skills;
         public string Name;
 
-        public uint unknown_or_not_used1;
-        public uint unknown_or_not_used2;
-        public byte unknown_or_not_used3;
-        public uint unknown_or_not_used4;
-        public uint unknown_or_not_used5;
-        public uint not_used1;
-        public uint not_used2;
-        public uint not_used3;
-        public uint not_used4;
-        public uint not_used5;
-        public uint not_used6;
-        public byte not_used7;
-        public byte not_used8;
+        private uint unknownOrNotUsed1;
+        private uint unknownOrNotUsed2;
+        private byte unknownOrNotUsed3;
+        private uint unknownOrNotUsed4;
+        private uint unknownOrNotUsed5;
+        private uint notUsed1;
+        private uint notUsed2;
+        private uint notUsed3;
+        private uint notUsed4;
+        private uint notUsed5;
+        private uint notUsed6;
+        private byte notUsed7;
+        private byte notUsed8;
         public ulong ParentOwner;
-        public uint not_used11;
-        public uint not_used12;
-        public uint not_used13;
-        public uint not_used14;
-        public uint not_used15;
-        public uint not_used16;
-        public uint not_used17;
-        public uint not_used18;
-        public uint not_used20;
-        public uint not_used21;
-        public uint not_used22;
-        public byte not_used19;
+        private uint notUsed11;
+        private uint notUsed12;
+        private uint notUsed13;
+        private uint notUsed14;
+        private uint notUsed15;
+        private uint notUsed16;
+        private uint notUsed17;
+        private uint notUsed18;
+        private uint notUsed20;
+        private uint notUsed21;
+        private uint notUsed22;
+        private byte notUsed19;
 
         #endregion
 
-        public Coob Coob;
         public Client Client;
 
+        // TODO Fix ctor
         public Entity(Coob coob, Client owner)
         {
             Client = owner;
-            Coob = coob;
             Position = new QVector3();
             Rotation = new Vector3();
             Velocity = new Vector3();
             Acceleration = new Vector3();
             ExtraVelocity = new Vector3();
-
             Appearance = new Appearance();
-
             RayHit = new Vector3();
-
             ItemData = new Item();
 
-            Equipment = new Item[13];
-            for (int i = 0; i < 13; i++)
+            Equipment = new Item[EquipmentCount];
+            for (int i = 0; i < EquipmentCount; i++)
                 Equipment[i] = new Item();
 
-            Skills = new uint[11];
+            Skills = new uint[SkillCount];
         }
 
         public void ReadByMask(BinaryReader reader)
         {
+            List<Action> maskActions = new List<Action>
+            {
+                () => Position = new QVector3(reader.ReadInt64(), reader.ReadInt64(), reader.ReadInt64()),
+                () => Rotation = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle()),
+                () => Velocity = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle()),
+                () => Acceleration = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle()),
+                () => ExtraVelocity = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle()),
+                () => LookPitch = reader.ReadSingle(),
+                () => PhysicsFlags = reader.ReadUInt32(),
+                () => SpeedFlags = reader.ReadByte(),
+                () => EntityType = reader.ReadUInt32(),
+                () => CurrentMode = reader.ReadByte(),
+                () => LastShootTime = reader.ReadUInt32(),
+                () => HitCounter = reader.ReadUInt32(),
+                () => LastHitTime = reader.ReadUInt32(),
+                () => Appearance.Read(reader),
+                () =>
+                {
+                    Flags1 = reader.ReadByte();
+
+                    // Not sure how necessary this is.
+                    if (Client != null && Client.Pvp)
+                    {
+                        if (Flags1 == 0x40) // Non-hostile
+                            Flags1 = 0x20;
+                    }
+                    else if (Client != null && !Client.Pvp)
+                    {
+                        if (Flags1 == 0x20) // Hostile
+                            Flags1 = 0x40;
+                    }
+
+                    Flags2 = reader.ReadByte();
+                },
+                () => RollTime = reader.ReadUInt32(),
+                () => StunTime = reader.ReadInt32(),
+                () => SlowedTime = reader.ReadUInt32(),
+                () => MakeBlueTime = reader.ReadUInt32(),
+                () => SpeedUpTime = reader.ReadUInt32(),
+                () => ShowPatchTime = reader.ReadSingle(),
+                () => ClassType = reader.ReadByte(),
+                () => Specialization = reader.ReadByte(),
+                () => ChargedMp = reader.ReadSingle(),
+                () =>
+                {
+                    notUsed1 = reader.ReadUInt32();
+                    notUsed2 = reader.ReadUInt32();
+                    notUsed3 = reader.ReadUInt32();
+                },
+                () =>
+                {
+                    notUsed4 = reader.ReadUInt32();
+                    notUsed5 = reader.ReadUInt32();
+                    notUsed6 = reader.ReadUInt32(); 
+                },
+                () => RayHit = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle()),
+                () => Hp = reader.ReadSingle(),
+                () => Mp = reader.ReadSingle(),
+                () => BlockPower = reader.ReadSingle(),
+                () =>
+                {
+                    MaxHpMultiplier = reader.ReadSingle();
+                    ShootSpeed = reader.ReadSingle();
+                    DamageMultiplier = reader.ReadSingle();
+                    ArmorMultiplier = reader.ReadSingle();
+                    ResistanceMultiplier = reader.ReadSingle();
+                },
+                () => notUsed7 = reader.ReadByte(),
+                () => notUsed8 = reader.ReadByte(),
+                () => Level = reader.ReadUInt32(),
+                () => CurrentXp = reader.ReadUInt32(),
+                () => ParentOwner = reader.ReadUInt64(),
+                () =>
+                {
+                    unknownOrNotUsed1 = reader.ReadUInt32();
+                    unknownOrNotUsed2 = reader.ReadUInt32();
+                },
+                () => unknownOrNotUsed3 = reader.ReadByte(),
+                () => unknownOrNotUsed4 = reader.ReadUInt32(),
+                () =>
+                {
+                    unknownOrNotUsed5 = reader.ReadUInt32();
+                    notUsed11 = reader.ReadUInt32();
+                    notUsed12 = reader.ReadUInt32();
+                },
+                () =>
+                {
+                    notUsed13 = reader.ReadUInt32();
+                    notUsed14 = reader.ReadUInt32();
+                    notUsed15 = reader.ReadUInt32();
+                    notUsed16 = reader.ReadUInt32();
+                    notUsed17 = reader.ReadUInt32();
+                    notUsed18 = reader.ReadUInt32();
+                },
+                () =>
+                {
+                    notUsed20 = reader.ReadUInt32();
+                    notUsed21 = reader.ReadUInt32();
+                    notUsed22 = reader.ReadUInt32();
+                },
+                () => notUsed19 = reader.ReadByte(),
+                () => ItemData.Read(reader),
+                () =>
+                {
+                    for (int i = 0; i < EquipmentCount; ++i)
+                    {
+                        Item item = new Item();
+                        item.Read(reader);
+                        Equipment[i] = item;
+                    }
+                },
+                () => Name = Encoding.ASCII.GetString(reader.ReadBytes(16)).TrimEnd(' ', '\0'),
+                () =>
+                {
+                    Skills = new uint[SkillCount];
+                    for (int i = 0; i < SkillCount; ++i)
+                        Skills[i] = reader.ReadUInt32();
+                },
+                () => IceBlockFour = reader.ReadUInt32()
+            };
+            
             LastBitmask = reader.ReadBytes(8);
             BitArray bitArray = new BitArray(LastBitmask);
 
-            if (bitArray.Get(0))
+            for (int i = 0; i < maskActions.Count; ++i)
             {
-                Position = new QVector3
-                {
-                    X = reader.ReadInt64(),
-                    Y = reader.ReadInt64(),
-                    Z = reader.ReadInt64()
-                };
-            }
-            if (bitArray.Get(1))
-            {
-                Rotation = new Vector3
-                {
-                    Pitch = reader.ReadSingle(),
-                    Roll = reader.ReadSingle(),
-                    Yaw = reader.ReadSingle()
-                };
-            }
-            if (bitArray.Get(2))
-            {
-                Velocity = new Vector3 { X = reader.ReadSingle(), Y = reader.ReadSingle(), Z = reader.ReadSingle() };
-            }
-            if (bitArray.Get(3))
-            {
-                Acceleration = new Vector3 { X = reader.ReadSingle(), Y = reader.ReadSingle(), Z = reader.ReadSingle() };
-            }
-            if (bitArray.Get(4))
-            {
-                ExtraVelocity = new Vector3 { X = reader.ReadSingle(), Y = reader.ReadSingle(), Z = reader.ReadSingle() };
-            }
-            if (bitArray.Get(5))
-            {
-                LookPitch = reader.ReadSingle();
-            }
-            if (bitArray.Get(6))
-            {
-                PhysicsFlags = reader.ReadUInt32();
-            }
-            if (bitArray.Get(7))
-            {
-                SpeedFlags = reader.ReadByte();
-            }
-            if (bitArray.Get(8))
-            {
-                EntityType = reader.ReadUInt32();
-            }
-            if (bitArray.Get(9))
-            {
-                CurrentMode = reader.ReadByte();
-            }
-            if (bitArray.Get(10))
-            {
-                LastShootTime = reader.ReadUInt32();
-            }
-            if (bitArray.Get(11))
-            {
-                HitCounter = reader.ReadUInt32();
-            }
-            if (bitArray.Get(12))
-            {
-                LastHitTime = reader.ReadUInt32();
-            }
-            if (bitArray.Get(13))
-            {
-                Appearance.Read(reader);
-            }
-            if (bitArray.Get(14))
-            {
-                Flags1 = reader.ReadByte();
+                if (!bitArray.Get(i))
+                    continue;
 
-                // Not sure how necessary this is.
-                if (Client != null && Client.PVP)
-                {
-                    if (Flags1 == 0x40) // Non-hostile
-                        Flags1 = 0x20;
-                }
-                else if (Client != null && !Client.PVP)
-                {
-                    if (Flags1 == 0x20) // Hostile
-                        Flags1 = 0x40;
-                }
-
-                Log.Info("Flags1: " + Flags1);
-
-                Flags2 = reader.ReadByte();
-            }
-            if (bitArray.Get(15))
-            {
-                RollTime = reader.ReadUInt32();
-            }
-            if (bitArray.Get(16))
-            {
-                StunTime = reader.ReadInt32();
-            }
-            if (bitArray.Get(17))
-            {
-                SlowedTime = reader.ReadUInt32();
-            }
-            if (bitArray.Get(18))
-            {
-                MakeBlueTime = reader.ReadUInt32();
-            }
-            if (bitArray.Get(19))
-            {
-                SpeedUpTime = reader.ReadUInt32();
-            }
-            if (bitArray.Get(20))
-            {
-                ShowPatchTime = reader.ReadSingle();
-            }
-            if (bitArray.Get(21))
-            {
-                ClassType = reader.ReadByte();
-            }
-            if (bitArray.Get(22))
-            {
-                Specialization = reader.ReadByte();
-            }
-            if (bitArray.Get(23))
-            {
-                ChargedMP = reader.ReadSingle();
-            }
-            if (bitArray.Get(24))
-            {
-                not_used1 = reader.ReadUInt32();
-                not_used2 = reader.ReadUInt32();
-                not_used3 = reader.ReadUInt32();
-            }
-            if (bitArray.Get(25))
-            {
-                not_used4 = reader.ReadUInt32();
-                not_used5 = reader.ReadUInt32();
-                not_used6 = reader.ReadUInt32();
-            }
-            if (bitArray.Get(26))
-            {
-                RayHit = new Vector3 { X = reader.ReadSingle(), Y = reader.ReadSingle(), Z = reader.ReadSingle() };
-            }
-            if (bitArray.Get(27))
-            {
-                HP = reader.ReadSingle();
-            }
-            if (bitArray.Get(28))
-            {
-                MP = reader.ReadSingle();
-            }
-            if (bitArray.Get(29))
-            {
-                BlockPower = reader.ReadSingle();
-            }
-            if (bitArray.Get(30))
-            {
-                MaxHPMultiplier = reader.ReadSingle();
-                ShootSpeed = reader.ReadSingle();
-                DamageMultiplier = reader.ReadSingle();
-                ArmorMultiplier = reader.ReadSingle();
-                ResistanceMultiplier = reader.ReadSingle();
-            }
-            if (bitArray.Get(31))
-            {
-                not_used7 = reader.ReadByte();
-            }
-            if (bitArray.Get(32))
-            {
-                not_used8 = reader.ReadByte();
-            }
-            if (bitArray.Get(33))
-            {
-                Level = reader.ReadUInt32();
-            }
-            if (bitArray.Get(34))
-            {
-                CurrentXP = reader.ReadUInt32();
-            }
-            if (bitArray.Get(35))
-            {
-                ParentOwner = reader.ReadUInt64();
-            }
-            if (bitArray.Get(36))
-            {
-                unknown_or_not_used1 = reader.ReadUInt32();
-                unknown_or_not_used2 = reader.ReadUInt32();
-            }
-            if (bitArray.Get(37))
-            {
-                unknown_or_not_used3 = reader.ReadByte();
-            }
-            if (bitArray.Get(38))
-            {
-                unknown_or_not_used4 = reader.ReadUInt32();
-            }
-            if (bitArray.Get(39))
-            {
-                unknown_or_not_used5 = reader.ReadUInt32();
-                not_used11 = reader.ReadUInt32();
-                not_used12 = reader.ReadUInt32();
-            }
-            if (bitArray.Get(40))
-            {
-                not_used13 = reader.ReadUInt32();
-                not_used14 = reader.ReadUInt32();
-                not_used15 = reader.ReadUInt32();
-                not_used16 = reader.ReadUInt32();
-                not_used17 = reader.ReadUInt32();
-                not_used18 = reader.ReadUInt32();
-            }
-            if (bitArray.Get(41))
-            {
-                not_used20 = reader.ReadUInt32();
-                not_used21 = reader.ReadUInt32();
-                not_used22 = reader.ReadUInt32();
-            }
-            if (bitArray.Get(42))
-            {
-                not_used19 = reader.ReadByte();
-            }
-            if (bitArray.Get(43))
-            {
-                ItemData.Read(reader);
-            }
-            if (bitArray.Get(44))
-            {
-                for (int i = 0; i < 13; i++)
-                {
-                    Item item = new Item();
-                    item.Read(reader);
-                    Equipment[i] = item;
-                }
-            }
-            if (bitArray.Get(45))
-            {
-                Name = Encoding.ASCII.GetString(reader.ReadBytes(16));
-                Name = Name.TrimEnd(' ', '\0');
-            }
-            if (bitArray.Get(46))
-            {
-                Skills = new uint[11];
-                for (int i = 0; i < 11; i++)
-                {
-                    Skills[i] = reader.ReadUInt32();
-                }
-            }
-            if (bitArray.Get(47))
-            {
-                IceBlockFour = reader.ReadUInt32();
+                maskActions[i]();
             }
         }
 
@@ -466,19 +346,19 @@ namespace Coob.Structures
             }
             if (bitArray.Get(23))
             {
-                ChargedMP = from.ChargedMP;
+                ChargedMp = from.ChargedMp;
             }
             if (bitArray.Get(24))
             {
-                not_used1 = from.not_used1;
-                not_used2 = from.not_used2;
-                not_used3 = from.not_used3;
+                notUsed1 = from.notUsed1;
+                notUsed2 = from.notUsed2;
+                notUsed3 = from.notUsed3;
             }
             if (bitArray.Get(25))
             {
-                not_used4 = from.not_used4;
-                not_used5 = from.not_used5;
-                not_used6 = from.not_used6;
+                notUsed4 = from.notUsed4;
+                notUsed5 = from.notUsed5;
+                notUsed6 = from.notUsed6;
             }
             if (bitArray.Get(26))
             {
@@ -486,11 +366,11 @@ namespace Coob.Structures
             }
             if (bitArray.Get(27))
             {
-                HP = from.HP;
+                Hp = from.Hp;
             }
             if (bitArray.Get(28))
             {
-                MP = from.MP;
+                Mp = from.Mp;
             }
             if (bitArray.Get(29))
             {
@@ -498,7 +378,7 @@ namespace Coob.Structures
             }
             if (bitArray.Get(30))
             {
-                MaxHPMultiplier = from.MaxHPMultiplier;
+                MaxHpMultiplier = from.MaxHpMultiplier;
                 ShootSpeed = from.ShootSpeed;
                 DamageMultiplier = from.DamageMultiplier;
                 ArmorMultiplier = from.ArmorMultiplier;
@@ -506,11 +386,11 @@ namespace Coob.Structures
             }
             if (bitArray.Get(31))
             {
-                not_used7 = from.not_used7;
+                notUsed7 = from.notUsed7;
             }
             if (bitArray.Get(32))
             {
-                not_used8 = from.not_used8;
+                notUsed8 = from.notUsed8;
             }
             if (bitArray.Get(33))
             {
@@ -518,7 +398,7 @@ namespace Coob.Structures
             }
             if (bitArray.Get(34))
             {
-                CurrentXP = from.CurrentXP;
+                CurrentXp = from.CurrentXp;
             }
             if (bitArray.Get(35))
             {
@@ -526,41 +406,41 @@ namespace Coob.Structures
             }
             if (bitArray.Get(36))
             {
-                unknown_or_not_used1 = from.unknown_or_not_used1;
-                unknown_or_not_used2 = from.unknown_or_not_used2;
+                unknownOrNotUsed1 = from.unknownOrNotUsed1;
+                unknownOrNotUsed2 = from.unknownOrNotUsed2;
             }
             if (bitArray.Get(37))
             {
-                unknown_or_not_used3 = from.unknown_or_not_used3;
+                unknownOrNotUsed3 = from.unknownOrNotUsed3;
             }
             if (bitArray.Get(38))
             {
-                unknown_or_not_used4 = from.unknown_or_not_used4;
+                unknownOrNotUsed4 = from.unknownOrNotUsed4;
             }
             if (bitArray.Get(39))
             {
-                unknown_or_not_used5 = from.unknown_or_not_used5;
-                not_used11 = from.not_used11;
-                not_used12 = from.not_used12;
+                unknownOrNotUsed5 = from.unknownOrNotUsed5;
+                notUsed11 = from.notUsed11;
+                notUsed12 = from.notUsed12;
             }
             if (bitArray.Get(40))
             {
-                not_used13 = from.not_used13;
-                not_used14 = from.not_used14;
-                not_used15 = from.not_used15;
-                not_used16 = from.not_used16;
-                not_used17 = from.not_used17;
-                not_used18 = from.not_used18;
+                notUsed13 = from.notUsed13;
+                notUsed14 = from.notUsed14;
+                notUsed15 = from.notUsed15;
+                notUsed16 = from.notUsed16;
+                notUsed17 = from.notUsed17;
+                notUsed18 = from.notUsed18;
             }
             if (bitArray.Get(41))
             {
-                not_used20 = from.not_used20;
-                not_used21 = from.not_used21;
-                not_used22 = from.not_used22;
+                notUsed20 = from.notUsed20;
+                notUsed21 = from.notUsed21;
+                notUsed22 = from.notUsed22;
             }
             if (bitArray.Get(42))
             {
-                not_used19 = from.not_used19;
+                notUsed19 = from.notUsed19;
             }
             if (bitArray.Get(43))
             {
@@ -692,19 +572,19 @@ namespace Coob.Structures
             }
             if (bitArray.Get(23))
             {
-                writer.Write(ChargedMP);
+                writer.Write(ChargedMp);
             }
             if (bitArray.Get(24))
             {
-                writer.Write(not_used1);
-                writer.Write(not_used2);
-                writer.Write(not_used3);
+                writer.Write(notUsed1);
+                writer.Write(notUsed2);
+                writer.Write(notUsed3);
             }
             if (bitArray.Get(25))
             {
-                writer.Write(not_used4);
-                writer.Write(not_used5);
-                writer.Write(not_used6);
+                writer.Write(notUsed4);
+                writer.Write(notUsed5);
+                writer.Write(notUsed6);
             }
             if (bitArray.Get(26))
             {
@@ -712,11 +592,11 @@ namespace Coob.Structures
             }
             if (bitArray.Get(27))
             {
-                writer.Write(HP);
+                writer.Write(Hp);
             }
             if (bitArray.Get(28))
             {
-                writer.Write(MP);
+                writer.Write(Mp);
             }
             if (bitArray.Get(29))
             {
@@ -724,7 +604,7 @@ namespace Coob.Structures
             }
             if (bitArray.Get(30))
             {
-                writer.Write(MaxHPMultiplier);
+                writer.Write(MaxHpMultiplier);
                 writer.Write(ShootSpeed);
                 writer.Write(DamageMultiplier);
                 writer.Write(ArmorMultiplier);
@@ -732,11 +612,11 @@ namespace Coob.Structures
             }
             if (bitArray.Get(31))
             {
-                writer.Write(not_used7);
+                writer.Write(notUsed7);
             }
             if (bitArray.Get(32))
             {
-                writer.Write(not_used8);
+                writer.Write(notUsed8);
             }
             if (bitArray.Get(33))
             {
@@ -744,7 +624,7 @@ namespace Coob.Structures
             }
             if (bitArray.Get(34))
             {
-                writer.Write(CurrentXP);
+                writer.Write(CurrentXp);
             }
             if (bitArray.Get(35))
             {
@@ -752,41 +632,41 @@ namespace Coob.Structures
             }
             if (bitArray.Get(36))
             {
-                writer.Write(unknown_or_not_used1);
-                writer.Write(unknown_or_not_used2);
+                writer.Write(unknownOrNotUsed1);
+                writer.Write(unknownOrNotUsed2);
             }
             if (bitArray.Get(37))
             {
-                writer.Write(unknown_or_not_used3);
+                writer.Write(unknownOrNotUsed3);
             }
             if (bitArray.Get(38))
             {
-                writer.Write(unknown_or_not_used4);
+                writer.Write(unknownOrNotUsed4);
             }
             if (bitArray.Get(39))
             {
-                writer.Write(unknown_or_not_used5);
-                writer.Write(not_used11);
-                writer.Write(not_used12);
+                writer.Write(unknownOrNotUsed5);
+                writer.Write(notUsed11);
+                writer.Write(notUsed12);
             }
             if (bitArray.Get(40))
             {
-                writer.Write(not_used13);
-                writer.Write(not_used14);
-                writer.Write(not_used15);
-                writer.Write(not_used16);
-                writer.Write(not_used17);
-                writer.Write(not_used18);
+                writer.Write(notUsed13);
+                writer.Write(notUsed14);
+                writer.Write(notUsed15);
+                writer.Write(notUsed16);
+                writer.Write(notUsed17);
+                writer.Write(notUsed18);
             }
             if (bitArray.Get(41))
             {
-                writer.Write(not_used20);
-                writer.Write(not_used21);
-                writer.Write(not_used22);
+                writer.Write(notUsed20);
+                writer.Write(notUsed21);
+                writer.Write(notUsed22);
             }
             if (bitArray.Get(42))
             {
-                writer.Write(not_used19);
+                writer.Write(notUsed19);
             }
             if (bitArray.Get(43))
             {
@@ -802,7 +682,7 @@ namespace Coob.Structures
             if (bitArray.Get(45))
             {
                 writer.Write(Encoding.UTF8.GetBytes(Name));
-                writer.Write(new byte[16-Name.Length]);
+                writer.Write(new byte[16 - Name.Length]);
             }
             if (bitArray.Get(46))
             {

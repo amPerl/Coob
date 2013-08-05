@@ -5,11 +5,12 @@ namespace Coob.CoobEventArgs
         public int Port;
         public int WorldSeed;
 
-        public InitializeEventArgs() : base(null)
+        public InitializeEventArgs()
+            : base(null)
         {
-            //Default Values. Can be changed by script
-            Port = 12345; 
-            WorldSeed = 26879;
+            // Default Values, can be changed by script
+            Port = Globals.DefaultPort;
+            WorldSeed = Globals.DefaultWorldSeed;
         }
     }
 }

@@ -5,63 +5,66 @@ namespace Coob
 {
     public struct Vector3 : ICloneable
     {
-        private float _x;
-        private float _y;
-        private float _z;
+        private float x;
+        private float y;
+        private float z;
 
         public float X
         {
-            get { return _x; }
-            set { _x = value; }
+            get { return x; }
+            set { x = value; }
         }
 
-        public float Pitch //Alias of X
+        // Alias of X
+        public float Pitch
         {
-            get { return _x; }
-            set { _x = value; }
+            get { return x; }
+            set { x = value; }
         }
 
         public float Y
         {
-            get { return _y; }
-            set { _y = value; }
+            get { return y; }
+            set { y = value; }
         }
 
-        public float Roll //Alias of Y
+        // Alias of Y
+        public float Roll
         {
-            get { return _y; }
-            set { _y = value; }
+            get { return y; }
+            set { y = value; }
         }
 
         public float Z
         {
-            get { return _z; }
-            set { _z = value; }
+            get { return z; }
+            set { z = value; }
         }
 
-        public float Yaw //Alias of Z
+        // Alias of Z
+        public float Yaw
         {
-            get { return _z; }
-            set { _z = value; }
+            get { return z; }
+            set { z = value; }
         }
 
         public Vector3(float x, float y, float z)
         {
-            this._x = x;
-            this._y = y;
-            this._z = z;
+            this.x = x;
+            this.y = y;
+            this.z = z;
         }
 
         public Vector3(float xyz)
         {
-            _x = xyz;
-            _y = xyz;
-            _z = xyz;
+            x = xyz;
+            y = xyz;
+            z = xyz;
         }
 
         public Vector3 Clone()
         {
-            return new Vector3(_x, _y, _z);
+            return new Vector3(x, y, z);
         }
 
         public void Write(BinaryWriter writer)
@@ -78,7 +81,7 @@ namespace Coob
 
         object ICloneable.Clone()
         {
-            return new Vector3(_x, _y, _z);
+            return new Vector3(x, y, z);
         }
 
         public static Vector3 operator +(Vector3 a, Vector3 b)

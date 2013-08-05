@@ -1,42 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Coob
 {
-    class Log
+    public static class Log
     {
         public class LogMessage
         {
             public string LogType;
             public string Message;
-            public ConsoleColor BGColor;
-            public ConsoleColor FGColor;
+            public ConsoleColor BgColor;
+            public ConsoleColor FgColor;
 
             public LogMessage(string logType, object message, ConsoleColor bgColor, ConsoleColor fgColor)
             {
                 LogType = logType;
                 Message = message.ToString();
-                BGColor = bgColor;
-                FGColor = fgColor;
+                BgColor = bgColor;
+                FgColor = fgColor;
             }
         }
 
-        private static Queue<LogMessage> queuedMessages = new Queue<LogMessage>();
+        private static readonly Queue<LogMessage> QueuedMessages = new Queue<LogMessage>();
 
         static Log()
         {
             Console.Clear();
         }
 
-        static void writeTimePrefix()
+        static void WriteTimePrefix()
         {
             Console.ForegroundColor = ConsoleColor.Black;
             Console.BackgroundColor = ConsoleColor.Gray;
             Console.Write(DateTime.Now.ToString(" HH:mm:ss "));
         }
 
-        static void writeTypePrefix(string type, ConsoleColor bg, ConsoleColor fg)
+        static void WriteTypePrefix(string type, ConsoleColor bg, ConsoleColor fg)
         {
             Console.ForegroundColor = fg;
             Console.BackgroundColor = bg;
@@ -48,42 +47,43 @@ namespace Coob
 
         public static void Info(object message)
         {
-            queuedMessages.Enqueue(new LogMessage("INFO", message.ToString(), ConsoleColor.DarkGreen, ConsoleColor.Green)); // Can't use the method below because if the message contains { or } it will throw invalid string format exception.
+            // Can't use the method below because if the message contains { or } it will throw invalid string format exception.
+            QueuedMessages.Enqueue(new LogMessage("INFO", message.ToString(), ConsoleColor.DarkGreen, ConsoleColor.Green));
         }
 
         public static void Info(string format, params object[] args)
         {
-            queuedMessages.Enqueue(new LogMessage("INFO", string.Format(format, args), ConsoleColor.DarkGreen, ConsoleColor.Green));
+            QueuedMessages.Enqueue(new LogMessage("INFO", string.Format(format, args), ConsoleColor.DarkGreen, ConsoleColor.Green));
         }
 
         public static void Warning(object message)
         {
-            queuedMessages.Enqueue(new LogMessage("WARNING", message.ToString(), ConsoleColor.DarkYellow, ConsoleColor.Yellow));
+            QueuedMessages.Enqueue(new LogMessage("WARNING", message.ToString(), ConsoleColor.DarkYellow, ConsoleColor.Yellow));
         }
 
         public static void Warning(string format, params object[] args)
         {
-            queuedMessages.Enqueue(new LogMessage("WARNING", string.Format(format, args), ConsoleColor.DarkYellow, ConsoleColor.Yellow));
+            QueuedMessages.Enqueue(new LogMessage("WARNING", string.Format(format, args), ConsoleColor.DarkYellow, ConsoleColor.Yellow));
         }
 
         public static void Error(object message)
         {
-            queuedMessages.Enqueue(new LogMessage("ERROR", message.ToString(), ConsoleColor.DarkRed, ConsoleColor.Red));
+            QueuedMessages.Enqueue(new LogMessage("ERROR", message.ToString(), ConsoleColor.DarkRed, ConsoleColor.Red));
         }
 
         public static void Error(string format, params object[] args)
         {
-            queuedMessages.Enqueue(new LogMessage("ERROR", string.Format(format, args), ConsoleColor.DarkRed, ConsoleColor.Red));
+            QueuedMessages.Enqueue(new LogMessage("ERROR", string.Format(format, args), ConsoleColor.DarkRed, ConsoleColor.Red));
         }
 
         public static void Display()
         {
-            while (queuedMessages.Count > 0)
+            while (QueuedMessages.Count > 0)
             {
-                LogMessage message = queuedMessages.Dequeue();
+                LogMessage message = QueuedMessages.Dequeue();
 
-                writeTimePrefix();
-                writeTypePrefix(message.LogType, message.BGColor, message.FGColor);
+                WriteTimePrefix();
+                WriteTypePrefix(message.LogType, message.BgColor, message.FgColor);
                 Console.WriteLine(message.Message);
             }
         }

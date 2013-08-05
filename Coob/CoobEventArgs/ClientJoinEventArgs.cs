@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Coob.CoobEventArgs
+﻿namespace Coob.CoobEventArgs
 {
-    class ClientJoinEventArgs : ScriptEventArgs
+    public class ClientJoinEventArgs : ScriptEventArgs
     {
-        public ClientJoinEventArgs(Client client) : base(client) {}
+        public ClientJoinEventArgs(Client client)
+            : base(client)
+        {
+
+        }
     }
 }

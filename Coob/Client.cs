@@ -2,9 +2,7 @@
 using Coob.Packets;
 using Coob.Structures;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -18,15 +16,15 @@ namespace Coob
         public NetReader Reader;
         public BinaryWriter Writer;
         public NetworkStream NetStream;
-        public ulong ID {get; private set;}
+        public ulong Id { get; private set; }
         public Entity Entity;
-        public string IP;
+        public string Ip;
         public Coob Coob { get; private set; }
-        public bool PVP;
+        public bool Pvp;
         private bool disconnecting;
 
-        TcpClient tcp;
-        byte[] recvBuffer;
+        private readonly TcpClient tcp;
+        private readonly byte[] recvBuffer;
 
         public Client(TcpClient tcpClient, Coob coob)
         {
@@ -34,44 +32,45 @@ namespace Coob
             Entity = null;
             disconnecting = false;
             tcp = tcpClient;
-            IP = (tcp.Client.RemoteEndPoint as IPEndPoint).Address.ToString();
+            Ip = ((IPEndPoint)tcp.Client.RemoteEndPoint).Address.ToString();
             NetStream = tcp.GetStream();
             Reader = new NetReader(NetStream);
             Writer = new BinaryWriter(NetStream);
             Coob = coob;
 
-            ID = Coob.CreateID();
+            Id = Coob.CreateId();
 
-            if (ID == 0)
-            {
+            if (Id == 0)
                 throw new UserLimitReachedException();
-            }
 
             recvBuffer = new byte[4];
-            NetStream.BeginRead(recvBuffer, 0, 4, idCallback, null);
+            NetStream.BeginRead(recvBuffer, 0, 4, IdCallback, null);
         }
 
-        void idCallback(IAsyncResult result)
+        void IdCallback(IAsyncResult result)
         {
             if (!tcp.Connected)
             {
                 Disconnect("Connection reset by peer.");
                 return;
             }
+
             if (disconnecting)
                 return;
-            int bytesRead = 0;
+
             try
             {
-                bytesRead = NetStream.EndRead(result);
+                int bytesRead = NetStream.EndRead(result);
 
                 if (bytesRead == 4)
-                {
                     Coob.HandleRecvPacket(BitConverter.ToInt32(recvBuffer, 0), this);
-                }
-                NetStream.BeginRead(recvBuffer, 0, 4, idCallback, null);
+
+                NetStream.BeginRead(recvBuffer, 0, 4, IdCallback, null);
             }
-            catch { Disconnect("Read error"); }
+            catch
+            {
+                Disconnect("Read error");
+            }
         }
 
         public void Disconnect(string reason = "")
@@ -80,19 +79,17 @@ namespace Coob
             disconnecting = true;
             tcp.Close();
 
-            if (Coob.Clients.ContainsKey(ID))
-            {
-                var client = Coob.Clients[ID];
-                Coob.Clients.Remove(ID);
+            if (!Coob.Clients.ContainsKey(Id))
+                return;
 
-                Entity removedEntity;
-                if (!Coob.World.Entities.TryRemove(this.ID, out removedEntity))
-                {
-                    throw new NotImplementedException("Failed to remove entity from Entities");
-                }
+            var client = Coob.Clients[Id];
+            Coob.Clients.Remove(Id);
 
-                Root.ScriptManager.CallEvent("OnClientDisconnect", new ClientDisconnectEventArgs(client, reason));
-            }
+            Entity removedEntity;
+            if (!Coob.World.Entities.TryRemove(Id, out removedEntity))
+                throw new ArgumentException("Failed to remove entity from Entities");
+
+            Program.ScriptManager.CallEvent("OnClientDisconnect", new ClientDisconnectEventArgs(client, reason));
         }
 
         public void SendMessage(ulong id, string message)
@@ -100,7 +97,7 @@ namespace Coob
             byte[] msgBuffer = Encoding.Unicode.GetBytes(message);
             int msgLength = msgBuffer.Length / 2;
 
-            Writer.Write(SCPacketIDs.ServerChatMessage);
+            Writer.Write(ScPacketIDs.ServerChatMessage);
             Writer.Write(id);
             Writer.Write(msgLength);
             Writer.Write(msgBuffer);
@@ -118,7 +115,7 @@ namespace Coob
         /// <param name="time">The elapsed hours in 0-24 range.</param>
         public void SetTime(uint day, float time)
         {
-            Writer.Write(SCPacketIDs.CurrentTime);
+            Writer.Write(ScPacketIDs.CurrentTime);
             Writer.Write(day);
             Writer.Write((uint)(60f * 60f * time * 1000f));
         }

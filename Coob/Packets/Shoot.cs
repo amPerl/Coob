@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 
 namespace Coob.Packets
 {
@@ -12,35 +8,36 @@ namespace Coob.Packets
     {
         public class Shoot : Base
         {
-            public ulong EntityID;
+            public ulong EntityId;
 
             public int ChunkX;
             public int ChunkY;
 
-            public uint something5;
+            private uint something5;
 
             public QVector3 Position;
 
-            public uint something13;
-            public uint something14;
-            public uint something15;
+            private uint something13;
+            private uint something14;
+            private uint something15;
 
             public Vector3 Velocity;
 
-            public float something19; // rand() something, probably damage multiplier.
-            public float something20;
-            public float something21;
-            public float something22; // used stamina? amount of stun?
-            public uint something23;
-            public byte something24;
-            public uint something25;
-            public byte something26;
-            public uint something27;
-            public uint something28;
+            private float something19; // rand() something, probably damage multiplier.
+            private float something20;
+            private float something21;
+            private float something22; // used stamina? amount of stun?
+            private uint something23;
+            private byte something24;
+            private uint something25;
+            private byte something26;
+            private uint something27;
+            private uint something28;
 
             public Shoot(Client client)
                 : base(client)
             {
+
             }
 
             public override bool CallScript()
@@ -48,10 +45,10 @@ namespace Coob.Packets
                 return true;
             }
 
-            public void write(BinaryWriter writer)
+            public override void Write(BinaryWriter writer)
             {
- 
-                writer.Write(EntityID);
+
+                writer.Write(EntityId);
                 writer.Write(ChunkX);
                 writer.Write(ChunkY);
                 writer.Write(something5);
@@ -85,7 +82,7 @@ namespace Coob.Packets
                 NetReader reader = client.Reader;
                 var shoot = new Shoot(client);
 
-                shoot.EntityID = reader.ReadUInt64();
+                shoot.EntityId = reader.ReadUInt64();
                 shoot.ChunkX = reader.ReadInt32();
                 shoot.ChunkY = reader.ReadInt32();
                 shoot.something5 = reader.ReadUInt32();
