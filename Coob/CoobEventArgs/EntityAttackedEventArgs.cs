@@ -13,7 +13,7 @@ namespace Coob.CoobEventArgs
         {
             Attacker = attacker;
             Target = target;
-            Killed = Target.Hp <= 0;
+            Killed = Target.HP <= 0;
         }
     }
 }

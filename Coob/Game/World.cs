@@ -88,7 +88,7 @@ namespace Coob.Game
             {
                 try
                 {
-                    client.Writer.Write(ScPacketIDs.ServerUpdate);
+                    client.Writer.Write(SCPacketIDs.ServerUpdate);
                     client.Writer.Write((uint)compressed.Length);
                     client.Writer.Write(compressed);
                 }

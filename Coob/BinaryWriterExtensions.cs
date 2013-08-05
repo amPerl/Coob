@@ -23,12 +23,12 @@ namespace Coob
             writer.Write(new byte[length]);
         }
 
-        public static void Write(this BinaryWriter writer, Packets.ScPacketIDs pId)
+        public static void Write(this BinaryWriter writer, Packets.SCPacketIDs pId)
         {
             writer.Write((int)pId);
         }
 
-        public static void Write(this BinaryWriter writer, Packets.CsPacketIDs pId)
+        public static void Write(this BinaryWriter writer, Packets.CSPacketIDs pId)
         {
             writer.Write((int)pId);
         }

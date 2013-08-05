@@ -14,7 +14,7 @@ namespace Coob.Structures
         public const int SkillCount = 11;
 
         #region Fields
-        public ulong Id;
+        public ulong ID;
         public byte[] LastBitmask;
 
         public QVector3 Position;
@@ -43,8 +43,8 @@ namespace Coob.Structures
         public byte Specialization;
         public float ChargedMp;
         public Vector3 RayHit;
-        public float Hp;
-        public float Mp;
+        public float HP;
+        public float MP;
         public float BlockPower;
         public float MaxHpMultiplier;
         public float ShootSpeed;
@@ -58,6 +58,7 @@ namespace Coob.Structures
         public uint IceBlockFour;
         public uint[] Skills;
         public string Name;
+        public ulong ParentOwner;
 
         private uint unknownOrNotUsed1;
         private uint unknownOrNotUsed2;
@@ -72,7 +73,6 @@ namespace Coob.Structures
         private uint notUsed6;
         private byte notUsed7;
         private byte notUsed8;
-        public ulong ParentOwner;
         private uint notUsed11;
         private uint notUsed12;
         private uint notUsed13;
@@ -168,8 +168,8 @@ namespace Coob.Structures
                     notUsed6 = reader.ReadUInt32(); 
                 },
                 () => RayHit = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle()),
-                () => Hp = reader.ReadSingle(),
-                () => Mp = reader.ReadSingle(),
+                () => HP = reader.ReadSingle(),
+                () => MP = reader.ReadSingle(),
                 () => BlockPower = reader.ReadSingle(),
                 () =>
                 {
@@ -366,11 +366,11 @@ namespace Coob.Structures
             }
             if (bitArray.Get(27))
             {
-                Hp = from.Hp;
+                HP = from.HP;
             }
             if (bitArray.Get(28))
             {
-                Mp = from.Mp;
+                MP = from.MP;
             }
             if (bitArray.Get(29))
             {
@@ -592,11 +592,11 @@ namespace Coob.Structures
             }
             if (bitArray.Get(27))
             {
-                writer.Write(Hp);
+                writer.Write(HP);
             }
             if (bitArray.Get(28))
             {
-                writer.Write(Mp);
+                writer.Write(MP);
             }
             if (bitArray.Get(29))
             {

@@ -89,7 +89,7 @@ namespace Coob.Packets
                 if (Target.Client != null && (Attacker.Client == null || !Attacker.Client.Pvp || Target.Client == null || !Target.Client.Pvp))
                     return;
 
-                Target.Hp -= Damage;
+                Target.HP -= Damage;
                 Program.ScriptManager.CallEvent("OnEntityAttacked", new EntityAttackedEventArgs(Attacker, Target));
             }
         }

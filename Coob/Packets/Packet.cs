@@ -30,7 +30,7 @@ namespace Coob.Packets
         }
     }
 
-    public enum CsPacketIDs
+    public enum CSPacketIDs
     {
         EntityUpdate = 0,
         Interact = 6,
@@ -43,7 +43,7 @@ namespace Coob.Packets
         ClientVersion = 17,
     }
 
-    public enum ScPacketIDs
+    public enum SCPacketIDs
     {
         EntityUpdate = 0,
         MultipleEntityUpdate = 1, // Not used

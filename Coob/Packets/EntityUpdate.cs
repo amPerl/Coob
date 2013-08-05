@@ -45,7 +45,7 @@ namespace Coob.Packets
 
                         client.Entity = entity;
                         entity.Client = client;
-                        entity.Id = client.Id;
+                        entity.ID = client.Id;
                         coob.World.Entities[client.Id] = client.Entity;
 
                         entity.ReadByMask(br);
@@ -84,7 +84,7 @@ namespace Coob.Packets
                 using (var ms = new MemoryStream())
                 using (var bw = new BinaryWriter(ms))
                 {
-                    bw.Write(Entity.Id);
+                    bw.Write(Entity.ID);
                     bw.Write(Changes.LastBitmask);
                     Entity.WriteByMask(Changes.LastBitmask, bw);
 
@@ -94,7 +94,7 @@ namespace Coob.Packets
 
                 foreach (var peer in Sender.Coob.GetClients(Sender))
                 {
-                    peer.Writer.Write(ScPacketIDs.EntityUpdate);
+                    peer.Writer.Write(SCPacketIDs.EntityUpdate);
                     peer.Writer.Write(compressed.Length);
                     peer.Writer.Write(compressed);
 
@@ -105,7 +105,7 @@ namespace Coob.Packets
                     using (var ms = new MemoryStream())
                     using (var bw = new BinaryWriter(ms))
                     {
-                        bw.Write(peer.Entity.Id);
+                        bw.Write(peer.Entity.ID);
                         bw.Write(Changes.LastBitmask);
                         peer.Entity.WriteByMask(FullBitmask, bw);
 
@@ -113,7 +113,7 @@ namespace Coob.Packets
                         peerCompressed = ZlibHelper.CompressBuffer(uncompressed);
                     }
 
-                    Sender.Writer.Write(ScPacketIDs.EntityUpdate);
+                    Sender.Writer.Write(SCPacketIDs.EntityUpdate);
                     Sender.Writer.Write(peerCompressed.Length);
                     Sender.Writer.Write(peerCompressed);
                 }

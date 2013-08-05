@@ -45,15 +45,15 @@ namespace Coob
             World = new World(options.WorldSeed, this);
 
             // TODO Refactor with new design later
-            PacketParsers.Add((int)CsPacketIDs.EntityUpdate, Packet.EntityUpdate.Parse);
-            PacketParsers.Add((int)CsPacketIDs.Interact, Packet.Interact.Parse);
-            PacketParsers.Add((int)CsPacketIDs.Hit, Packet.Hit.Parse);
+            PacketParsers.Add((int)CSPacketIDs.EntityUpdate, Packet.EntityUpdate.Parse);
+            PacketParsers.Add((int)CSPacketIDs.Interact, Packet.Interact.Parse);
+            PacketParsers.Add((int)CSPacketIDs.Hit, Packet.Hit.Parse);
             // TODO: PacketParsers.Add((int)CSPacketIDs.Stealth, Packet.Stealth.Parse);
-            PacketParsers.Add((int)CsPacketIDs.Shoot, Packet.Shoot.Parse);
-            PacketParsers.Add((int)CsPacketIDs.ClientChatMessage, Packet.ChatMessage.Parse);
-            PacketParsers.Add((int)CsPacketIDs.ChunkDiscovered, Packet.UpdateChunk.Parse);
-            PacketParsers.Add((int)CsPacketIDs.SectorDiscovered, Packet.UpdateSector.Parse);
-            PacketParsers.Add((int)CsPacketIDs.ClientVersion, Packet.ClientVersion.Parse);
+            PacketParsers.Add((int)CSPacketIDs.Shoot, Packet.Shoot.Parse);
+            PacketParsers.Add((int)CSPacketIDs.ClientChatMessage, Packet.ChatMessage.Parse);
+            PacketParsers.Add((int)CSPacketIDs.ChunkDiscovered, Packet.UpdateChunk.Parse);
+            PacketParsers.Add((int)CSPacketIDs.SectorDiscovered, Packet.UpdateSector.Parse);
+            PacketParsers.Add((int)CSPacketIDs.ClientVersion, Packet.ClientVersion.Parse);
 
             try
             {
