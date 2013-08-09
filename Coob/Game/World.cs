@@ -28,7 +28,7 @@ namespace Coob.Game
         {
             // Update stuff
 
-            var eventArgs = Program.ScriptManager.CallEvent("OnWorldUpdate", new WorldUpdateEventArgs(dt));
+            var eventArgs = Program.ScriptManager.CallEvent<WorldUpdateEventArgs>("OnWorldUpdate", new WorldUpdateEventArgs(dt));
         }
 
         public void SendServerUpdate()

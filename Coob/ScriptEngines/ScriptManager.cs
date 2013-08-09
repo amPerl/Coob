@@ -80,5 +80,10 @@ namespace Coob.ScriptEngines
 
             return args;
         }
+
+        public T CallEvent<T>(string name, ScriptEventArgs args) where T : ScriptEventArgs
+        {
+            return (T)CallEvent(name, args);
+        }
     }
 }

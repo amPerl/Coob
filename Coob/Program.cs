@@ -24,7 +24,7 @@ namespace Coob
 
             Scripting.Run();
 
-            var initArgs = (InitializeEventArgs)ScriptManager.CallEvent("OnInitialize", new InitializeEventArgs());
+            var initArgs = ScriptManager.CallEvent<InitializeEventArgs>("OnInitialize", new InitializeEventArgs());
 
             Coob = new Coob(new CoobOptions
             {

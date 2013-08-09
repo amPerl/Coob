@@ -21,8 +21,7 @@ namespace Coob.Packets
 
             public override bool CallScript()
             {
-                ScriptEventArgs result = Program.ScriptManager.CallEvent("OnClientVersion", new ClientVersionEventArgs(Sender, Version));
-                return result.Canceled == false;
+                return !Program.ScriptManager.CallEvent("OnClientVersion", new ClientVersionEventArgs(Sender, Version)).Canceled;
             }
 
             public override void Process()

@@ -50,8 +50,7 @@ namespace Coob.Packets
 
             public override bool CallScript()
             {
-                var interactArgs = new InteractEventArgs(Sender, this);
-                return Program.ScriptManager.CallEvent("OnInteract", interactArgs).Canceled == false;
+                return Program.ScriptManager.CallEvent("OnInteract", new InteractEventArgs(Sender, this)).Canceled == false;
             }
 
             public override void Process()
