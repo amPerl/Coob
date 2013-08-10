@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Coob.CoobEventArgs;
 using Coob.ScriptEngines;
 
@@ -43,8 +44,7 @@ namespace Coob
             {
                 var input = Console.ReadLine() ?? "";
 
-                if (input.ToLower() == "exit") // Temporary way to quit server properly. Seems to fuck up because the console hates life.
-                    Coob.StopServer();
+                HandleConsoleCommand(input);
             }
 
             Log.Info("Stopping server...");
@@ -52,6 +52,31 @@ namespace Coob
             ScriptManager.CallEvent("OnQuit", new QuitEventArgs());
 
             Log.Display(); // "Needs" to be called here since it normally gets called in the message handler (which isn't called anymore since server stopped).
+        }
+
+        private static void HandleConsoleCommand(string line)
+        {
+            var parts = line.Split(' ');
+            var command = parts[0];
+
+            switch (command)
+            {
+                case "exit":
+                case "quit":
+                case "q":
+                    Coob.StopServer();
+                    break;
+                case "kick":
+                    if (parts.Length == 2)
+                        Coob.KickPlayer(parts[1]);
+                    break;
+                case "say":
+                    Coob.Broadcast(line.Substring(4));
+                    break;
+                default :
+                    Log.Info("Unrecognised command: {0}", command);
+                    break;
+            }
         }
     }
 }

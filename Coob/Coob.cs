@@ -128,6 +128,27 @@ namespace Coob
             Running = false;
         }
 
+        public void KickPlayer(string Name)
+        {
+            var player = Clients.Where(cl => cl.Value.Entity.Name == Name).Select(cl => cl.Value).FirstOrDefault();
+            if (player != null)
+            {
+                player.Disconnect();
+            }
+            else
+            {
+                Log.Info("No such player '{0}'", Name);
+            }
+        }
+
+        public void Broadcast(string Message)
+        {
+            foreach (var c in Clients.Values)
+            {
+                c.SendServerMessage("[SERVER] " + Message);
+            }
+        }
+
         private void UpdateWorld()
         {
             var totalDt = (float)elapsedDt.Elapsed.TotalSeconds;
