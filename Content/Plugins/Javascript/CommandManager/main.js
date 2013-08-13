@@ -1,4 +1,4 @@
-CommandManager = function ()
+var CommandManager = function ()
 {
     this.commands = {};
     
@@ -42,7 +42,7 @@ CommandManager = function ()
     LogInfo("[CommandManager] Initialized.");
 };
 
-Command = function (command, helpString, notEnoughArgumentsString, minArgCount, callback)
+var Command = function (command, helpString, notEnoughArgumentsString, minArgCount, callback)
 {
     this.command = command;
     this.helpString = helpString;
@@ -85,10 +85,11 @@ Command = function (command, helpString, notEnoughArgumentsString, minArgCount, 
     };
 };
 
-commandManager = new CommandManager();
+SetGlobal("CommandManager", new CommandManager());
+SetGlobal("CommandManager_Command", Command);
 
 // Include commands here
-#include "teleport.js"
+include("Plugins/Javascript/CommandManager/teleport.js");
 
 AddHook("OnChatMessage", function (args)
 {

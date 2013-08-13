@@ -7,7 +7,6 @@ namespace Coob.ScriptEngines
         void SetFunction(string name, Delegate function);
         void SetParameter(string name, object value);
         void Initialize();
-        void Load(string sourceFile);
         void LoadPlugin(string pluginName, string entryFile);
         void Run();
         object RunString(string code);

@@ -1,13 +1,13 @@
-﻿commandManager.AddCommand(new Command(
+﻿var cmdman = GetGlobal("CommandManager");
+var command = GetGlobal("CommandManager_Command");
+cmdman.AddCommand(new command(
     "tp",
     "Teleport to the given coordinates or player.",
     "Not enough arguments. You need to specify X Y Z or player name.",
     1,
-    function (client)
-    {
+    function (client) {
         var x, y, z;
-        if (this.args.length == 3)
-        {
+        if (this.args.length == 3) {
             LogInfo("Parsing XYZ for tp command.");
             x = parseInt(this.args[0]);
             y = parseInt(this.args[1]);
@@ -17,13 +17,11 @@
                 client.SendServerMessage("Invalid coordinates given.");
                 return;
             }
-            else
-            {
+            else {
                 client.SendServerMessage("Teleported to " + x + "," + y + "," + z + ".");
             }
         }
-        else
-        {
+        else {
             LogInfo("Parsing name for tp command.");
             var playerName = this.JoinArgs();
             LogInfo("Name: " + playerName);

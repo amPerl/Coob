@@ -2,6 +2,7 @@
 using System.Linq;
 using Coob.CoobEventArgs;
 using Coob.ScriptEngines;
+using Jint;
 
 namespace Coob
 {
@@ -42,7 +43,7 @@ namespace Coob
 
             while (Coob.Running)
             {
-                var input = Console.ReadLine() ?? "";
+                var input = Console.ReadLine() ?? ""; // FixMe: This will cause the console to spam HandleConsoleCommand(line) with an empty string.
 
                 HandleConsoleCommand(input);
             }

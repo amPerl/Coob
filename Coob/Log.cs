@@ -47,32 +47,50 @@ namespace Coob
 
         public static void Info(object message)
         {
+            if (message == null)
+                message = "null";
+
             // Can't use the method below because if the message contains { or } it will throw invalid string format exception.
-            QueuedMessages.Enqueue(new LogMessage("INFO", message.ToString(), ConsoleColor.DarkGreen, ConsoleColor.Green));
+            QueuedMessages.Enqueue(new LogMessage("INFO", message, ConsoleColor.DarkGreen, ConsoleColor.Green));
         }
 
         public static void Info(string format, params object[] args)
         {
+            if (args == null || args.Length == 0)
+                args = new object[] { "null" };
+
             QueuedMessages.Enqueue(new LogMessage("INFO", string.Format(format, args), ConsoleColor.DarkGreen, ConsoleColor.Green));
         }
 
         public static void Warning(object message)
         {
-            QueuedMessages.Enqueue(new LogMessage("WARNING", message.ToString(), ConsoleColor.DarkYellow, ConsoleColor.Yellow));
+            if (message == null)
+                message = "null";
+
+            QueuedMessages.Enqueue(new LogMessage("WARNING", message, ConsoleColor.DarkYellow, ConsoleColor.Yellow));
         }
 
         public static void Warning(string format, params object[] args)
         {
+            if (args == null || args.Length == 0)
+                args = new object[] { "null" };
+
             QueuedMessages.Enqueue(new LogMessage("WARNING", string.Format(format, args), ConsoleColor.DarkYellow, ConsoleColor.Yellow));
         }
 
         public static void Error(object message)
         {
-            QueuedMessages.Enqueue(new LogMessage("ERROR", message.ToString(), ConsoleColor.DarkRed, ConsoleColor.Red));
+            if (message == null)
+                message = "null";
+
+            QueuedMessages.Enqueue(new LogMessage("ERROR", message, ConsoleColor.DarkRed, ConsoleColor.Red));
         }
 
         public static void Error(string format, params object[] args)
         {
+            if (args == null || args.Length == 0)
+                args = new object[] { "null" };
+
             QueuedMessages.Enqueue(new LogMessage("ERROR", string.Format(format, args), ConsoleColor.DarkRed, ConsoleColor.Red));
         }
 

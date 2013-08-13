@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using Jint;
 using Jint.Native;
 using System.IO;
@@ -10,11 +12,21 @@ namespace Coob.ScriptEngines
     public class JavascriptEngine : IScriptHandler
     {
         private readonly JintEngine engine;
-        private string source;
+        private List<PluginSource> sources = new List<PluginSource>();
+
+        struct PluginSource
+        {
+            public string Source;
+            public string Path;
+
+            public PluginSource(string source, string path) { Source = source; Path = path; }
+        }
 
         public JavascriptEngine()
         {
-            engine = new JintEngine();
+            engine = new JintEngine(Options.Ecmascript5 | Options.Strict);
+
+            engine.SetFunction("include", (Func<string, object>)Include);
         }
 
         public void Initialize()
@@ -24,50 +36,51 @@ namespace Coob.ScriptEngines
             engine.AddPermission(new WebPermission(PermissionState.Unrestricted));
         }
 
-        public void Load(string sourceFile)
-        {
-            source += File.ReadAllText(sourceFile);
-        }
-
         public void LoadPlugin(string pluginName, string sourceFile)
         {
             Log.Info("Loading Javascript plugin \"{0}\"", pluginName);
 
             string pluginSource = File.ReadAllText(sourceFile).Replace("\r\n", "\n");
-            pluginSource = PreprocessIncludes(pluginSource, Path.GetDirectoryName(sourceFile));
+            //pluginSource = PreprocessIncludes(pluginSource, Path.GetDirectoryName(sourceFile));
 
-            source += pluginSource + "\n";
+            sources.Add(new PluginSource(pluginName + " = new function() {" + pluginSource + "\n}\n", Path.GetFullPath(sourceFile)));
         }
 
-        public string PreprocessIncludes(string pluginSource, string directory)
+        public object Include(string path)
         {
-            var lines = pluginSource.Split('\n');
-
-            foreach (var line in lines)
-            {
-                string trimmed = line.Trim();
-
-                if (!trimmed.StartsWith("#include \""))
-                    continue;
-
-                if (trimmed.Length < 11)
-                    continue;
-
-                string includeName = trimmed.Substring(10, trimmed.Length - 10 - 1);
-
-                string includePath = Path.Combine(directory, includeName);
-                if (File.Exists(includePath))
-                    pluginSource = pluginSource.Replace(trimmed, PreprocessIncludes(File.ReadAllText(includePath), directory));
-                else
-                {
-                    Log.Error("Could not find file to include \"" + trimmed + "\" in plugin " + directory + ".");
-                    Log.Display();
-                    Environment.Exit(1);
-                }
-            }
-
-            return pluginSource;
+            var code = File.ReadAllText(path);
+            return RunString("return new function() {\n" + code + "\n};");
         }
+
+        //public string PreprocessIncludes(string pluginSource, string directory)
+        //{
+        //    var lines = pluginSource.Split('\n');
+        //
+        //    foreach (var line in lines)
+        //    {
+        //        string trimmed = line.Trim();
+        //
+        //        if (!trimmed.StartsWith("#include \""))
+        //            continue;
+        //
+        //        if (trimmed.Length < 11)
+        //            continue;
+        //
+        //        string includeName = trimmed.Substring(10, trimmed.Length - 10 - 1);
+        //
+        //        string includePath = Path.Combine(directory, includeName);
+        //        if (File.Exists(includePath))
+        //            pluginSource = pluginSource.Replace(trimmed, PreprocessIncludes(File.ReadAllText(includePath), directory));
+        //        else
+        //        {
+        //            Log.Error("Could not find file to include \"" + trimmed + "\" in plugin " + directory + ".");
+        //            Log.Display();
+        //            Environment.Exit(1);
+        //        }
+        //    }
+        //
+        //    return pluginSource;
+        //}
 
         public void SetParameter(string name, object value)
         {
@@ -152,13 +165,13 @@ namespace Coob.ScriptEngines
 
         public void Run()
         {
-            if (source == null)
+            if (sources.Count == 0)
             {
                 Log.Error("No plugins found.");
                 return;
             }
 
-            RunString(source);
+            sources.ForEach(s => RunString(s.Source));
         }
     }
 }
