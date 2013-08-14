@@ -59,6 +59,7 @@ namespace Coob
         {
             var parts = line.Split(new char[] {' '}, 2);
             var command = parts[0];
+            var arg = parts.Length > 1 ? parts[1] : null;
 
             switch (command)
             {
@@ -69,10 +70,11 @@ namespace Coob
                     break;
                 case "kick":
                     if (parts.Length == 2)
-                        Coob.KickPlayer(parts[1]);
+                        Coob.KickPlayer(arg);
                     break;
                 case "say":
-                    Coob.Broadcast(line.Substring(4));
+                    Coob.Broadcast(arg);
+                    Log.Info("[SERVER] " + arg);
                     break;
                 default :
                     Log.Info("Unrecognised command: {0}", command);
