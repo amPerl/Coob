@@ -98,7 +98,7 @@ namespace Coob.ScriptEngines
             {
                 return engine.Run(code);
             }
-            catch (JintException ex)
+            catch (Exception ex)
             {
                 Log.Error(ex.InnerException != null ? (ex.Message + ": " + ex.InnerException.Message) : ex.Message);
                 Log.Display();
