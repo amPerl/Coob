@@ -89,7 +89,7 @@ SetGlobal("CommandManager", new CommandManager());
 SetGlobal("CommandManager_Command", Command);
 
 // Include commands here
-include("Plugins/Javascript/CommandManager/teleport.js");
+include("CommandManager/teleport.js");
 
 AddHook("OnChatMessage", function (args)
 {

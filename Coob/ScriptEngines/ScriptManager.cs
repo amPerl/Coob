@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 using Coob.CoobEventArgs;
 using Jint.Native;
 
@@ -13,11 +15,14 @@ namespace Coob.ScriptEngines
 
         private readonly Dictionary<string, object> globals;
 
+        private readonly List<string> loadedPlugins; 
+
         public ScriptManager()
         {
             hooks = new Dictionary<string, List<object>>();
             ScriptHandlers = new List<IScriptHandler>();
             globals = new Dictionary<string, object>();
+            loadedPlugins = new List<string>();
         }
 
         public void Initialize()
@@ -43,14 +48,104 @@ namespace Coob.ScriptEngines
 
                 foreach (string directory in Directory.GetDirectories(pluginDirectory))
                 {
-                    string pluginName = directory.Replace('\\', '/');
-                    pluginName = pluginName.Substring(pluginName.LastIndexOf('/') + 1);
-
-                    string entryPath = Path.Combine(directory, scriptHandler.GetEntryFileName() + scriptHandler.GetScriptExtension());
-                    if (File.Exists(entryPath))
-                        scriptHandler.LoadPlugin(pluginName, entryPath);
+                    LoadPlugin(directory, scriptHandler, pluginDirectory);
                 }
             }
+        }
+
+        private void LoadPlugin(string directory, IScriptHandler scriptHandler, string pluginDirectory)
+        {
+            string pluginName = directory.Replace('\\', '/');
+            pluginName = pluginName.Substring(pluginName.LastIndexOf('/') + 1);
+
+            if (!VerifyPlugin(pluginName))
+                return;
+
+            string entryPath = Path.Combine(directory, scriptHandler.GetEntryFileName() + scriptHandler.GetScriptExtension());
+            if (File.Exists(entryPath))
+            {
+                var requireTextPath = directory.Replace('\\', '/');
+                var lines = GetDependencies(requireTextPath);
+
+                foreach(var line in lines)
+                {
+                    if (!loadedPlugins.Contains(line))
+                    {
+                        var dependencies = GetDependencies("Plugins/" + scriptHandler.GetScriptDirectoryName() + "/" + line);
+                        if (dependencies.Contains(pluginName))
+                        {
+                            Log.Error("Plugin \"" + pluginName + "\" has a dependency to itself!");
+                            return;
+                        }
+
+                        if (dependencies.Contains(pluginName))
+                        {
+                            Log.Error("Circular dependency detected between \"" + pluginName + "\" and \"" + line + "\"!");
+                            return;
+                        }
+
+                        Log.Info(pluginName + " requires " + line + ". Loading " + line + ".");
+                        LoadPlugin(pluginDirectory + "/" + line, scriptHandler, pluginDirectory);
+                    }
+                }
+
+                scriptHandler.LoadPlugin(pluginName, entryPath);
+                loadedPlugins.Add(pluginName);
+            }
+            else
+            {
+                Log.Error("Plugin \"" + pluginName + "\" could not be loaded because it does not exist!");
+                return;
+            }
+        }
+
+        private List<string> GetDependencies(string path)
+        {
+            var result = new List<string>();
+            path = Path.Combine(path, "require.txt").Replace('\\', '/');
+
+            if (File.Exists(path))
+            {
+                var lines = File.ReadAllLines(path);
+
+                for (int i = 0; i < lines.Length; ++i)
+                {
+                    if (lines[i].Trim().StartsWith("//"))
+                        continue;
+
+                    var line = lines[i].Replace(" ", "");
+                    var commentIndex = line.IndexOf("//", StringComparison.InvariantCultureIgnoreCase);
+                    line = line.Substring(0, commentIndex > 0 ? commentIndex : lines[i].Length);
+
+                    result.Add(line);
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>Returns true if the plugin can and should be loaded.</summary>
+        private bool VerifyPlugin(string pluginName)
+        {
+            // Don't load plugin if already loaded.
+            if (loadedPlugins.Contains(pluginName))
+                return false;
+
+            // Don't load plugin if contains spaces.
+            if (pluginName.Contains(" "))
+            {
+                Log.Error("Plugin \"" + pluginName + "\" contains spaces!");
+                return false;
+            }
+
+            // Don't load plugin if starts with a number.
+            if (Regex.IsMatch(pluginName[0].ToString(), "[0-9]"))
+            {
+                Log.Error("Plugin \"" + pluginName + "\" starts with a number!");
+                return false;
+            }
+
+            return true;
         }
 
         private void SetGlobal(string key, object val)

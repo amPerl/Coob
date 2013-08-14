@@ -48,7 +48,7 @@ namespace Coob.ScriptEngines
 
         public object Include(string path)
         {
-            var code = File.ReadAllText(path);
+            var code = File.ReadAllText("Plugins/Javascript/" + path);
             return RunString("return new function() {\n" + code + "\n};");
         }
 
