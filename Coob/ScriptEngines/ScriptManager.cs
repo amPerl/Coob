@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using Coob.CoobEventArgs;
 using Jint.Native;
 
@@ -139,7 +138,7 @@ namespace Coob.ScriptEngines
             }
 
             // Don't load plugin if starts with a number.
-            if (Regex.IsMatch(pluginName[0].ToString(), "[0-9]"))
+            if (char.IsDigit(pluginName, 0))
             {
                 Log.Error("Plugin \"" + pluginName + "\" starts with a number!");
                 return false;
