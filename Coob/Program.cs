@@ -57,7 +57,7 @@ namespace Coob
 
         private static void HandleConsoleCommand(string line)
         {
-            var parts = line.Split(' ');
+            var parts = line.Split(new char[] {' '}, 2);
             var command = parts[0];
 
             switch (command)
