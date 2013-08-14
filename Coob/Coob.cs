@@ -141,11 +141,11 @@ namespace Coob
             }
         }
 
-        public void Broadcast(string Message)
+        public void Broadcast(string message)
         {
             foreach (var c in Clients.Values)
             {
-                c.SendServerMessage("[SERVER] " + Message);
+                c.SendServerMessage("[SERVER] " + message);
             }
         }
 
