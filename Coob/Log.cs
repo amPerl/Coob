@@ -94,6 +94,14 @@ namespace Coob
             QueuedMessages.Enqueue(new LogMessage("ERROR", string.Format(format, args), ConsoleColor.DarkRed, ConsoleColor.Red));
         }
 
+        public static void Custom(object message, string idString, ConsoleColor? bg = null, ConsoleColor? fg = null)
+        {
+            if (message == null)
+                message = "null";
+
+            QueuedMessages.Enqueue(new LogMessage(idString, message, bg ?? ConsoleColor.DarkGreen, fg ?? ConsoleColor.Green));
+        }
+
         public static void Display()
         {
             while (QueuedMessages.Count > 0)
