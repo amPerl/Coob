@@ -13,5 +13,10 @@
         public static readonly int DefaultPort = 12345;
         public static readonly uint DefaultMaxClients = 1024;
         public static readonly int DefaultWorldSeed = 26879;
+
+        // If true, events will be printed to the console as they're called.
+        public static bool PrintEvents = true;
+        // If true, events such as world update will be printed aswell.
+        public static bool PrintEventUpdates = false;
     }
 }

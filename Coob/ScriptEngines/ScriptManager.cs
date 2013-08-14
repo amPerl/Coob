@@ -41,21 +41,20 @@ namespace Coob.ScriptEngines
                 scriptHandler.SetFunction("SetGlobal", (Action<string, object>)SetGlobal);
                 scriptHandler.SetFunction("GetGlobal", (Func<string, object>)GetGlobal);
 
-                string pluginDirectory = Path.Combine(@"Plugins", scriptHandler.GetScriptDirectoryName());
+                string pluginDirectory = Path.Combine("Plugins", scriptHandler.GetScriptDirectoryName());
                 if (!Directory.Exists(pluginDirectory))
                     continue;
 
                 foreach (string directory in Directory.GetDirectories(pluginDirectory))
                 {
-                    LoadPlugin(directory, scriptHandler, pluginDirectory);
+                    LoadPlugin(directory.Replace('\\', '/'), scriptHandler, pluginDirectory);
                 }
             }
         }
 
         private void LoadPlugin(string directory, IScriptHandler scriptHandler, string pluginDirectory)
         {
-            string pluginName = directory.Replace('\\', '/');
-            pluginName = pluginName.Substring(pluginName.LastIndexOf('/') + 1);
+            string pluginName = directory.Substring(directory.LastIndexOf('/') + 1);
 
             if (!VerifyPlugin(pluginName))
                 return;
@@ -63,8 +62,7 @@ namespace Coob.ScriptEngines
             string entryPath = Path.Combine(directory, scriptHandler.GetEntryFileName() + scriptHandler.GetScriptExtension());
             if (File.Exists(entryPath))
             {
-                var requireTextPath = directory.Replace('\\', '/');
-                var lines = GetDependencies(requireTextPath);
+                var lines = GetDependencies(directory);
 
                 foreach(var line in lines)
                 {
@@ -130,17 +128,27 @@ namespace Coob.ScriptEngines
             if (loadedPlugins.Contains(pluginName))
                 return false;
 
-            // Don't load plugin if contains spaces.
             if (pluginName.Contains(" "))
             {
                 Log.Error("Plugin \"" + pluginName + "\" contains spaces!");
                 return false;
             }
 
-            // Don't load plugin if starts with a number.
             if (char.IsDigit(pluginName, 0))
             {
                 Log.Error("Plugin \"" + pluginName + "\" starts with a number!");
+                return false;
+            }
+
+            if (char.IsSymbol(pluginName, 0))
+            {
+                Log.Error("Plugin \"" + pluginName + "\" starts with a symbol!");
+                return false;
+            }
+
+            if (char.IsWhiteSpace(pluginName, 0))
+            {
+                Log.Error("Plugin \"" + pluginName + "\" starts with whitespace!");
                 return false;
             }
 
@@ -186,6 +194,14 @@ namespace Coob.ScriptEngines
 
         public ScriptEventArgs CallEvent(string name, ScriptEventArgs args)
         {
+            if (Globals.PrintEvents)
+            {
+                if (name.ToLower().Contains("update") && Globals.PrintEventUpdates)
+                    Log.Custom("Event called: " + name, "ATTN", ConsoleColor.DarkCyan, ConsoleColor.Cyan);
+                else if (!name.ToLower().Contains("update"))
+                    Log.Custom("Event called: " + name, "ATTN", ConsoleColor.DarkCyan, ConsoleColor.Cyan);
+            }
+
             if (!hooks.ContainsKey(name))
             {
                 args.Canceled = false;
@@ -193,8 +209,8 @@ namespace Coob.ScriptEngines
             }
 
             // ToArray because if event removes a function from this event, it'll cause an exception. (collection modified)
-            foreach (object functionName in hooks[name].ToArray())
-                ScriptHandlers.ForEach(sh => sh.CallFunction(functionName, args));
+            foreach (object function in hooks[name].ToArray())
+                ScriptHandlers.ForEach(sh => sh.CallFunction(function, args));
 
             return args;
         }

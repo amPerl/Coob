@@ -57,8 +57,14 @@ namespace Coob
 
         private static void HandleConsoleCommand(string line)
         {
+            if (line == "")
+            {
+                Console.CursorTop -= 1;
+                return;
+            }
+
             var parts = line.Split(new char[] {' '}, 2);
-            var command = parts[0];
+            var command = parts[0].ToLower();
             var arg = parts.Length > 1 ? parts[1] : null;
 
             switch (command)
@@ -78,6 +84,16 @@ namespace Coob
                     break;
                 default :
                     Log.Info("Unrecognised command: {0}", command);
+                    break;
+                case "js":
+                    var result = Scripting.RunString(arg);
+                    Log.Custom(result ?? "No returned value.", "JSCRIPT");
+                    break;
+                case "help":
+                    Log.Info("exit, quit, q: stop the server.");
+                    Log.Info("kick [player name]: kick the player with the given name.");
+                    Log.Info("say: broadcast a message to the server.");
+                    Log.Info("js: execute as javascript.");
                     break;
             }
         }
