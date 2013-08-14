@@ -128,16 +128,16 @@ namespace Coob
             Running = false;
         }
 
-        public void KickPlayer(string Name)
+        public void KickPlayer(string name)
         {
-            var player = Clients.Where(cl => cl.Value.Entity.Name == Name).Select(cl => cl.Value).FirstOrDefault();
-            if (player != null)
+            var player = Clients.FirstOrDefault(plr => plr.Value.Entity.Name.ToLower() == name);
+            if (player.Value != null)
             {
-                player.Disconnect();
+                player.Value.Disconnect();
             }
             else
             {
-                Log.Info("No such player '{0}'", Name);
+                Log.Warning("No such player '{0}'", name);
             }
         }
 
