@@ -43,7 +43,7 @@ namespace Coob
 
             while (Coob.Running)
             {
-                var input = Console.ReadLine() ?? ""; // FixMe: This will cause the console to spam HandleConsoleCommand(line) with an empty string.
+                var input = Console.ReadLine() ?? ""; // FixMe: This will cause the console to spam HandleConsoleCommand(line) with an empty string if there's no input.
 
                 HandleConsoleCommand(input);
             }
